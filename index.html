@@ -974,12 +974,12 @@ button,.opt,.mitem,.tile,.node{touch-action:manipulation;-webkit-user-select:non
    WORDS (woorden), SENTENCES (zinnen), WORLDS (werelden + lessen),
    STICKERS en AUDIO_FILES.
 
-   Spelling van de uitspraak (ph): Nederlandse klanken
-     ch = als in "lachen" (خ)      gh = Nederlandse g in "gaan" (غ)
-     g  = harde g, als in "goal" (ج) h  = hete h, als op een brilletje blazen (ح)
-     '  = klein stopje of keelklank (ء / ع / ق)
-     sj = als in "sjaal"   j = als in "jas"   oe = als in "boek"
-     aa/ee/ie = lange klinkers (maan / been / fiets)
+   Spelling van de uitspraak (ph): zie translit() verderop. Je mag hier oude
+   Nederlandse spelling laten staan; de app trekt alles bij het laden gelijk:
+     Ieder woord met hoofdletter    3  = ع (keelklank)     7  = ح (hete h)
+     Kh = خ (ch in "lachen")        Sh = ش                 Gh = غ (g in "gaan")
+     G  = harde g als in "goal" (ج) y  = j in "jas"        '  = stopje (ء / ق)
+     ee = lange i (ي), oo = lange oe (و), a = a
    Let op: alle vertalingen zijn een eerste versie. Laat ze controleren door
    een native Egyptische spreker (in het ouderdashboard kun je ze afvinken).
    ===================================================================== */
@@ -987,290 +987,290 @@ button,.opt,.mitem,.tile,.node{touch-action:manipulation;-webkit-user-select:non
 // ---- Woorden. w = wereld (1,2,3). tip = optionele uitspraak-/gebruikstip.
 const WORDS = [
   // Wereld 1 – Hallo Egypte
-  {id:'ahlan',   w:1, ar:'أهلاً',          ph:'ahlan',              nl:'hallo',            pic:'😊'},
-  {id:'salam',   w:1, ar:'السلام عليكم',  ph:"es-salaamoe 'aleekoem", nl:'hallo (vrede voor jou)', pic:'🤝'},
-  {id:'sabah',   w:1, ar:'صباح الخير',    ph:'sabaah el-cheer',    nl:'goedemorgen',      pic:'🌅', tip:'h = hete h, ch = als in "lachen"'},
-  {id:'masa',    w:1, ar:'مساء الخير',    ph:'masa el-cheer',      nl:'goedenavond',      pic:'🌆'},
-  {id:'tesbah',  w:1, ar:'تصبح على خير',  ph:"tesbah 'ala cheer",  nl:'welterusten',      pic:'🌙', g:'you', fem:{ar:'تصبحي على خير', ph:"tesbahi 'ala cheer"}},
-  {id:'bye',     w:1, ar:'مع السلامة',    ph:"ma'as-salaama",      nl:'doei!',            pic:'👋'},
-  {id:'shukran', w:1, ar:'شكراً',         ph:'sjoekran',           nl:'dank je wel',      pic:'💝'},
-  {id:'fadlak',  w:1, ar:'من فضلك',       ph:'men fadlak',         nl:'alsjeblieft',      pic:'🙏', g:'you', fem:{ar:'من فضلك', ph:'men fadlek'}},
-  {id:'aywa',    w:1, ar:'أيوه',          ph:'ajwa',               nl:'ja',               pic:'👍'},
-  {id:'la',      w:1, ar:'لأ',            ph:"la'",                nl:'nee',              pic:'🙅'},
-  {id:'ana',     w:1, ar:'أنا',           ph:'ana',                nl:'ik',               pic:'🙋'},
-  {id:'enta',    w:1, ar:'إنت',           ph:'enta',               nl:'jij',              pic:'👉', g:'you', fem:{ar:'إنتي', ph:'enti'}},
-  {id:'ismi',    w:1, ar:'اسمي',          ph:'esmi',               nl:'ik heet',          pic:'📛'},
-  {id:'izzayak', w:1, ar:'إزيك',          ph:'ezzajjak',           nl:'hoe gaat het?',    pic:'🙂', g:'you', fem:{ar:'إزيك', ph:'ezzajjek'}},
-  {id:'kwayyes', w:1, ar:'كويس',          ph:'kwajjes',            nl:'goed',             pic:'😀', g:'self', fem:{ar:'كويسة', ph:'kwajjesa'}},
-  {id:'hamdu',   w:1, ar:'الحمد لله',     ph:'el-hamdoe lellaah',  nl:'goed, dank God',   pic:'✨'},
-  {id:'holanda', w:1, ar:'هولندا',        ph:'holanda',            nl:'Nederland',        pic:'🌷'},
-  {id:'masr',    w:1, ar:'مصر',           ph:'masr',               nl:'Egypte',           pic:'🏜️'},
+  {id:'ahlan',   w:1, ar:'أهلاً',          ph:'Ahlan',              nl:'hallo',            pic:'😊'},
+  {id:'salam',   w:1, ar:'السلام عليكم',  ph:'Es-Salamo 3aleekom', nl:'hallo (vrede voor jou)', pic:'🤝'},
+  {id:'sabah',   w:1, ar:'صباح الخير',    ph:'Saba7 El-Kheer',    nl:'goedemorgen',      pic:'🌅', tip:'7 = hete h (ح), Kh = als de ch in "lachen" (خ)'},
+  {id:'masa',    w:1, ar:'مساء الخير',    ph:'Masa El-Kheer',      nl:'goedenavond',      pic:'🌆'},
+  {id:'tesbah',  w:1, ar:'تصبح على خير',  ph:'Tesba7 3ala Kheer',  nl:'welterusten',      pic:'🌙', g:'you', fem:{ar:'تصبحي على خير', ph:'Tesba7i 3ala Kheer'}},
+  {id:'bye',     w:1, ar:'مع السلامة',    ph:'Ma3a Salama',      nl:'doei!',            pic:'👋'},
+  {id:'shukran', w:1, ar:'شكراً',         ph:'Shokran',           nl:'dank je wel',      pic:'💝'},
+  {id:'fadlak',  w:1, ar:'من فضلك',       ph:'Men Fadlak',         nl:'alsjeblieft',      pic:'🙏', g:'you', fem:{ar:'من فضلك', ph:'Men Fadlek'}},
+  {id:'aywa',    w:1, ar:'أيوه',          ph:'Aywa',               nl:'ja',               pic:'👍'},
+  {id:'la',      w:1, ar:'لأ',            ph:"La'",                nl:'nee',              pic:'🙅'},
+  {id:'ana',     w:1, ar:'أنا',           ph:'Ana',                nl:'ik',               pic:'🙋'},
+  {id:'enta',    w:1, ar:'إنت',           ph:'Enta',               nl:'jij',              pic:'👉', g:'you', fem:{ar:'إنتي', ph:'Enti'}},
+  {id:'ismi',    w:1, ar:'اسمي',          ph:'Esmi',               nl:'ik heet',          pic:'📛'},
+  {id:'izzayak', w:1, ar:'إزيك',          ph:'Ezzayyak',           nl:'hoe gaat het?',    pic:'🙂', g:'you', fem:{ar:'إزيك', ph:'Ezzayyek'}},
+  {id:'kwayyes', w:1, ar:'كويس',          ph:'Kwayyes',            nl:'goed',             pic:'😀', g:'self', fem:{ar:'كويسة', ph:'Kwayyesa'}},
+  {id:'hamdu',   w:1, ar:'الحمد لله',     ph:'El-7amdo Lellah',  nl:'goed, dank God',   pic:'✨'},
+  {id:'holanda', w:1, ar:'هولندا',        ph:'Holanda',            nl:'Nederland',        pic:'🌷'},
+  {id:'masr',    w:1, ar:'مصر',           ph:'Masr',               nl:'Egypte',           pic:'🏜️'},
   // Wereld 2 – Mijn familie
-  {id:'mama',    w:2, ar:'ماما',          ph:'mama',               nl:'mama',             pic:'👩'},
-  {id:'baba',    w:2, ar:'بابا',          ph:'baba',               nl:'papa',             pic:'👨'},
-  {id:'akh',     w:2, ar:'أخ',            ph:'ach',                nl:'broer',            pic:'👦'},
-  {id:'ukht',    w:2, ar:'أخت',           ph:'oecht',              nl:'zus',              pic:'👧'},
-  {id:'teeta',   w:2, ar:'تيتة',          ph:'teeta',              nl:'oma',              pic:'👵'},
-  {id:'geddo',   w:2, ar:'جدو',           ph:'geddo',              nl:'opa',              pic:'👴', tip:'g = harde g, als in "goal"'},
-  {id:'beebi',   w:2, ar:'بيبي',          ph:'beebi',              nl:'baby',             pic:'👶'},
-  {id:'eela',    w:2, ar:'عيلة',          ph:"'eela",              nl:'familie',          pic:'🏡'},
-  {id:'walad',   w:2, ar:'ولد',           ph:'walad',              nl:'jongen',           pic:'🧒'},
-  {id:'bent',    w:2, ar:'بنت',           ph:'bent',               nl:'meisje',           pic:'🎀'},
-  {id:'khalo',   w:2, ar:'خالو',          ph:'chaalo',             nl:'oom (broer van mama)',  pic:'🧔'},
-  {id:'ammo',    w:2, ar:'عمو',           ph:"'ammo",              nl:'oom (broer van papa)',  pic:'👨‍🦱'},
-  {id:'khalto',  w:2, ar:'خالتو',         ph:'chaalto',            nl:'tante (zus van mama)',  pic:'👩‍🦰'},
-  {id:'ammeto',  w:2, ar:'عمتو',          ph:"'ammeto",            nl:'tante (zus van papa)',  pic:'👩‍🦱'},
-  {id:'beet',    w:2, ar:'بيت',           ph:'beet',               nl:'huis',             pic:'🏠'},
-  {id:'bahebbak',w:2, ar:'بحبك',          ph:'bahebbak',           nl:'ik hou van jou',   pic:'❤️', g:'you', fem:{ar:'بحبك', ph:'bahebbik'}},
+  {id:'mama',    w:2, ar:'ماما',          ph:'Mama',               nl:'mama',             pic:'👩'},
+  {id:'baba',    w:2, ar:'بابا',          ph:'Baba',               nl:'papa',             pic:'👨'},
+  {id:'akh',     w:2, ar:'أخ',            ph:'Akh',                nl:'broer',            pic:'👦'},
+  {id:'ukht',    w:2, ar:'أخت',           ph:'Okht',              nl:'zus',              pic:'👧'},
+  {id:'teeta',   w:2, ar:'تيتة',          ph:'Teeta',              nl:'oma',              pic:'👵'},
+  {id:'geddo',   w:2, ar:'جدو',           ph:'Geddo',              nl:'opa',              pic:'👴', tip:'g = harde g, als in "goal"'},
+  {id:'beebi',   w:2, ar:'بيبي',          ph:'Beebi',              nl:'baby',             pic:'👶'},
+  {id:'eela',    w:2, ar:'عيلة',          ph:'3eela',              nl:'familie',          pic:'🏡'},
+  {id:'walad',   w:2, ar:'ولد',           ph:'Walad',              nl:'jongen',           pic:'🧒'},
+  {id:'bent',    w:2, ar:'بنت',           ph:'Bent',               nl:'meisje',           pic:'🎀'},
+  {id:'khalo',   w:2, ar:'خالو',          ph:'Khalo',             nl:'oom (broer van mama)',  pic:'🧔'},
+  {id:'ammo',    w:2, ar:'عمو',           ph:'3ammo',              nl:'oom (broer van papa)',  pic:'👨‍🦱'},
+  {id:'khalto',  w:2, ar:'خالتو',         ph:'Khalto',            nl:'tante (zus van mama)',  pic:'👩‍🦰'},
+  {id:'ammeto',  w:2, ar:'عمتو',          ph:'3ammeto',            nl:'tante (zus van papa)',  pic:'👩‍🦱'},
+  {id:'beet',    w:2, ar:'بيت',           ph:'Beet',               nl:'huis',             pic:'🏠'},
+  {id:'bahebbak',w:2, ar:'بحبك',          ph:'Ba7ebbak',           nl:'ik hou van jou',   pic:'❤️', g:'you', fem:{ar:'بحبك', ph:'Ba7ebbek'}},
   // Wereld 3 – Dieren
-  {id:'otta',    w:3, ar:'قطة',           ph:'otta',               nl:'kat',              pic:'🐱'},
-  {id:'kalb',    w:3, ar:'كلب',           ph:'kalb',               nl:'hond',             pic:'🐶'},
-  {id:'arnab',   w:3, ar:'أرنب',          ph:'arnab',              nl:'konijn',           pic:'🐰'},
-  {id:'samaka',  w:3, ar:'سمكة',          ph:'samaka',             nl:'vis',              pic:'🐟'},
-  {id:'hosaan',  w:3, ar:'حصان',          ph:'hoesaan',            nl:'paard',            pic:'🐴'},
-  {id:'baara',   w:3, ar:'بقرة',          ph:"ba'ara",             nl:'koe',              pic:'🐮'},
-  {id:'farkha',  w:3, ar:'فرخة',          ph:'farcha',             nl:'kip',              pic:'🐔'},
-  {id:'batta',   w:3, ar:'بطة',           ph:'batta',              nl:'eend',             pic:'🦆'},
-  {id:'kharoof', w:3, ar:'خروف',          ph:'charoef',            nl:'schaap',           pic:'🐑'},
-  {id:'gamal',   w:3, ar:'جمل',           ph:'gamal',              nl:'kameel',           pic:'🐫', tip:'g = harde g, als in "goal"'},
-  {id:'timsah',  w:3, ar:'تمساح',         ph:'temsaah',            nl:'krokodil',         pic:'🐊'},
-  {id:'asad',    w:3, ar:'أسد',           ph:'asad',               nl:'leeuw',            pic:'🦁'},
-  {id:'erd',     w:3, ar:'قرد',           ph:"'erd",               nl:'aap',              pic:'🐵'},
-  {id:'fiil',    w:3, ar:'فيل',           ph:'fiel',               nl:'olifant',          pic:'🐘'},
-  {id:'asfoora', w:3, ar:'عصفورة',        ph:"'asfoera",           nl:'vogeltje',         pic:'🐦'},
-  {id:'farasha', w:3, ar:'فراشة',         ph:'faraasja',           nl:'vlinder',          pic:'🦋'},
-  {id:'selahfa', w:3, ar:'سلحفة',         ph:'selahfa',            nl:'schildpad',        pic:'🐢', check:'Uitspraak: selahfa of zelahfa?'},
-  {id:'kebiir',  w:3, ar:'كبير',          ph:'kebier',             nl:'groot',            pic:'⬆️'},
-  {id:'soghayyar',w:3,ar:'صغير',          ph:'soeghajjar',         nl:'klein',            pic:'🐭', tip:'gh = Nederlandse g, als in "gaan"'},
+  {id:'otta',    w:3, ar:'قطة',           ph:'Otta',               nl:'kat',              pic:'🐱'},
+  {id:'kalb',    w:3, ar:'كلب',           ph:'Kalb',               nl:'hond',             pic:'🐶'},
+  {id:'arnab',   w:3, ar:'أرنب',          ph:'Arnab',              nl:'konijn',           pic:'🐰'},
+  {id:'samaka',  w:3, ar:'سمكة',          ph:'Samaka',             nl:'vis',              pic:'🐟'},
+  {id:'hosaan',  w:3, ar:'حصان',          ph:'7osan',            nl:'paard',            pic:'🐴'},
+  {id:'baara',   w:3, ar:'بقرة',          ph:"Ba'ara",             nl:'koe',              pic:'🐮'},
+  {id:'farkha',  w:3, ar:'فرخة',          ph:'Farkha',             nl:'kip',              pic:'🐔'},
+  {id:'batta',   w:3, ar:'بطة',           ph:'Batta',              nl:'eend',             pic:'🦆'},
+  {id:'kharoof', w:3, ar:'خروف',          ph:'Kharoof',            nl:'schaap',           pic:'🐑'},
+  {id:'gamal',   w:3, ar:'جمل',           ph:'Gamal',              nl:'kameel',           pic:'🐫', tip:'g = harde g, als in "goal"'},
+  {id:'timsah',  w:3, ar:'تمساح',         ph:'Temsa7',            nl:'krokodil',         pic:'🐊'},
+  {id:'asad',    w:3, ar:'أسد',           ph:'Asad',               nl:'leeuw',            pic:'🦁'},
+  {id:'erd',     w:3, ar:'قرد',           ph:"'Erd",               nl:'aap',              pic:'🐵'},
+  {id:'fiil',    w:3, ar:'فيل',           ph:'Feel',               nl:'olifant',          pic:'🐘'},
+  {id:'asfoora', w:3, ar:'عصفورة',        ph:'3asfoora',           nl:'vogeltje',         pic:'🐦'},
+  {id:'farasha', w:3, ar:'فراشة',         ph:'Farasha',           nl:'vlinder',          pic:'🦋'},
+  {id:'selahfa', w:3, ar:'سلحفة',         ph:'Sela7fa',            nl:'schildpad',        pic:'🐢', check:'Uitspraak: Sela7fa of Zela7fa?'},
+  {id:'kebiir',  w:3, ar:'كبير',          ph:'Kebeer',             nl:'groot',            pic:'⬆️'},
+  {id:'soghayyar',w:3,ar:'صغير',          ph:'Soghayyar',         nl:'klein',            pic:'🐭', tip:'Gh = zachte Nederlandse g, als in "gaan" (غ)'},
   // Wereld 4 – Voetbal! (bonuswereld)
-  {id:'kora',     w:4, ar:'كورة',        ph:'kora',              nl:'bal / voetbal',     pic:'⚽'},
-  {id:'goon',     w:4, ar:'جون',         ph:'goon',              nl:'goal!',             pic:'🥅', tip:'g = harde g, als in "goal"'},
-  {id:'shoot',    w:4, ar:'شوت',         ph:'sjoet',             nl:'schiet!',           pic:'🦵'},
-  {id:'yalla',    w:4, ar:'يلا',         ph:'jalla',             nl:'kom op!',           pic:'🏃'},
-  {id:'malab',    w:4, ar:'ملعب',        ph:"mal'ab",            nl:'voetbalveld',       pic:'🏟️'},
-  {id:'laeeb',    w:4, ar:'لعيب',        ph:"la'ieb",            nl:'speler',            pic:'👟'},
-  {id:'goolee',   w:4, ar:'جولي',        ph:'goolie',            nl:'keeper',            pic:'🧤', tip:'g = harde g, als in "goal"', check:'Zeggen kinderen goolie of haris (حارس)?'},
-  {id:'hakam',    w:4, ar:'حكم',         ph:'hakam',             nl:'scheidsrechter',    pic:'🟨'},
-  {id:'matsh',    w:4, ar:'ماتش',        ph:'matsj',             nl:'wedstrijd',         pic:'⏱️'},
-  {id:'faree',    w:4, ar:'فريق',        ph:"faree'",            nl:'team',              pic:'👥'},
-  {id:'fanella',  w:4, ar:'فانلة',       ph:'fanella',           nl:'shirt',             pic:'👕'},
-  {id:'gomhoor',  w:4, ar:'جمهور',       ph:'gomhoer',           nl:'publiek',           pic:'📣'},
-  {id:'kesebna',  w:4, ar:'كسبنا',       ph:'kesebna',           nl:'we hebben gewonnen!', pic:'🏆'},
-  {id:'montakhab',w:4, ar:'منتخب مصر',   ph:'montachab masr',    nl:'het Egyptische elftal', pic:'🇪🇬'},
+  {id:'kora',     w:4, ar:'كورة',        ph:'Kora',              nl:'bal / voetbal',     pic:'⚽'},
+  {id:'goon',     w:4, ar:'جون',         ph:'Goon',              nl:'goal!',             pic:'🥅', tip:'g = harde g, als in "goal"'},
+  {id:'shoot',    w:4, ar:'شوت',         ph:'Shoot',             nl:'schiet!',           pic:'🦵'},
+  {id:'yalla',    w:4, ar:'يلا',         ph:'Yalla',             nl:'kom op!',           pic:'🏃'},
+  {id:'malab',    w:4, ar:'ملعب',        ph:'Mal3ab',            nl:'voetbalveld',       pic:'🏟️'},
+  {id:'laeeb',    w:4, ar:'لعيب',        ph:'La3eeb',            nl:'speler',            pic:'👟'},
+  {id:'goolee',   w:4, ar:'جولي',        ph:'Goolee',            nl:'keeper',            pic:'🧤', tip:'g = harde g, als in "goal"', check:'Zeggen kinderen Gooli of 7aris (حارس)?'},
+  {id:'hakam',    w:4, ar:'حكم',         ph:'7akam',             nl:'scheidsrechter',    pic:'🟨'},
+  {id:'matsh',    w:4, ar:'ماتش',        ph:'Matsh',             nl:'wedstrijd',         pic:'⏱️'},
+  {id:'faree',    w:4, ar:'فريق',        ph:"Faree'",            nl:'team',              pic:'👥'},
+  {id:'fanella',  w:4, ar:'فانلة',       ph:'Fanella',           nl:'shirt',             pic:'👕'},
+  {id:'gomhoor',  w:4, ar:'جمهور',       ph:'Gomhoor',           nl:'publiek',           pic:'📣'},
+  {id:'kesebna',  w:4, ar:'كسبنا',       ph:'Kesebna',           nl:'we hebben gewonnen!', pic:'🏆'},
+  {id:'montakhab',w:4, ar:'منتخب مصر',   ph:'Montakhab Masr',    nl:'het Egyptische elftal', pic:'🇪🇬'},
   // Wereld 5 – Eten en drinken
-  {id:'eesh',     w:5, ar:'عيش',          ph:"'eesj",           nl:'brood',              pic:'🍞'},
-  {id:'gebna',    w:5, ar:'جبنة',         ph:'gebna',           nl:'kaas',               pic:'🧀'},
-  {id:'beed',     w:5, ar:'بيض',          ph:'beed',            nl:'eieren',             pic:'🥚'},
-  {id:'laban',    w:5, ar:'لبن',          ph:'laban',           nl:'melk',               pic:'🥛'},
-  {id:'toffah',   w:5, ar:'تفاح',         ph:'toffaah',         nl:'appel',              pic:'🍎'},
-  {id:'mooz',     w:5, ar:'موز',          ph:'mooz',            nl:'banaan',             pic:'🍌'},
-  {id:'bortoaan', w:5, ar:'برتقان',       ph:"borto'aan",       nl:'sinaasappel',        pic:'🍊'},
-  {id:'manga',    w:5, ar:'مانجة',        ph:'manga',           nl:'mango',              pic:'🥭'},
-  {id:'mayya',    w:5, ar:'مية',          ph:'majja',           nl:'water',              pic:'💧'},
-  {id:'shay',     w:5, ar:'شاي',          ph:'sjaai',           nl:'thee',               pic:'🍵'},
-  {id:'aseer',    w:5, ar:'عصير',         ph:"'asier",          nl:'sap',                pic:'🧃'},
-  {id:'atshan',   w:5, ar:'عطشان',        ph:"'atsjaan",        nl:'ik heb dorst',       pic:'🥤', g:'self', fem:{ar:'عطشانة', ph:"'atsjaana"}},
-  {id:'roz',      w:5, ar:'رز',           ph:'roz',             nl:'rijst',              pic:'🍚'},
-  {id:'koshari',  w:5, ar:'كشري',         ph:'kosjari',         nl:'koshari',            pic:'🍲'},
-  {id:'tameya',   w:5, ar:'طعمية',        ph:"ta'mejja",        nl:'falafel (ta\'meya)', pic:'🧆'},
-  {id:'gaaan',    w:5, ar:'جعان',         ph:"ga'aan",          nl:'ik heb honger',      pic:'😋', g:'self', fem:{ar:'جعانة', ph:"ga'aana"}},
+  {id:'eesh',     w:5, ar:'عيش',          ph:'3eesh',           nl:'brood',              pic:'🍞'},
+  {id:'gebna',    w:5, ar:'جبنة',         ph:'Gebna',           nl:'kaas',               pic:'🧀'},
+  {id:'beed',     w:5, ar:'بيض',          ph:'Beed',            nl:'eieren',             pic:'🥚'},
+  {id:'laban',    w:5, ar:'لبن',          ph:'Laban',           nl:'melk',               pic:'🥛'},
+  {id:'toffah',   w:5, ar:'تفاح',         ph:'Toffa7',         nl:'appel',              pic:'🍎'},
+  {id:'mooz',     w:5, ar:'موز',          ph:'Mooz',            nl:'banaan',             pic:'🍌'},
+  {id:'bortoaan', w:5, ar:'برتقان',       ph:"Borto'an",       nl:'sinaasappel',        pic:'🍊'},
+  {id:'manga',    w:5, ar:'مانجة',        ph:'Manga',           nl:'mango',              pic:'🥭'},
+  {id:'mayya',    w:5, ar:'مية',          ph:'Mayya',           nl:'water',              pic:'💧'},
+  {id:'shay',     w:5, ar:'شاي',          ph:'Shai',           nl:'thee',               pic:'🍵'},
+  {id:'aseer',    w:5, ar:'عصير',         ph:'3aseer',          nl:'sap',                pic:'🧃'},
+  {id:'atshan',   w:5, ar:'عطشان',        ph:'3atshan',        nl:'ik heb dorst',       pic:'🥤', g:'self', fem:{ar:'عطشانة', ph:'3atshana'}},
+  {id:'roz',      w:5, ar:'رز',           ph:'Roz',             nl:'rijst',              pic:'🍚'},
+  {id:'koshari',  w:5, ar:'كشري',         ph:'Koshari',         nl:'koshari',            pic:'🍲'},
+  {id:'tameya',   w:5, ar:'طعمية',        ph:'Ta3meyya',        nl:'falafel (ta\'meya)', pic:'🧆'},
+  {id:'gaaan',    w:5, ar:'جعان',         ph:'Ga3an',          nl:'ik heb honger',      pic:'😋', g:'self', fem:{ar:'جعانة', ph:'Ga3ana'}},
   // Wereld 6 – Kleuren en cijfers
-  {id:'ahmar',    w:6, ar:'أحمر',         ph:'ahmar',           nl:'rood',               pic:'🔴'},
-  {id:'azra',     w:6, ar:'أزرق',         ph:"azra'",           nl:'blauw',              pic:'🔵'},
-  {id:'akhdar',   w:6, ar:'أخضر',         ph:'achdar',          nl:'groen',              pic:'🟢'},
-  {id:'asfar',    w:6, ar:'أصفر',         ph:'asfar',           nl:'geel',               pic:'🟡'},
-  {id:'abyad',    w:6, ar:'أبيض',         ph:'abjad',           nl:'wit',                pic:'⚪'},
-  {id:'eswed',    w:6, ar:'إسود',         ph:'eswed',           nl:'zwart',              pic:'⚫'},
-  {id:'bonni',    w:6, ar:'بني',          ph:'bonni',           nl:'bruin',              pic:'🟤'},
-  {id:'bortoani', w:6, ar:'برتقاني',      ph:"borto'aani",      nl:'oranje',             pic:'🟠'},
-  {id:'wahed',    w:6, ar:'واحد',         ph:'waahed',          nl:'één',                pic:'1️⃣'},
-  {id:'etneen',   w:6, ar:'اتنين',        ph:'etneen',          nl:'twee',               pic:'2️⃣'},
-  {id:'talata',   w:6, ar:'تلاتة',        ph:'talaata',         nl:'drie',               pic:'3️⃣'},
-  {id:'arbaa',    w:6, ar:'أربعة',        ph:"arba'a",          nl:'vier',               pic:'4️⃣'},
-  {id:'khamsa',   w:6, ar:'خمسة',         ph:'chamsa',          nl:'vijf',               pic:'5️⃣'},
-  {id:'setta',    w:6, ar:'ستة',          ph:'setta',           nl:'zes',                pic:'6️⃣'},
-  {id:'sabaa',    w:6, ar:'سبعة',         ph:"sab'a",           nl:'zeven',              pic:'7️⃣'},
-  {id:'tamanya',  w:6, ar:'تمانية',       ph:'tamanja',         nl:'acht',               pic:'8️⃣'},
-  {id:'tesaa',    w:6, ar:'تسعة',         ph:"tes'a",           nl:'negen',              pic:'9️⃣'},
-  {id:'ashara',   w:6, ar:'عشرة',         ph:"'asjara",         nl:'tien',               pic:'🔟'},
+  {id:'ahmar',    w:6, ar:'أحمر',         ph:'A7mar',           nl:'rood',               pic:'🔴'},
+  {id:'azra',     w:6, ar:'أزرق',         ph:"Azra'",           nl:'blauw',              pic:'🔵'},
+  {id:'akhdar',   w:6, ar:'أخضر',         ph:'Akhdar',          nl:'groen',              pic:'🟢'},
+  {id:'asfar',    w:6, ar:'أصفر',         ph:'Asfar',           nl:'geel',               pic:'🟡'},
+  {id:'abyad',    w:6, ar:'أبيض',         ph:'Abyad',           nl:'wit',                pic:'⚪'},
+  {id:'eswed',    w:6, ar:'إسود',         ph:'Eswed',           nl:'zwart',              pic:'⚫'},
+  {id:'bonni',    w:6, ar:'بني',          ph:'Bonni',           nl:'bruin',              pic:'🟤'},
+  {id:'bortoani', w:6, ar:'برتقاني',      ph:"Borto'ani",      nl:'oranje',             pic:'🟠'},
+  {id:'wahed',    w:6, ar:'واحد',         ph:'Wa7ed',          nl:'één',                pic:'1️⃣'},
+  {id:'etneen',   w:6, ar:'اتنين',        ph:'Etneen',          nl:'twee',               pic:'2️⃣'},
+  {id:'talata',   w:6, ar:'تلاتة',        ph:'Talata',         nl:'drie',               pic:'3️⃣'},
+  {id:'arbaa',    w:6, ar:'أربعة',        ph:'Arba3a',          nl:'vier',               pic:'4️⃣'},
+  {id:'khamsa',   w:6, ar:'خمسة',         ph:'Khamsa',          nl:'vijf',               pic:'5️⃣'},
+  {id:'setta',    w:6, ar:'ستة',          ph:'Setta',           nl:'zes',                pic:'6️⃣'},
+  {id:'sabaa',    w:6, ar:'سبعة',         ph:'Sab3a',           nl:'zeven',              pic:'7️⃣'},
+  {id:'tamanya',  w:6, ar:'تمانية',       ph:'Tamanya',         nl:'acht',               pic:'8️⃣'},
+  {id:'tesaa',    w:6, ar:'تسعة',         ph:'Tes3a',           nl:'negen',              pic:'9️⃣'},
+  {id:'ashara',   w:6, ar:'عشرة',         ph:'3ashara',         nl:'tien',               pic:'🔟'},
   // Wereld 7 – Mijn lichaam
-  {id:'wesh',     w:7, ar:'وش',           ph:'wesj',            nl:'gezicht',            pic:'😊'},
-  {id:'een',      w:7, ar:'عين',          ph:"'een",            nl:'oog',                pic:'👁️'},
-  {id:'wedn',     w:7, ar:'ودن',          ph:'wedn',            nl:'oor',                pic:'👂'},
-  {id:'manakheer',w:7, ar:'مناخير',       ph:'manachier',       nl:'neus',               pic:'👃'},
-  {id:'bo',       w:7, ar:'بق',           ph:"bo'",             nl:'mond',               pic:'👄'},
-  {id:'senaan',   w:7, ar:'سنان',         ph:'senaan',          nl:'tanden',             pic:'🦷'},
-  {id:'shaar',    w:7, ar:'شعر',          ph:"sja'r",           nl:'haar',               pic:'💇'},
-  {id:'raas',     w:7, ar:'راس',          ph:'raas',            nl:'hoofd',              pic:'🙆'},
-  {id:'eed',      w:7, ar:'إيد',          ph:'eed',             nl:'hand',               pic:'✋'},
-  {id:'sawabe',   w:7, ar:'صوابع',        ph:"sawaabe'",        nl:'vingers',            pic:'🖐️'},
-  {id:'regl',     w:7, ar:'رجل',          ph:'regl',            nl:'been / voet',        pic:'🦵'},
-  {id:'batn',     w:7, ar:'بطن',          ph:'batn',            nl:'buik',               pic:'🫃', check:'Zeg je tegen kinderen batn of kersj?'},
-  {id:'mabsoot',  w:7, ar:'مبسوط',        ph:'mabsoet',         nl:'blij',               pic:'😀', g:'self', fem:{ar:'مبسوطة', ph:'mabsoeta'}},
-  {id:'zaalan',   w:7, ar:'زعلان',        ph:"za'laan",         nl:'verdrietig',         pic:'😢', g:'self', fem:{ar:'زعلانة', ph:"za'laana"}},
-  {id:'taaban',   w:7, ar:'تعبان',        ph:"ta'baan",         nl:'moe / ziek',         pic:'😴', g:'self', fem:{ar:'تعبانة', ph:"ta'baana"}},
-  {id:'khayef',   w:7, ar:'خايف',         ph:'chaajef',         nl:'bang',               pic:'😨', g:'self', fem:{ar:'خايفة', ph:'chajfa'}},
+  {id:'wesh',     w:7, ar:'وش',           ph:'Wesh',            nl:'gezicht',            pic:'😊'},
+  {id:'een',      w:7, ar:'عين',          ph:'3een',            nl:'oog',                pic:'👁️'},
+  {id:'wedn',     w:7, ar:'ودن',          ph:'Wedn',            nl:'oor',                pic:'👂'},
+  {id:'manakheer',w:7, ar:'مناخير',       ph:'Manakheer',       nl:'neus',               pic:'👃'},
+  {id:'bo',       w:7, ar:'بق',           ph:"Bo'",             nl:'mond',               pic:'👄'},
+  {id:'senaan',   w:7, ar:'سنان',         ph:'Senan',          nl:'tanden',             pic:'🦷'},
+  {id:'shaar',    w:7, ar:'شعر',          ph:'Sha3r',           nl:'haar',               pic:'💇'},
+  {id:'raas',     w:7, ar:'راس',          ph:'Ras',            nl:'hoofd',              pic:'🙆'},
+  {id:'eed',      w:7, ar:'إيد',          ph:'Eed',             nl:'hand',               pic:'✋'},
+  {id:'sawabe',   w:7, ar:'صوابع',        ph:'Sawabe3',        nl:'vingers',            pic:'🖐️'},
+  {id:'regl',     w:7, ar:'رجل',          ph:'Regl',            nl:'been / voet',        pic:'🦵'},
+  {id:'batn',     w:7, ar:'بطن',          ph:'Batn',            nl:'buik',               pic:'🫃', check:'Zeg je tegen kinderen Batn of Kersh?'},
+  {id:'mabsoot',  w:7, ar:'مبسوط',        ph:'Mabsoot',         nl:'blij',               pic:'😀', g:'self', fem:{ar:'مبسوطة', ph:'Mabsoota'}},
+  {id:'zaalan',   w:7, ar:'زعلان',        ph:'Za3lan',         nl:'verdrietig',         pic:'😢', g:'self', fem:{ar:'زعلانة', ph:'Za3lana'}},
+  {id:'taaban',   w:7, ar:'تعبان',        ph:'Ta3ban',         nl:'moe / ziek',         pic:'😴', g:'self', fem:{ar:'تعبانة', ph:'Ta3bana'}},
+  {id:'khayef',   w:7, ar:'خايف',         ph:'Khayef',         nl:'bang',               pic:'😨', g:'self', fem:{ar:'خايفة', ph:'Khayfa'}},
   // Wereld 8 – Thuis
-  {id:'ooda',     w:8, ar:'أوضة',         ph:'ooda',            nl:'kamer',              pic:'🏠'},
-  {id:'baab',     w:8, ar:'باب',          ph:'baab',            nl:'deur',               pic:'🚪'},
-  {id:'shebbak',  w:8, ar:'شباك',         ph:'sjebbaak',        nl:'raam',               pic:'🪟'},
-  {id:'noor',     w:8, ar:'نور',          ph:'noer',            nl:'licht',              pic:'💡'},
-  {id:'sereer',   w:8, ar:'سرير',         ph:'serier',          nl:'bed',                pic:'🛏️'},
-  {id:'korsi',    w:8, ar:'كرسي',         ph:'korsi',           nl:'stoel',              pic:'🪑'},
-  {id:'kanaba',   w:8, ar:'كنبة',         ph:'kanaba',          nl:'bank',               pic:'🛋️'},
-  {id:'tilifizyon',w:8,ar:'تليفزيون',     ph:'tilifizjoon',     nl:'televisie',          pic:'📺'},
-  {id:'matbakh',  w:8, ar:'مطبخ',         ph:'matbach',         nl:'keuken',             pic:'🍳'},
-  {id:'hammam',   w:8, ar:'حمام',         ph:'hammaam',         nl:'badkamer / wc',      pic:'🛁'},
-  {id:'kobbaya',  w:8, ar:'كوباية',       ph:'kobbaaja',        nl:'glas',               pic:'🥃'},
-  {id:'tarabeeza',w:8, ar:'ترابيزة',      ph:'tarabeeza',       nl:'tafel',              pic:'🍽️'},
+  {id:'ooda',     w:8, ar:'أوضة',         ph:'Ooda',            nl:'kamer',              pic:'🏠'},
+  {id:'baab',     w:8, ar:'باب',          ph:'Bab',            nl:'deur',               pic:'🚪'},
+  {id:'shebbak',  w:8, ar:'شباك',         ph:'Shebbak',        nl:'raam',               pic:'🪟'},
+  {id:'noor',     w:8, ar:'نور',          ph:'Noor',            nl:'licht',              pic:'💡'},
+  {id:'sereer',   w:8, ar:'سرير',         ph:'Sereer',          nl:'bed',                pic:'🛏️'},
+  {id:'korsi',    w:8, ar:'كرسي',         ph:'Korsi',           nl:'stoel',              pic:'🪑'},
+  {id:'kanaba',   w:8, ar:'كنبة',         ph:'Kanaba',          nl:'bank',               pic:'🛋️'},
+  {id:'tilifizyon',w:8,ar:'تليفزيون',     ph:'Tilifizyoon',     nl:'televisie',          pic:'📺'},
+  {id:'matbakh',  w:8, ar:'مطبخ',         ph:'Matbakh',         nl:'keuken',             pic:'🍳'},
+  {id:'hammam',   w:8, ar:'حمام',         ph:'7ammam',         nl:'badkamer / wc',      pic:'🛁'},
+  {id:'kobbaya',  w:8, ar:'كوباية',       ph:'Kobbaya',        nl:'glas',               pic:'🥃'},
+  {id:'tarabeeza',w:8, ar:'ترابيزة',      ph:'Tarabeeza',       nl:'tafel',              pic:'🍽️'},
   // Wereld 9 – Op vakantie in Egypte
-  {id:'tayyara',  w:9, ar:'طيارة',        ph:'tajjaara',        nl:'vliegtuig',          pic:'✈️'},
-  {id:'shanta',   w:9, ar:'شنطة',         ph:'sjanta',          nl:'koffer / tas',       pic:'🧳'},
-  {id:'fondo',    w:9, ar:'فندق',         ph:"fondo'",          nl:'hotel',              pic:'🏨'},
-  {id:'agaza',    w:9, ar:'أجازة',        ph:'agaaza',          nl:'vakantie',           pic:'🌴'},
-  {id:'bahr',     w:9, ar:'بحر',          ph:'bahr',            nl:'zee',                pic:'🌊'},
-  {id:'shams',    w:9, ar:'شمس',          ph:'sjams',           nl:'zon',                pic:'☀️'},
-  {id:'ramla',    w:9, ar:'رملة',         ph:'ramla',           nl:'zand',               pic:'🏖️'},
-  {id:'hammamsebaha',w:9,ar:'حمام سباحة', ph:'hammaam sebaaha', nl:'zwembad',            pic:'🏊'},
-  {id:'ahramat',  w:9, ar:'الأهرامات',    ph:'el-ahramaat',     nl:'de piramides',       pic:'🔺'},
-  {id:'nil',      w:9, ar:'النيل',        ph:'en-niel',         nl:'de Nijl',            pic:'🏞️'},
-  {id:'markeb',   w:9, ar:'مركب',         ph:'markeb',          nl:'boot',               pic:'⛵'},
-  {id:'samak_hayy',w:9,ar:'شعاب',         ph:"sjo'aab",         nl:'koraalrif',          pic:'🪸', check:'Is sjo\'aab het woord dat jullie gebruiken voor het rif?'},
-  {id:'harr',     w:9, ar:'حر',           ph:'harr',            nl:'warm (heet weer)',   pic:'🥵'},
-  {id:'gamil',    w:9, ar:'جميل',         ph:'gamiel',          nl:'mooi',               pic:'🌅', g:'self', fem:{ar:'جميلة', ph:'gamiela'}, check:'Hangt af van waar het over gaat; nu als "ik vind het mooi"'},
-  {id:'awam',     w:9, ar:'عوم',          ph:"'oom",            nl:'zwemmen',            pic:'🤽'},
-  {id:'sowar',    w:9, ar:'صور',          ph:'sowar',           nl:"foto's",             pic:'📸'},
+  {id:'tayyara',  w:9, ar:'طيارة',        ph:'Tayyara',        nl:'vliegtuig',          pic:'✈️'},
+  {id:'shanta',   w:9, ar:'شنطة',         ph:'Shanta',          nl:'koffer / tas',       pic:'🧳'},
+  {id:'fondo',    w:9, ar:'فندق',         ph:"Fondo'",          nl:'hotel',              pic:'🏨'},
+  {id:'agaza',    w:9, ar:'أجازة',        ph:'Agaza',          nl:'vakantie',           pic:'🌴'},
+  {id:'bahr',     w:9, ar:'بحر',          ph:'Ba7r',            nl:'zee',                pic:'🌊'},
+  {id:'shams',    w:9, ar:'شمس',          ph:'Shams',           nl:'zon',                pic:'☀️'},
+  {id:'ramla',    w:9, ar:'رملة',         ph:'Ramla',           nl:'zand',               pic:'🏖️'},
+  {id:'hammamsebaha',w:9,ar:'حمام سباحة', ph:'7ammam Seba7a', nl:'zwembad',            pic:'🏊'},
+  {id:'ahramat',  w:9, ar:'الأهرامات',    ph:'El-Ahramat',     nl:'de piramides',       pic:'🔺'},
+  {id:'nil',      w:9, ar:'النيل',        ph:'En-Neel',         nl:'de Nijl',            pic:'🏞️'},
+  {id:'markeb',   w:9, ar:'مركب',         ph:'Markeb',          nl:'boot',               pic:'⛵'},
+  {id:'samak_hayy',w:9,ar:'شعاب',         ph:'Sho3ab',         nl:'koraalrif',          pic:'🪸', check:'Is Sho3ab het woord dat jullie gebruiken voor het rif?'},
+  {id:'harr',     w:9, ar:'حر',           ph:'7arr',            nl:'warm (heet weer)',   pic:'🥵'},
+  {id:'gamil',    w:9, ar:'جميل',         ph:'Gameel',          nl:'mooi',               pic:'🌅', g:'self', fem:{ar:'جميلة', ph:'Gameela'}, check:'Hangt af van waar het over gaat; nu als "ik vind het mooi"'},
+  {id:'awam',     w:9, ar:'عوم',          ph:'3oom',            nl:'zwemmen',            pic:'🤽'},
+  {id:'sowar',    w:9, ar:'صور',          ph:'Sowar',           nl:"foto's",             pic:'📸'},
   // Wereld 10 – Mijn vriendjes
-  {id:'sahbi',    w:10, ar:'صاحبي',       ph:'saahbi',          nl:'mijn vriend',        pic:'🧑‍🤝‍🧑'},
-  {id:'sahbeti',  w:10, ar:'صاحبتي',      ph:'sahbeti',         nl:'mijn vriendin',      pic:'👭'},
-  {id:'taala',    w:10, ar:'تعالى',       ph:"ta'aala",         nl:'kom (hier)',         pic:'🫴', g:'you', fem:{ar:'تعالي', ph:"ta'aali"}},
-  {id:'nelab',    w:10, ar:'نلعب',        ph:"nel'ab",          nl:'we spelen',          pic:'🎲'},
-  {id:'dori',     w:10, ar:'دوري',        ph:'doori',           nl:'ik ben aan de beurt',pic:'🙋'},
-  {id:'dorak',    w:10, ar:'دورك',        ph:'doorak',          nl:'jij bent aan de beurt',pic:'🫵', g:'you', fem:{ar:'دورك', ph:'doorek'}},
-  {id:'estanna',  w:10, ar:'استنى',       ph:'estanna',         nl:'wacht even',         pic:'✋', g:'you', fem:{ar:'استني', ph:'estanni'}},
-  {id:'mashi',    w:10, ar:'ماشي',        ph:'maasji',          nl:'oké',                pic:'👌'},
-  {id:'maalesh',  w:10, ar:'معلش',        ph:"ma'lesj",         nl:'geeft niet / sorry', pic:'🤗'},
-  {id:'anakaman', w:10, ar:'أنا كمان',    ph:'ana kamaan',      nl:'ik ook',             pic:'🙌'},
-  {id:'mesh',     w:10, ar:'مش',          ph:'mesj',            nl:'niet',               pic:'🚫'},
-  {id:'momken',   w:10, ar:'ممكن؟',       ph:'momken?',         nl:'mag het? / kan het?',pic:'🤔'},
+  {id:'sahbi',    w:10, ar:'صاحبي',       ph:'Sa7bi',          nl:'mijn vriend',        pic:'🧑‍🤝‍🧑'},
+  {id:'sahbeti',  w:10, ar:'صاحبتي',      ph:'Sa7beti',         nl:'mijn vriendin',      pic:'👭'},
+  {id:'taala',    w:10, ar:'تعالى',       ph:'Ta3ala',         nl:'kom (hier)',         pic:'🫴', g:'you', fem:{ar:'تعالي', ph:'Ta3ali'}},
+  {id:'nelab',    w:10, ar:'نلعب',        ph:'Nel3ab',          nl:'we spelen',          pic:'🎲'},
+  {id:'dori',     w:10, ar:'دوري',        ph:'Doori',           nl:'ik ben aan de beurt',pic:'🙋'},
+  {id:'dorak',    w:10, ar:'دورك',        ph:'Doorak',          nl:'jij bent aan de beurt',pic:'🫵', g:'you', fem:{ar:'دورك', ph:'Doorek'}},
+  {id:'estanna',  w:10, ar:'استنى',       ph:'Estanna',         nl:'wacht even',         pic:'✋', g:'you', fem:{ar:'استني', ph:'Estanni'}},
+  {id:'mashi',    w:10, ar:'ماشي',        ph:'Mashi',          nl:'oké',                pic:'👌'},
+  {id:'maalesh',  w:10, ar:'معلش',        ph:'Ma3lesh',         nl:'geeft niet / sorry', pic:'🤗'},
+  {id:'anakaman', w:10, ar:'أنا كمان',    ph:'Ana Kaman',      nl:'ik ook',             pic:'🙌'},
+  {id:'mesh',     w:10, ar:'مش',          ph:'Mesh',            nl:'niet',               pic:'🚫'},
+  {id:'momken',   w:10, ar:'ممكن؟',       ph:'Momken?',         nl:'mag het? / kan het?',pic:'🤔'},
   // Wereld 11 – Bij opa en oma
-  {id:'wahashteeni',w:11,ar:'وحشتيني',    ph:'wahasjtieni',     nl:'ik heb je gemist (tegen oma)', pic:'🥰'},
-  {id:'wahashtni',w:11, ar:'وحشتني',      ph:'wahasjtini',      nl:'ik heb je gemist (tegen opa)', pic:'🤗'},
-  {id:'habibi',   w:11, ar:'حبيبي',       ph:'habiebi',         nl:'lieverd (jongen)',   pic:'💙'},
-  {id:'habibti',  w:11, ar:'حبيبتي',      ph:'habiebti',        nl:'lieverd (meisje)',   pic:'💗'},
-  {id:'boosa',    w:11, ar:'بوسة',        ph:'boosa',           nl:'kusje',              pic:'😘'},
-  {id:'hodn',     w:11, ar:'حضن',         ph:'hodn',            nl:'knuffel',            pic:'🫂'},
-  {id:'hekaya',   w:11, ar:'حكاية',       ph:'hekaaja',         nl:'verhaal',            pic:'📖'},
-  {id:'kahk',     w:11, ar:'كحك',         ph:'kahk',            nl:'koekjes (voor het Suikerfeest)', pic:'🍪'},
-  {id:'genena',   w:11, ar:'جنينة',       ph:'geniena',         nl:'tuin',               pic:'🏡'},
-  {id:'shagara',  w:11, ar:'شجرة',        ph:'sjagara',         nl:'boom',               pic:'🌳'},
-  {id:'warda',    w:11, ar:'وردة',        ph:'warda',           nl:'bloem',              pic:'🌹'},
-  {id:'ahwa',     w:11, ar:'قهوة',        ph:"'ahwa",           nl:'koffie',             pic:'☕'},
+  {id:'wahashteeni',w:11,ar:'وحشتيني',    ph:'Wa7ashteeni',     nl:'ik heb je gemist (tegen oma)', pic:'🥰'},
+  {id:'wahashtni',w:11, ar:'وحشتني',      ph:'Wa7ashtini',      nl:'ik heb je gemist (tegen opa)', pic:'🤗'},
+  {id:'habibi',   w:11, ar:'حبيبي',       ph:'7abeebi',         nl:'lieverd (jongen)',   pic:'💙'},
+  {id:'habibti',  w:11, ar:'حبيبتي',      ph:'7abeebti',        nl:'lieverd (meisje)',   pic:'💗'},
+  {id:'boosa',    w:11, ar:'بوسة',        ph:'Boosa',           nl:'kusje',              pic:'😘'},
+  {id:'hodn',     w:11, ar:'حضن',         ph:'7odn',            nl:'knuffel',            pic:'🫂'},
+  {id:'hekaya',   w:11, ar:'حكاية',       ph:'7ekaya',         nl:'verhaal',            pic:'📖'},
+  {id:'kahk',     w:11, ar:'كحك',         ph:'Ka7k',            nl:'koekjes (voor het Suikerfeest)', pic:'🍪'},
+  {id:'genena',   w:11, ar:'جنينة',       ph:'Geneena',         nl:'tuin',               pic:'🏡'},
+  {id:'shagara',  w:11, ar:'شجرة',        ph:'Shagara',         nl:'boom',               pic:'🌳'},
+  {id:'warda',    w:11, ar:'وردة',        ph:'Warda',           nl:'bloem',              pic:'🌹'},
+  {id:'ahwa',     w:11, ar:'قهوة',        ph:"'Ahwa",           nl:'koffie',             pic:'☕'},
   // Wereld 12 – Winkelen in Egypte
-  {id:'soo',      w:12, ar:'سوق',         ph:"soe'",            nl:'markt',              pic:'🏪'},
-  {id:'feloos',   w:12, ar:'فلوس',        ph:'feloes',          nl:'geld',               pic:'💵'},
-  {id:'geneh',    w:12, ar:'جنيه',        ph:'geneeh',          nl:'pond (Egyptisch geld)', pic:'🪙'},
-  {id:'bekam',    w:12, ar:'بكام؟',       ph:'bekaam?',         nl:'hoeveel kost het?',  pic:'🏷️'},
-  {id:'ghali',    w:12, ar:'غالي',        ph:'ghaali',          nl:'duur',               pic:'💎'},
-  {id:'rekhees',  w:12, ar:'رخيص',        ph:'rachies',         nl:'goedkoop',           pic:'🪶'},
-  {id:'aawez',    w:12, ar:'عايز',        ph:"'aajez",          nl:'ik wil',             pic:'🙋', g:'self', fem:{ar:'عايزة', ph:"'ajza"}},
-  {id:'ayskreem', w:12, ar:'آيس كريم',    ph:'ajs kriem',       nl:'ijsje',              pic:'🍦'},
-  {id:'leaba',    w:12, ar:'لعبة',        ph:"le'ba",           nl:'speelgoed',          pic:'🧸'},
-  {id:'hodoom',   w:12, ar:'هدوم',        ph:'hoedoem',         nl:'kleren',             pic:'👗'},
-  {id:'gazma',    w:12, ar:'جزمة',        ph:'gazma',           nl:'schoenen',           pic:'👞'},
-  {id:'shanta2',  w:12, ar:'كيس',         ph:'kies',            nl:'zakje / tasje',      pic:'🛍️'},
+  {id:'soo',      w:12, ar:'سوق',         ph:"Soo'",            nl:'markt',              pic:'🏪'},
+  {id:'feloos',   w:12, ar:'فلوس',        ph:'Feloos',          nl:'geld',               pic:'💵'},
+  {id:'geneh',    w:12, ar:'جنيه',        ph:'Geneeh',          nl:'pond (Egyptisch geld)', pic:'🪙'},
+  {id:'bekam',    w:12, ar:'بكام؟',       ph:'Bekam?',         nl:'hoeveel kost het?',  pic:'🏷️'},
+  {id:'ghali',    w:12, ar:'غالي',        ph:'Ghali',          nl:'duur',               pic:'💎'},
+  {id:'rekhees',  w:12, ar:'رخيص',        ph:'Rakhees',         nl:'goedkoop',           pic:'🪶'},
+  {id:'aawez',    w:12, ar:'عايز',        ph:'3ayez',          nl:'ik wil',             pic:'🙋', g:'self', fem:{ar:'عايزة', ph:'3ayza'}},
+  {id:'ayskreem', w:12, ar:'آيس كريم',    ph:'Ays Kreem',       nl:'ijsje',              pic:'🍦'},
+  {id:'leaba',    w:12, ar:'لعبة',        ph:'Le3ba',           nl:'speelgoed',          pic:'🧸'},
+  {id:'hodoom',   w:12, ar:'هدوم',        ph:'Hodoom',         nl:'kleren',             pic:'👗'},
+  {id:'gazma',    w:12, ar:'جزمة',        ph:'Gazma',           nl:'schoenen',           pic:'👞'},
+  {id:'shanta2',  w:12, ar:'كيس',         ph:'Kees',            nl:'zakje / tasje',      pic:'🛍️'},
   // Wereld 13 – Op avontuur in Cairo
-  {id:'qahera',   w:13, ar:'القاهرة',     ph:"el-'aahera",      nl:'Caïro',              pic:'🏙️'},
-  {id:'share',    w:13, ar:'شارع',        ph:"sjaare'",         nl:'straat',             pic:'🛣️'},
-  {id:'zahma',    w:13, ar:'زحمة',        ph:'zahma',           nl:'druk',               pic:'🚦'},
-  {id:'borg',     w:13, ar:'برج',         ph:'borg',            nl:'toren',              pic:'🗼'},
-  {id:'taksi',    w:13, ar:'تاكسي',       ph:'taksi',           nl:'taxi',               pic:'🚕'},
-  {id:'metro',    w:13, ar:'مترو',        ph:'metro',           nl:'metro',              pic:'🚇'},
-  {id:'otobees',  w:13, ar:'أتوبيس',      ph:'otobies',         nl:'bus',                pic:'🚌'},
-  {id:'arabeyya', w:13, ar:'عربية',       ph:"'arabejja",       nl:'auto',               pic:'🚗'},
-  {id:'yemeen',   w:13, ar:'يمين',        ph:'jemien',          nl:'rechts',             pic:'➡️'},
-  {id:'shemal',   w:13, ar:'شمال',        ph:'sjmaal',          nl:'links',              pic:'⬅️'},
-  {id:'alatool',  w:13, ar:'على طول',     ph:"'ala toel",       nl:'rechtdoor',          pic:'⬆️'},
-  {id:'feen',     w:13, ar:'فين؟',        ph:'feen?',           nl:'waar?',              pic:'🗺️'},
-  {id:'mathaf',   w:13, ar:'متحف',        ph:'mathaf',          nl:'museum',             pic:'🏛️'},
-  {id:'faraon',   w:13, ar:'فرعون',       ph:"far'oon",         nl:'farao',              pic:'👑'},
-  {id:'momya',    w:13, ar:'مومياء',      ph:'momja',           nl:'mummie',             pic:'⚱️', check:'Uitspraak: momja of mumja?'},
-  {id:'dahab',    w:13, ar:'دهب',         ph:'dahab',           nl:'goud',               pic:'🥇'},
+  {id:'qahera',   w:13, ar:'القاهرة',     ph:"El-'Ahera",      nl:'Caïro',              pic:'🏙️'},
+  {id:'share',    w:13, ar:'شارع',        ph:'Share3',         nl:'straat',             pic:'🛣️'},
+  {id:'zahma',    w:13, ar:'زحمة',        ph:'Za7ma',           nl:'druk',               pic:'🚦'},
+  {id:'borg',     w:13, ar:'برج',         ph:'Borg',            nl:'toren',              pic:'🗼'},
+  {id:'taksi',    w:13, ar:'تاكسي',       ph:'Taksi',           nl:'taxi',               pic:'🚕'},
+  {id:'metro',    w:13, ar:'مترو',        ph:'Metro',           nl:'metro',              pic:'🚇'},
+  {id:'otobees',  w:13, ar:'أتوبيس',      ph:'Otobees',         nl:'bus',                pic:'🚌'},
+  {id:'arabeyya', w:13, ar:'عربية',       ph:'3arabeyya',       nl:'auto',               pic:'🚗'},
+  {id:'yemeen',   w:13, ar:'يمين',        ph:'Yemeen',          nl:'rechts',             pic:'➡️'},
+  {id:'shemal',   w:13, ar:'شمال',        ph:'Shmal',          nl:'links',              pic:'⬅️'},
+  {id:'alatool',  w:13, ar:'على طول',     ph:'3ala Tool',       nl:'rechtdoor',          pic:'⬆️'},
+  {id:'feen',     w:13, ar:'فين؟',        ph:'Feen?',           nl:'waar?',              pic:'🗺️'},
+  {id:'mathaf',   w:13, ar:'متحف',        ph:'Mat7af',          nl:'museum',             pic:'🏛️'},
+  {id:'faraon',   w:13, ar:'فرعون',       ph:'Far3oon',         nl:'farao',              pic:'👑'},
+  {id:'momya',    w:13, ar:'مومياء',      ph:'Momya',           nl:'mummie',             pic:'⚱️', check:'Uitspraak: Momya of Mumya?'},
+  {id:'dahab',    w:13, ar:'دهب',         ph:'Dahab',           nl:'goud',               pic:'🥇'},
 ];
 
 // ---- Zinnen. lesson = bij welke les de zin hoort. Arabisch en uitspraak
 //      moeten evenveel woorden hebben (gescheiden door spaties).
 const SENTENCES = [
-  {id:'s_ahlan_teeta', w:1, lesson:'w1l1', ar:'أهلاً يا تيتة',        ph:'ahlan ja teeta',        nl:'Hallo, oma!'},
-  {id:'s_sabah_mama',  w:1, lesson:'w1l2', ar:'صباح الخير يا ماما',  ph:'sabaah el-cheer ja mama', nl:'Goedemorgen, mama!'},
-  {id:'s_sabah_noor',  w:1, lesson:'w1l2', ar:'صباح النور',          ph:'sabaah en-noer',        nl:'Goedemorgen! (antwoord)'},
-  {id:'s_shukran_baba',w:1, lesson:'w1l2', ar:'شكراً يا بابا',        ph:'sjoekran ja baba',      nl:'Dank je wel, papa!'},
-  {id:'s_esmi',        w:1, lesson:'w1l3', ar:'اسمي سارة',           ph:'esmi Sara',             nl:'Ik heet Sara.'},
-  {id:'s_esmak',       w:1, lesson:'w1l3', ar:'اسمك إيه؟',           ph:'esmak eeh?',            nl:'Hoe heet jij?', g:'you', fem:{ar:'اسمك إيه؟', ph:'esmek eeh?'}},
-  {id:'s_kwayyes',     w:1, lesson:'w1l4', ar:'أنا كويس',            ph:'ana kwajjes',           nl:'Het gaat goed met mij. (jongen)'},
-  {id:'s_kwayyesa',    w:1, lesson:'w1l4', ar:'أنا كويسة',           ph:'ana kwajjesa',          nl:'Het gaat goed met mij. (meisje)'},
-  {id:'s_izzayek',     w:1, lesson:'w1l4', ar:'إزيك يا تيتة؟',       ph:'ezzajjek ja teeta?',    nl:'Hoe gaat het, oma?'},
-  {id:'s_holanda',     w:1, lesson:'w1l4', ar:'أنا من هولندا',       ph:'ana men holanda',       nl:'Ik kom uit Nederland.'},
-  {id:'s_da_baba',     w:2, lesson:'w2l1', ar:'ده بابا',             ph:'da baba',               nl:'Dit is papa.'},
-  {id:'s_di_mama',     w:2, lesson:'w2l1', ar:'دي ماما',             ph:'di mama',               nl:'Dit is mama.'},
-  {id:'s_di_teeta',    w:2, lesson:'w2l2', ar:'دي تيتة',             ph:'di teeta',              nl:'Dit is oma.'},
-  {id:'s_feen_geddo',  w:2, lesson:'w2l2', ar:'فين جدو؟',            ph:'feen geddo?',           nl:'Waar is opa?'},
-  {id:'s_akhuya',      w:2, lesson:'w2l3', ar:'ده أخويا',            ph:'da achoeja',            nl:'Dit is mijn broer.'},
-  {id:'s_ukhti',       w:2, lesson:'w2l3', ar:'دي أختي',             ph:'di oechti',             nl:'Dit is mijn zus.'},
-  {id:'s_bahebbik',    w:2, lesson:'w2l3', ar:'بحبك يا ماما',        ph:'bahebbik ja mama',      nl:'Ik hou van jou, mama.'},
-  {id:'s_da_khalo',    w:2, lesson:'w2l4', ar:'ده خالو',             ph:'da chaalo',             nl:'Dit is mijn oom.'},
-  {id:'s_andi_akh',    w:2, lesson:'w2l4', ar:'عندي أخ',             ph:"'andi ach",             nl:'Ik heb een broer.'},
-  {id:'s_andi_ukht',   w:2, lesson:'w2l4', ar:'عندي أخت',            ph:"'andi oecht",           nl:'Ik heb een zus.'},
-  {id:'s_di_otta',     w:3, lesson:'w3l1', ar:'دي قطة',              ph:'di otta',               nl:'Dit is een kat.'},
-  {id:'s_da_kalb',     w:3, lesson:'w3l1', ar:'ده كلب',              ph:'da kalb',               nl:'Dit is een hond.'},
-  {id:'s_andi_otta',   w:3, lesson:'w3l1', ar:'عندي قطة',            ph:"'andi otta",            nl:'Ik heb een kat.'},
-  {id:'s_feen_otta',   w:3, lesson:'w3l2', ar:'فين القطة؟',          ph:'feen el-otta?',         nl:'Waar is de kat?'},
-  {id:'s_hosaan',      w:3, lesson:'w3l2', ar:'بحب الحصان',          ph:'bahebb el-hoesaan',     nl:'Ik hou van het paard.'},
-  {id:'s_gamal',       w:3, lesson:'w3l3', ar:'الجمل كبير',          ph:'el-gamal kebier',       nl:'De kameel is groot.'},
-  {id:'s_mjau',        w:3, lesson:'w3l3', ar:'القطة بتقول مياو',    ph:"el-otta bet'oel mjau",  nl:'De kat zegt miauw.'},
-  {id:'s_arnab',       w:3, lesson:'w3l4', ar:'الأرنب صغير',         ph:'el-arnab soeghajjar',   nl:'Het konijn is klein.'},
-  {id:'s_yalla_kora',  w:4, lesson:'w4l1', ar:'يلا نلعب كورة',       ph:"jalla nel'ab kora",     nl:'Kom, we gaan voetballen!'},
-  {id:'s_feen_kora',   w:4, lesson:'w4l1', ar:'فين الكورة؟',         ph:'feen el-kora?',         nl:'Waar is de bal?'},
-  {id:'s_ana_laeeb',   w:4, lesson:'w4l2', ar:'أنا لعيب',            ph:"ana la'ieb",            nl:'Ik ben een speler.'},
-  {id:'s_eddini',      w:4, lesson:'w4l2', ar:'إديني الكورة',        ph:'eddini el-kora',        nl:'Geef mij de bal!'},
-  {id:'s_bahebb_kora', w:4, lesson:'w4l3', ar:'أنا بحب الكورة',      ph:'ana bahebb el-kora',    nl:'Ik hou van voetbal.'},
-  {id:'s_kesebna',     w:4, lesson:'w4l4', ar:'كسبنا الماتش',        ph:'kesebna el-matsj',      nl:'We hebben de wedstrijd gewonnen!'},
-  {id:'s_montakhab',   w:4, lesson:'w4l4', ar:'منتخب مصر كسب',       ph:'montachab masr keseb',  nl:'Egypte heeft gewonnen!'},
-  {id:'s_majja',       w:5, lesson:'w5l3', ar:'مية من فضلك',          ph:'majja men fadlak',       nl:'Water alsjeblieft.'},
-  {id:'s_akl_helw',    w:5, lesson:'w5l4', ar:'الأكل حلو',            ph:'el-akl helw',            nl:'Het eten is lekker.'},
-  {id:'s_bahebb_manga',w:5, lesson:'w5l2', ar:'بحب المانجة',          ph:'bahebb el-manga',        nl:'Ik hou van mango.'},
-  {id:'s_shay_laban',  w:5, lesson:'w5l3', ar:'شاي بلبن',             ph:'sjaai be-laban',         nl:'Thee met melk.'},
-  {id:'s_feen_eesh',   w:5, lesson:'w5l1', ar:'فين العيش؟',           ph:"feen el-'eesj?",         nl:'Waar is het brood?'},
-  {id:'s_toffaha_hamra',w:6, lesson:'w6l1', ar:'التفاحة حمرا',        ph:'et-toffaaha hamra',      nl:'De appel is rood.'},
-  {id:'s_sama_zar2a',  w:6, lesson:'w6l2', ar:'السما زرقا',           ph:"es-sama zar'a",          nl:'De lucht is blauw.'},
-  {id:'s_waahed_etneen',w:6, lesson:'w6l3', ar:'واحد اتنين تلاتة',    ph:'waahed etneen talaata',  nl:'Eén, twee, drie.'},
-  {id:'s_andi_khamsa', w:6, lesson:'w6l3', ar:'عندي خمسة',            ph:"'andi chamsa",           nl:'Ik heb er vijf.'},
-  {id:'s_di_eedi',     w:7, lesson:'w7l3', ar:'دي إيدي',              ph:'di iedi',                nl:'Dit is mijn hand.'},
-  {id:'s_ana_mabsoot', w:7, lesson:'w7l4', ar:'أنا مبسوط',            ph:'ana mabsoet',            nl:'Ik ben blij. (jongen)'},
-  {id:'s_ana_mabsoota',w:7, lesson:'w7l4', ar:'أنا مبسوطة',           ph:'ana mabsoeta',           nl:'Ik ben blij. (meisje)'},
-  {id:'s_batni',       w:7, lesson:'w7l3', ar:'بطني بتوجعني',         ph:"batni betewga'ni",       nl:'Mijn buik doet pijn.'},
-  {id:'s_feen_hammam', w:8, lesson:'w8l3', ar:'فين الحمام؟',          ph:'feen el-hammaam?',       nl:'Waar is de wc?'},
-  {id:'s_eftah_baab',  w:8, lesson:'w8l1', ar:'افتح الباب',           ph:'eftah el-baab',          nl:'Doe de deur open.'},
-  {id:'s_efel_noor',   w:8, lesson:'w8l1', ar:'اقفل النور',           ph:"e'fel en-noer",          nl:'Doe het licht uit.'},
-  {id:'s_yalla_nenam', w:8, lesson:'w8l2', ar:'يلا ننام',             ph:'jalla nenaam',           nl:'Kom, we gaan slapen.'},
-  {id:'s_rayhin_masr', w:9, lesson:'w9l1', ar:'رايحين مصر',           ph:'rajhien masr',           nl:'We gaan naar Egypte.'},
-  {id:'s_gaww_harr',   w:9, lesson:'w9l4', ar:'الجو حر',              ph:'el-gaww harr',           nl:'Het is warm.'},
-  {id:'s_yalla_bahr',  w:9, lesson:'w9l2', ar:'يلا على البحر',        ph:"jalla 'al-bahr",         nl:'Kom, naar de zee!'},
-  {id:'s_shoft_ahramat',w:9, lesson:'w9l3', ar:'شفت الأهرامات',       ph:'sjoft el-ahramaat',      nl:'Ik heb de piramides gezien.'},
-  {id:'s_taala_nelab', w:10, lesson:'w10l1', ar:'تعالى نلعب',         ph:"ta'aala nel'ab",         nl:'Kom, we gaan spelen.'},
-  {id:'s_enta_sahbi',  w:10, lesson:'w10l1', ar:'إنت صاحبي',          ph:'enta saahbi',            nl:'Jij bent mijn vriend.'},
-  {id:'s_momken_alab', w:10, lesson:'w10l3', ar:'ممكن ألعب معاكم؟',   ph:"momken al'ab ma'aakom?", nl:'Mag ik met jullie meespelen?'},
-  {id:'s_maalesh',     w:10, lesson:'w10l3', ar:'معلش يا صاحبي',      ph:"ma'lesj ja saahbi",      nl:'Geeft niet, vriend.'},
-  {id:'s_wahashteeni_teeta',w:11, lesson:'w11l1', ar:'وحشتيني يا تيتة',ph:'wahasjtieni ja teeta',   nl:'Ik heb je gemist, oma.'},
-  {id:'s_bahebbak_geddo',w:11, lesson:'w11l1', ar:'بحبك يا جدو',      ph:'bahebbak ja geddo',      nl:'Ik hou van je, opa.'},
-  {id:'s_ehkili',      w:11, lesson:'w11l2', ar:'احكيلي حكاية',       ph:'ehkieli hekaaja',        nl:'Vertel me een verhaal.'},
-  {id:'s_kahk_helw',   w:11, lesson:'w11l3', ar:'الكحك حلو',          ph:'el-kahk helw',           nl:'De koekjes zijn lekker.'},
-  {id:'s_bekam_da',    w:12, lesson:'w12l1', ar:'بكام ده؟',           ph:'bekaam da?',             nl:'Hoeveel kost dit?'},
-  {id:'s_ghali_awi',   w:12, lesson:'w12l2', ar:'ده غالي أوي',        ph:'da ghaali awi',          nl:'Dit is heel duur.'},
-  {id:'s_momken_ays',  w:12, lesson:'w12l3', ar:'ممكن آيس كريم؟',     ph:'momken ajs kriem?',      nl:'Mag ik een ijsje?'},
-  {id:'s_feen_metro',  w:13, lesson:'w13l2', ar:'فين المترو؟',        ph:'feen el-metro?',         nl:'Waar is de metro?'},
-  {id:'s_ala_tool_yemeen',w:13, lesson:'w13l3', ar:'على طول وبعدين يمين', ph:"'ala toel we ba'deen jemien", nl:'Rechtdoor en dan rechts.'},
-  {id:'s_qahera_zahma',w:13, lesson:'w13l1', ar:'القاهرة زحمة أوي',   ph:"el-'aahera zahma awi",   nl:'Caïro is heel druk.'},
+  {id:'s_ahlan_teeta', w:1, lesson:'w1l1', ar:'أهلاً يا تيتة',        ph:'Ahlan Ya Teeta',        nl:'Hallo, oma!'},
+  {id:'s_sabah_mama',  w:1, lesson:'w1l2', ar:'صباح الخير يا ماما',  ph:'Saba7 El-Kheer Ya Mama', nl:'Goedemorgen, mama!'},
+  {id:'s_sabah_noor',  w:1, lesson:'w1l2', ar:'صباح النور',          ph:'Saba7 En-Noor',        nl:'Goedemorgen! (antwoord)'},
+  {id:'s_shukran_baba',w:1, lesson:'w1l2', ar:'شكراً يا بابا',        ph:'Shokran Ya Baba',      nl:'Dank je wel, papa!'},
+  {id:'s_esmi',        w:1, lesson:'w1l3', ar:'اسمي سارة',           ph:'Esmi Sara',             nl:'Ik heet Sara.'},
+  {id:'s_esmak',       w:1, lesson:'w1l3', ar:'اسمك إيه؟',           ph:'Esmak Eeh?',            nl:'Hoe heet jij?', g:'you', fem:{ar:'اسمك إيه؟', ph:'Esmek Eeh?'}},
+  {id:'s_kwayyes',     w:1, lesson:'w1l4', ar:'أنا كويس',            ph:'Ana Kwayyes',           nl:'Het gaat goed met mij. (jongen)'},
+  {id:'s_kwayyesa',    w:1, lesson:'w1l4', ar:'أنا كويسة',           ph:'Ana Kwayyesa',          nl:'Het gaat goed met mij. (meisje)'},
+  {id:'s_izzayek',     w:1, lesson:'w1l4', ar:'إزيك يا تيتة؟',       ph:'Ezzayyek Ya Teeta?',    nl:'Hoe gaat het, oma?'},
+  {id:'s_holanda',     w:1, lesson:'w1l4', ar:'أنا من هولندا',       ph:'Ana Men Holanda',       nl:'Ik kom uit Nederland.'},
+  {id:'s_da_baba',     w:2, lesson:'w2l1', ar:'ده بابا',             ph:'Da Baba',               nl:'Dit is papa.'},
+  {id:'s_di_mama',     w:2, lesson:'w2l1', ar:'دي ماما',             ph:'Di Mama',               nl:'Dit is mama.'},
+  {id:'s_di_teeta',    w:2, lesson:'w2l2', ar:'دي تيتة',             ph:'Di Teeta',              nl:'Dit is oma.'},
+  {id:'s_feen_geddo',  w:2, lesson:'w2l2', ar:'فين جدو؟',            ph:'Feen Geddo?',           nl:'Waar is opa?'},
+  {id:'s_akhuya',      w:2, lesson:'w2l3', ar:'ده أخويا',            ph:'Da Akhooya',            nl:'Dit is mijn broer.'},
+  {id:'s_ukhti',       w:2, lesson:'w2l3', ar:'دي أختي',             ph:'Di Okhti',             nl:'Dit is mijn zus.'},
+  {id:'s_bahebbik',    w:2, lesson:'w2l3', ar:'بحبك يا ماما',        ph:'Ba7ebbek Ya Mama',      nl:'Ik hou van jou, mama.'},
+  {id:'s_da_khalo',    w:2, lesson:'w2l4', ar:'ده خالو',             ph:'Da Khalo',             nl:'Dit is mijn oom.'},
+  {id:'s_andi_akh',    w:2, lesson:'w2l4', ar:'عندي أخ',             ph:'3andi Akh',             nl:'Ik heb een broer.'},
+  {id:'s_andi_ukht',   w:2, lesson:'w2l4', ar:'عندي أخت',            ph:'3andi Okht',           nl:'Ik heb een zus.'},
+  {id:'s_di_otta',     w:3, lesson:'w3l1', ar:'دي قطة',              ph:'Di Otta',               nl:'Dit is een kat.'},
+  {id:'s_da_kalb',     w:3, lesson:'w3l1', ar:'ده كلب',              ph:'Da Kalb',               nl:'Dit is een hond.'},
+  {id:'s_andi_otta',   w:3, lesson:'w3l1', ar:'عندي قطة',            ph:'3andi Otta',            nl:'Ik heb een kat.'},
+  {id:'s_feen_otta',   w:3, lesson:'w3l2', ar:'فين القطة؟',          ph:'Feen El-Otta?',         nl:'Waar is de kat?'},
+  {id:'s_hosaan',      w:3, lesson:'w3l2', ar:'بحب الحصان',          ph:'Ba7ebb El-7osan',     nl:'Ik hou van het paard.'},
+  {id:'s_gamal',       w:3, lesson:'w3l3', ar:'الجمل كبير',          ph:'El-Gamal Kebeer',       nl:'De kameel is groot.'},
+  {id:'s_mjau',        w:3, lesson:'w3l3', ar:'القطة بتقول مياو',    ph:"El-Otta Bet'ool Myau",  nl:'De kat zegt miauw.'},
+  {id:'s_arnab',       w:3, lesson:'w3l4', ar:'الأرنب صغير',         ph:'El-Arnab Soghayyar',   nl:'Het konijn is klein.'},
+  {id:'s_yalla_kora',  w:4, lesson:'w4l1', ar:'يلا نلعب كورة',       ph:'Yalla Nel3ab Kora',     nl:'Kom, we gaan voetballen!'},
+  {id:'s_feen_kora',   w:4, lesson:'w4l1', ar:'فين الكورة؟',         ph:'Feen El-Kora?',         nl:'Waar is de bal?'},
+  {id:'s_ana_laeeb',   w:4, lesson:'w4l2', ar:'أنا لعيب',            ph:'Ana La3eeb',            nl:'Ik ben een speler.'},
+  {id:'s_eddini',      w:4, lesson:'w4l2', ar:'إديني الكورة',        ph:'Eddini El-Kora',        nl:'Geef mij de bal!'},
+  {id:'s_bahebb_kora', w:4, lesson:'w4l3', ar:'أنا بحب الكورة',      ph:'Ana Ba7ebb El-Kora',    nl:'Ik hou van voetbal.'},
+  {id:'s_kesebna',     w:4, lesson:'w4l4', ar:'كسبنا الماتش',        ph:'Kesebna El-Matsh',      nl:'We hebben de wedstrijd gewonnen!'},
+  {id:'s_montakhab',   w:4, lesson:'w4l4', ar:'منتخب مصر كسب',       ph:'Montakhab Masr Keseb',  nl:'Egypte heeft gewonnen!'},
+  {id:'s_majja',       w:5, lesson:'w5l3', ar:'مية من فضلك',          ph:'Mayya Men Fadlak',       nl:'Water alsjeblieft.'},
+  {id:'s_akl_helw',    w:5, lesson:'w5l4', ar:'الأكل حلو',            ph:'El-Akl 7elw',            nl:'Het eten is lekker.'},
+  {id:'s_bahebb_manga',w:5, lesson:'w5l2', ar:'بحب المانجة',          ph:'Ba7ebb El-Manga',        nl:'Ik hou van mango.'},
+  {id:'s_shay_laban',  w:5, lesson:'w5l3', ar:'شاي بلبن',             ph:'Shai Be-Laban',         nl:'Thee met melk.'},
+  {id:'s_feen_eesh',   w:5, lesson:'w5l1', ar:'فين العيش؟',           ph:'Feen El-3eesh?',         nl:'Waar is het brood?'},
+  {id:'s_toffaha_hamra',w:6, lesson:'w6l1', ar:'التفاحة حمرا',        ph:'Et-Toffa7a 7amra',      nl:'De appel is rood.'},
+  {id:'s_sama_zar2a',  w:6, lesson:'w6l2', ar:'السما زرقا',           ph:"Es-Sama Zar'a",          nl:'De lucht is blauw.'},
+  {id:'s_waahed_etneen',w:6, lesson:'w6l3', ar:'واحد اتنين تلاتة',    ph:'Wa7ed Etneen Talata',  nl:'Eén, twee, drie.'},
+  {id:'s_andi_khamsa', w:6, lesson:'w6l3', ar:'عندي خمسة',            ph:'3andi Khamsa',           nl:'Ik heb er vijf.'},
+  {id:'s_di_eedi',     w:7, lesson:'w7l3', ar:'دي إيدي',              ph:'Di Eedi',                nl:'Dit is mijn hand.'},
+  {id:'s_ana_mabsoot', w:7, lesson:'w7l4', ar:'أنا مبسوط',            ph:'Ana Mabsoot',            nl:'Ik ben blij. (jongen)'},
+  {id:'s_ana_mabsoota',w:7, lesson:'w7l4', ar:'أنا مبسوطة',           ph:'Ana Mabsoota',           nl:'Ik ben blij. (meisje)'},
+  {id:'s_batni',       w:7, lesson:'w7l3', ar:'بطني بتوجعني',         ph:'Batni Betewga3ni',       nl:'Mijn buik doet pijn.'},
+  {id:'s_feen_hammam', w:8, lesson:'w8l3', ar:'فين الحمام؟',          ph:'Feen El-7ammam?',       nl:'Waar is de wc?'},
+  {id:'s_eftah_baab',  w:8, lesson:'w8l1', ar:'افتح الباب',           ph:'Efta7 El-Bab',          nl:'Doe de deur open.'},
+  {id:'s_efel_noor',   w:8, lesson:'w8l1', ar:'اقفل النور',           ph:"E'fel En-Noor",          nl:'Doe het licht uit.'},
+  {id:'s_yalla_nenam', w:8, lesson:'w8l2', ar:'يلا ننام',             ph:'Yalla Nenam',           nl:'Kom, we gaan slapen.'},
+  {id:'s_rayhin_masr', w:9, lesson:'w9l1', ar:'رايحين مصر',           ph:'Ray7een Masr',           nl:'We gaan naar Egypte.'},
+  {id:'s_gaww_harr',   w:9, lesson:'w9l4', ar:'الجو حر',              ph:'El-Gaww 7arr',           nl:'Het is warm.'},
+  {id:'s_yalla_bahr',  w:9, lesson:'w9l2', ar:'يلا على البحر',        ph:'Yalla 3al-Ba7r',         nl:'Kom, naar de zee!'},
+  {id:'s_shoft_ahramat',w:9, lesson:'w9l3', ar:'شفت الأهرامات',       ph:'Shoft El-Ahramat',      nl:'Ik heb de piramides gezien.'},
+  {id:'s_taala_nelab', w:10, lesson:'w10l1', ar:'تعالى نلعب',         ph:'Ta3ala Nel3ab',         nl:'Kom, we gaan spelen.'},
+  {id:'s_enta_sahbi',  w:10, lesson:'w10l1', ar:'إنت صاحبي',          ph:'Enta Sa7bi',            nl:'Jij bent mijn vriend.'},
+  {id:'s_momken_alab', w:10, lesson:'w10l3', ar:'ممكن ألعب معاكم؟',   ph:'Momken Al3ab Ma3akom?', nl:'Mag ik met jullie meespelen?'},
+  {id:'s_maalesh',     w:10, lesson:'w10l3', ar:'معلش يا صاحبي',      ph:'Ma3lesh Ya Sa7bi',      nl:'Geeft niet, vriend.'},
+  {id:'s_wahashteeni_teeta',w:11, lesson:'w11l1', ar:'وحشتيني يا تيتة',ph:'Wa7ashteeni Ya Teeta',   nl:'Ik heb je gemist, oma.'},
+  {id:'s_bahebbak_geddo',w:11, lesson:'w11l1', ar:'بحبك يا جدو',      ph:'Ba7ebbak Ya Geddo',      nl:'Ik hou van je, opa.'},
+  {id:'s_ehkili',      w:11, lesson:'w11l2', ar:'احكيلي حكاية',       ph:'E7keeli 7ekaya',        nl:'Vertel me een verhaal.'},
+  {id:'s_kahk_helw',   w:11, lesson:'w11l3', ar:'الكحك حلو',          ph:'El-Ka7k 7elw',           nl:'De koekjes zijn lekker.'},
+  {id:'s_bekam_da',    w:12, lesson:'w12l1', ar:'بكام ده؟',           ph:'Bekam Da?',             nl:'Hoeveel kost dit?'},
+  {id:'s_ghali_awi',   w:12, lesson:'w12l2', ar:'ده غالي أوي',        ph:'Da Ghali Awi',          nl:'Dit is heel duur.'},
+  {id:'s_momken_ays',  w:12, lesson:'w12l3', ar:'ممكن آيس كريم؟',     ph:'Momken Ays Kreem?',      nl:'Mag ik een ijsje?'},
+  {id:'s_feen_metro',  w:13, lesson:'w13l2', ar:'فين المترو؟',        ph:'Feen El-Metro?',         nl:'Waar is de metro?'},
+  {id:'s_ala_tool_yemeen',w:13, lesson:'w13l3', ar:'على طول وبعدين يمين', ph:'3ala Tol We Ba3deen Yemeen', nl:'Rechtdoor en dan rechts.'},
+  {id:'s_qahera_zahma',w:13, lesson:'w13l1', ar:'القاهرة زحمة أوي',   ph:"El-'Ahera Za7ma Awi",   nl:'Caïro is heel druk.'},
 ];
 
 // ---- Werelden en lessen (5 lessen per wereld; review = herhaling van de hele wereld)
@@ -1401,30 +1401,30 @@ const AUDIO_FILES = {};
    Verwijzingen naar bestaande woorden/zinnen gebruiken hun id, zodat jouw opnames meteen werken.
    Nieuwe regels staan in DLINES en kun je ook inspreken in het ouderdashboard. */
 const DLINES = [
-  {id:'d2_feen_mama',  w:2,  ar:'فين ماما؟',          ph:'feen mama?',            nl:'Waar is mama?'},
-  {id:'d2_fel_beet',   w:2,  ar:'ماما في البيت',      ph:'mama fel-beet',         nl:'Mama is thuis.'},
-  {id:'d2_andak_akh',  w:2,  ar:'عندك أخ؟',           ph:"'andak ach?",           nl:'Heb jij een broer?', g:'you', fem:{ar:'عندك أخ؟', ph:"'andek ach?"}},
-  {id:'d3_da_eeh',     w:3,  ar:'ده إيه؟',            ph:'da eeh?',               nl:'Wat is dit? (🐶)'},
-  {id:'d3_otta_eeh',   w:3,  ar:'القطة بتقول إيه؟',   ph:"el-otta bet'oel eeh?",  nl:'Wat zegt de kat?'},
-  {id:'d4_mien_keseb', w:4,  ar:'مين كسب؟',           ph:'mien keseb?',           nl:'Wie heeft gewonnen?'},
-  {id:'d5_gaaan',      w:5,  ar:'إنت جعان؟',          ph:"enta ga'aan?",          nl:'Heb jij honger?', g:'you', fem:{ar:'إنتي جعانة؟', ph:"enti ga'aana?"}},
-  {id:'d5_aywa_gaaan', w:5,  ar:'أيوه، أنا جعان',     ph:"ajwa, ana ga'aan",      nl:'Ja, ik heb honger.', g:'self', fem:{ar:'أيوه، أنا جعانة', ph:"ajwa, ana ga'aana"}},
-  {id:'d5_teshrab',    w:5,  ar:'عايز تشرب إيه؟',     ph:"'aajez tesjrab eeh?",   nl:'Wat wil je drinken?', g:'you', fem:{ar:'عايزة تشربي إيه؟', ph:"'ajza tesjrabi eeh?"}},
-  {id:'d6_lonha',      w:6,  ar:'التفاحة لونها إيه؟', ph:'et-toffaaha lonha eeh?',nl:'Welke kleur heeft de appel?'},
-  {id:'d6_andak_kam',  w:6,  ar:'عندك كام؟',          ph:"'andak kaam?",          nl:'Hoeveel heb je er?', g:'you', fem:{ar:'عندك كام؟', ph:"'andek kaam?"}},
-  {id:'d7_malak',      w:7,  ar:'مالك؟',              ph:'maalak?',               nl:'Wat is er?', g:'you', fem:{ar:'مالك؟', ph:'maalek?'}},
-  {id:'d7_mabsoot',    w:7,  ar:'إنت مبسوط؟',         ph:'enta mabsoet?',         nl:'Ben je blij?', g:'you', fem:{ar:'إنتي مبسوطة؟', ph:'enti mabsoeta?'}},
-  {id:'d8_mehtag',     w:8,  ar:'محتاج حاجة؟',        ph:'mehtaag haaga?',        nl:'Heb je iets nodig?', g:'you', fem:{ar:'محتاجة حاجة؟', ph:'mehtaaga haaga?'}},
-  {id:'d9_rayhin',     w:9,  ar:'رايحين فين؟',        ph:'rajhien feen?',         nl:'Waar gaan we heen?'},
-  {id:'d9_gaww',       w:9,  ar:'الجو عامل إيه؟',     ph:"el-gaww 'aamel eeh?",   nl:'Hoe is het weer?'},
-  {id:'d10_aywa_taala',w:10, ar:'أيوه، تعالى!',       ph:"ajwa, ta'aala!",        nl:'Ja, kom maar!'},
-  {id:'d10_door_mien', w:10, ar:'دور مين؟',           ph:'door mien?',            nl:'Wie is er aan de beurt?'},
-  {id:'d11_wahashtni', w:11, ar:'وحشتني يا حبيبي!',   ph:'wahasjtini ja habiebi!',nl:'Ik heb je gemist, lieverd!', g:'you', fem:{ar:'وحشتيني يا حبيبتي!', ph:'wahasjtieni ja habiebti!'}},
-  {id:'d11_aawez_eeh', w:11, ar:'عايز إيه؟',          ph:"'aajez eeh?",           nl:'Wat wil je?', g:'you', fem:{ar:'عايزة إيه؟', ph:"'ajza eeh?"}},
-  {id:'d12_ahlan',     w:12, ar:'أهلاً! عايز إيه؟',   ph:"ahlan! 'aajez eeh?",    nl:'Hallo! Wat wil je?', g:'you', fem:{ar:'أهلاً! عايزة إيه؟', ph:"ahlan! 'ajza eeh?"}},
-  {id:'d12_etfaddal',  w:12, ar:'اتفضل',              ph:'etfaddal',              nl:'Alsjeblieft, hier is het.', g:'you', fem:{ar:'اتفضلي', ph:'etfaddali'}},
-  {id:'d13_agabetak',  w:13, ar:'عجبتك القاهرة؟',     ph:"'agabetak el-'aahera?", nl:'Vond je Caïro leuk?', g:'you', fem:{ar:'عجبتك القاهرة؟', ph:"'agabetek el-'aahera?"}},
-  {id:'d13_bas_zahma', w:13, ar:'أيوه، بس زحمة أوي',  ph:'ajwa, bas zahma awi',   nl:'Ja, maar het is heel druk.'},
+  {id:'d2_feen_mama',  w:2,  ar:'فين ماما؟',          ph:'Feen Mama?',            nl:'Waar is mama?'},
+  {id:'d2_fel_beet',   w:2,  ar:'ماما في البيت',      ph:'Mama Fel-Beet',         nl:'Mama is thuis.'},
+  {id:'d2_andak_akh',  w:2,  ar:'عندك أخ؟',           ph:'3andak Akh?',           nl:'Heb jij een broer?', g:'you', fem:{ar:'عندك أخ؟', ph:'3andek Akh?'}},
+  {id:'d3_da_eeh',     w:3,  ar:'ده إيه؟',            ph:'Da Eeh?',               nl:'Wat is dit? (🐶)'},
+  {id:'d3_otta_eeh',   w:3,  ar:'القطة بتقول إيه؟',   ph:"El-Otta Bet'ool Eeh?",  nl:'Wat zegt de kat?'},
+  {id:'d4_mien_keseb', w:4,  ar:'مين كسب؟',           ph:'Meen Keseb?',           nl:'Wie heeft gewonnen?'},
+  {id:'d5_gaaan',      w:5,  ar:'إنت جعان؟',          ph:'Enta Ga3an?',          nl:'Heb jij honger?', g:'you', fem:{ar:'إنتي جعانة؟', ph:'Enti Ga3ana?'}},
+  {id:'d5_aywa_gaaan', w:5,  ar:'أيوه، أنا جعان',     ph:'Aywa, Ana Ga3an',      nl:'Ja, ik heb honger.', g:'self', fem:{ar:'أيوه، أنا جعانة', ph:'Aywa, Ana Ga3ana'}},
+  {id:'d5_teshrab',    w:5,  ar:'عايز تشرب إيه؟',     ph:'3ayez Teshrab Eeh?',   nl:'Wat wil je drinken?', g:'you', fem:{ar:'عايزة تشربي إيه؟', ph:'3ayza Teshrabi Eeh?'}},
+  {id:'d6_lonha',      w:6,  ar:'التفاحة لونها إيه؟', ph:'Et-Toffa7a Lonha Eeh?',nl:'Welke kleur heeft de appel?'},
+  {id:'d6_andak_kam',  w:6,  ar:'عندك كام؟',          ph:'3andak Kam?',          nl:'Hoeveel heb je er?', g:'you', fem:{ar:'عندك كام؟', ph:'3andek Kam?'}},
+  {id:'d7_malak',      w:7,  ar:'مالك؟',              ph:'Malak?',               nl:'Wat is er?', g:'you', fem:{ar:'مالك؟', ph:'Malek?'}},
+  {id:'d7_mabsoot',    w:7,  ar:'إنت مبسوط؟',         ph:'Enta Mabsoot?',         nl:'Ben je blij?', g:'you', fem:{ar:'إنتي مبسوطة؟', ph:'Enti Mabsoota?'}},
+  {id:'d8_mehtag',     w:8,  ar:'محتاج حاجة؟',        ph:'Me7tag 7aga?',        nl:'Heb je iets nodig?', g:'you', fem:{ar:'محتاجة حاجة؟', ph:'Me7taga 7aga?'}},
+  {id:'d9_rayhin',     w:9,  ar:'رايحين فين؟',        ph:'Ray7een Feen?',         nl:'Waar gaan we heen?'},
+  {id:'d9_gaww',       w:9,  ar:'الجو عامل إيه؟',     ph:'El-Gaww 3amel Eeh?',   nl:'Hoe is het weer?'},
+  {id:'d10_aywa_taala',w:10, ar:'أيوه، تعالى!',       ph:'Aywa, Ta3ala!',        nl:'Ja, kom maar!'},
+  {id:'d10_door_mien', w:10, ar:'دور مين؟',           ph:'Door Meen?',            nl:'Wie is er aan de beurt?'},
+  {id:'d11_wahashtni', w:11, ar:'وحشتني يا حبيبي!',   ph:'Wa7ashtini Ya 7abeebi!',nl:'Ik heb je gemist, lieverd!', g:'you', fem:{ar:'وحشتيني يا حبيبتي!', ph:'Wa7ashteeni Ya 7abeebti!'}},
+  {id:'d11_aawez_eeh', w:11, ar:'عايز إيه؟',          ph:'3ayez Eeh?',           nl:'Wat wil je?', g:'you', fem:{ar:'عايزة إيه؟', ph:'3ayza Eeh?'}},
+  {id:'d12_ahlan',     w:12, ar:'أهلاً! عايز إيه؟',   ph:'Ahlan! 3ayez Eeh?',    nl:'Hallo! Wat wil je?', g:'you', fem:{ar:'أهلاً! عايزة إيه؟', ph:'Ahlan! 3ayza Eeh?'}},
+  {id:'d12_etfaddal',  w:12, ar:'اتفضل',              ph:'Etfaddal',              nl:'Alsjeblieft, hier is het.', g:'you', fem:{ar:'اتفضلي', ph:'Etfaddali'}},
+  {id:'d13_agabetak',  w:13, ar:'عجبتك القاهرة؟',     ph:"3agabetak El-'Ahera?", nl:'Vond je Caïro leuk?', g:'you', fem:{ar:'عجبتك القاهرة؟', ph:"3agabetek El-'Ahera?"}},
+  {id:'d13_bas_zahma', w:13, ar:'أيوه، بس زحمة أوي',  ph:'Aywa, Bas Za7ma Awi',   nl:'Ja, maar het is heel druk.'},
 ];
 const DIALOGS = {
   1: [{intro:'Mishmish komt je begroeten.', turns:[{q:'ahlan', a:'ahlan', d:['bye','la']}, {q:'izzayak', a:{m:'s_kwayyes', f:'s_kwayyesa'}, d:['s_holanda','shukran']}, {q:'s_esmak', a:'s_esmi', d:['ana','s_holanda']}]},
@@ -1451,101 +1451,101 @@ const DIALOGS = {
    ===================================================================== */
 const A_ITEMS = [
   // Niveau 1
-  {id:'a_ahlanbik', w:'A1', ar:'أهلاً بيك', ph:'ahlan biek', nl:'welkom', g:'you', fem:{ar:'أهلاً بيكي', ph:'ahlan biiki'}},
-  {id:'a_tsharrafna', w:'A1', ar:'تشرفنا', ph:'tsjarrafna', nl:'aangenaam (kennis te maken)'},
-  {id:'a_saken', w:'A2', ar:'أنا ساكن في هولندا', ph:'ana saaken fi holanda', nl:'ik woon in Nederland', g:'self', fem:{ar:'أنا ساكنة في هولندا', ph:'ana sakna fi holanda'}},
-  {id:'a_bashtaghal', w:'A2', ar:'بشتغل مدرس', ph:'basjtaghal modarres', nl:'ik werk als leraar', g:'self', fem:{ar:'بشتغل مدرسة', ph:'basjtaghal modarresa'}},
-  {id:'a_mitgawez', w:'A2', ar:'متجوز', ph:'metgawwez', nl:'getrouwd', g:'self', fem:{ar:'متجوزة', ph:'metgawweza'}},
-  {id:'a_3andi_wlad', w:'A2', ar:'عندي عيال', ph:"'andi 'ijaal", nl:'ik heb kinderen'},
-  {id:'a_ba3raf_shwaya', w:'A2', ar:'بعرف عربي شوية', ph:"ba'raf 'arabi sjwajja", nl:'ik spreek een beetje Arabisch'},
-  {id:'a_gozi', w:'A3', ar:'جوزي', ph:'goozi', nl:'mijn man'},
-  {id:'a_merati', w:'A3', ar:'مراتي', ph:'meraati', nl:'mijn vrouw'},
-  {id:'a_hamati', w:'A3', ar:'حماتي', ph:'hamaati', nl:'mijn schoonmoeder'},
-  {id:'a_hamaya', w:'A3', ar:'حمايا', ph:'hamaaja', nl:'mijn schoonvader'},
-  {id:'a_ebni', w:'A3', ar:'ابني', ph:'ebni', nl:'mijn zoon'},
-  {id:'a_benti', w:'A3', ar:'بنتي', ph:'benti', nl:'mijn dochter'},
-  {id:'a_ful', w:'A5', ar:'فول', ph:'foel', nl:'bruine bonen (foel)'},
-  {id:'a_inshallah', w:'A6', ar:'إن شاء الله', ph:"insja'allah", nl:'als God het wil / hopelijk'},
-  {id:'a_khalas', w:'A6', ar:'خلاص', ph:'chalaas', nl:'klaar / genoeg / oké'},
-  {id:'a_tamam', w:'A6', ar:'تمام', ph:'tamaam', nl:'prima'},
-  {id:'a_awi', w:'A6', ar:'أوي', ph:'awi', nl:'heel / erg'},
+  {id:'a_ahlanbik', w:'A1', ar:'أهلاً بيك', ph:'Ahlan Beek', nl:'welkom', g:'you', fem:{ar:'أهلاً بيكي', ph:'Ahlan Beeki'}},
+  {id:'a_tsharrafna', w:'A1', ar:'تشرفنا', ph:'Tsharrafna', nl:'aangenaam (kennis te maken)'},
+  {id:'a_saken', w:'A2', ar:'أنا ساكن في هولندا', ph:'Ana Saken Fi Holanda', nl:'ik woon in Nederland', g:'self', fem:{ar:'أنا ساكنة في هولندا', ph:'Ana Sakna Fi Holanda'}},
+  {id:'a_bashtaghal', w:'A2', ar:'بشتغل مدرس', ph:'Bashtaghal Modarres', nl:'ik werk als leraar', g:'self', fem:{ar:'بشتغل مدرسة', ph:'Bashtaghal Modarresa'}},
+  {id:'a_mitgawez', w:'A2', ar:'متجوز', ph:'Metgawwez', nl:'getrouwd', g:'self', fem:{ar:'متجوزة', ph:'Metgawweza'}},
+  {id:'a_3andi_wlad', w:'A2', ar:'عندي عيال', ph:'3andi 3iyal', nl:'ik heb kinderen'},
+  {id:'a_ba3raf_shwaya', w:'A2', ar:'بعرف عربي شوية', ph:'Ba3raf 3arabi Shwayya', nl:'ik spreek een beetje Arabisch'},
+  {id:'a_gozi', w:'A3', ar:'جوزي', ph:'Goozi', nl:'mijn man'},
+  {id:'a_merati', w:'A3', ar:'مراتي', ph:'Merati', nl:'mijn vrouw'},
+  {id:'a_hamati', w:'A3', ar:'حماتي', ph:'7amati', nl:'mijn schoonmoeder'},
+  {id:'a_hamaya', w:'A3', ar:'حمايا', ph:'7amaya', nl:'mijn schoonvader'},
+  {id:'a_ebni', w:'A3', ar:'ابني', ph:'Ebni', nl:'mijn zoon'},
+  {id:'a_benti', w:'A3', ar:'بنتي', ph:'Benti', nl:'mijn dochter'},
+  {id:'a_ful', w:'A5', ar:'فول', ph:'Fool', nl:'bruine bonen (foel)'},
+  {id:'a_inshallah', w:'A6', ar:'إن شاء الله', ph:"Insha'allah", nl:'als God het wil / hopelijk'},
+  {id:'a_khalas', w:'A6', ar:'خلاص', ph:'Khalas', nl:'klaar / genoeg / oké'},
+  {id:'a_tamam', w:'A6', ar:'تمام', ph:'Tamam', nl:'prima'},
+  {id:'a_awi', w:'A6', ar:'أوي', ph:'Awi', nl:'heel / erg'},
   // Niveau 2
-  {id:'a_law_samaht', w:'B1', ar:'لو سمحت', ph:'law samaht', nl:'pardon / alstublieft', g:'you', fem:{ar:'لو سمحتي', ph:'law samahti'}},
-  {id:'a_akhbarak', w:'B1', ar:'أخبارك إيه؟', ph:'achbaarak eeh?', nl:'hoe is het met je?', g:'you', fem:{ar:'أخبارك إيه؟', ph:'achbaarek eeh?'}},
-  {id:'a_kollo_tamam', w:'B1', ar:'كله تمام', ph:'kollo tamaam', nl:'alles goed'},
-  {id:'a_nawartna', w:'B1', ar:'نورتنا', ph:'nawwartena', nl:'fijn dat je er bent', g:'you', fem:{ar:'نورتينا', ph:'nawwarteena'}},
-  {id:'a_da_noorak', w:'B1', ar:'ده نورك', ph:'da noorak', nl:'dank je (antwoord op nawwartena)', g:'you', fem:{ar:'ده نورك', ph:'da noorek'}},
-  {id:'a_eeh', w:'B2', ar:'إيه؟', ph:'eeh?', nl:'wat?'},
-  {id:'a_emta', w:'B2', ar:'إمتى؟', ph:'emta?', nl:'wanneer?'},
-  {id:'a_leeh', w:'B2', ar:'ليه؟', ph:'leeh?', nl:'waarom?'},
-  {id:'a_mien', w:'B2', ar:'مين؟', ph:'mien?', nl:'wie?'},
-  {id:'a_ezzay', w:'B2', ar:'إزاي؟', ph:'ezzaj?', nl:'hoe?'},
-  {id:'a_kam', w:'B2', ar:'كام؟', ph:'kaam?', nl:'hoeveel?'},
-  {id:'a_fahem', w:'B2', ar:'فاهم؟', ph:'faahem?', nl:'begrijp je het?', g:'you', fem:{ar:'فاهمة؟', ph:'fahma?'}},
-  {id:'a_mesh_fahem', w:'B3', ar:'أنا مش فاهم', ph:'ana mesj faahem', nl:'ik begrijp het niet', g:'self', fem:{ar:'أنا مش فاهمة', ph:'ana mesj fahma'}},
-  {id:'a_tani', w:'B3', ar:'ممكن تاني؟', ph:'momken taani?', nl:'nog een keer, alstublieft?'},
-  {id:'a_beraha', w:'B3', ar:'براحة', ph:'be-raaha', nl:'rustig / langzaam'},
-  {id:'a_tab3an', w:'B3', ar:'طبعاً', ph:"tab'an", nl:'natuurlijk'},
-  {id:'a_ma3rafsh', w:'B3', ar:'معرفش', ph:"ma'rafsj", nl:'ik weet het niet'},
-  {id:'a_sa7', w:'B3', ar:'صح', ph:'sahh', nl:'klopt'},
-  {id:'a_tenazzel', w:'B4', ar:'ممكن تنزل شوية؟', ph:'momken tenazzel sjwajja?', nl:'kunt u wat lager gaan (met de prijs)?', g:'you', fem:{ar:'ممكن تنزلي شوية؟', ph:'momken tenazzeli sjwajja?'}},
-  {id:'a_akher_kalam', w:'B4', ar:'آخر كلام؟', ph:'aacher kalaam?', nl:'wat is uw laatste prijs?'},
-  {id:'a_khod', w:'B4', ar:'خد', ph:'chod', nl:'pak aan / hier', g:'you', fem:{ar:'خدي', ph:'choedi'}},
-  {id:'a_menu', w:'B5', ar:'المنيو لو سمحت', ph:'el-menjoe law samaht', nl:'de menukaart alstublieft'},
-  {id:'a_hesab', w:'B5', ar:'الحساب', ph:'el-hesaab', nl:'de rekening'},
-  {id:'a_3ayez_akol', w:'B5', ar:'عايز آكل', ph:"'aajez aakol", nl:'ik wil eten', g:'self', fem:{ar:'عايزة آكل', ph:"'ajza aakol"}},
-  {id:'a_men_gheer', w:'B5', ar:'من غير لحمة', ph:'men gheer lahma', nl:'zonder vlees'},
-  {id:'a_bel_hana', w:'B5', ar:'بالهنا والشفا', ph:'bel-hana wesj-sjefa', nl:'eet smakelijk'},
-  {id:'a_akl_helw_awi', w:'B5', ar:'الأكل حلو أوي', ph:'el-akl helw awi', nl:'het eten is heel lekker'},
-  {id:'a_kam_3ayel', w:'B6', ar:'عندك كام عيل؟', ph:"'andak kaam 'ajjel?", nl:'hoeveel kinderen heb je?', g:'you', fem:{ar:'عندك كام عيل؟', ph:"'andek kaam 'ajjel?"}},
-  {id:'a_da_ebni', w:'B6', ar:'ده ابني', ph:'da ebni', nl:'dit is mijn zoon'},
-  {id:'a_di_benti', w:'B6', ar:'دي بنتي', ph:'di benti', nl:'dit is mijn dochter'},
-  {id:'a_gozi_masri', w:'B6', ar:'جوزي مصري', ph:'goozi masri', nl:'mijn man is Egyptisch'},
-  {id:'a_ahl_gozi', w:'B6', ar:'أهل جوزي', ph:'ahl goozi', nl:'de familie van mijn man'},
+  {id:'a_law_samaht', w:'B1', ar:'لو سمحت', ph:'Law Sama7t', nl:'pardon / alstublieft', g:'you', fem:{ar:'لو سمحتي', ph:'Law Sama7ti'}},
+  {id:'a_akhbarak', w:'B1', ar:'أخبارك إيه؟', ph:'Akhbarak Eeh?', nl:'hoe is het met je?', g:'you', fem:{ar:'أخبارك إيه؟', ph:'Akhbarek Eeh?'}},
+  {id:'a_kollo_tamam', w:'B1', ar:'كله تمام', ph:'Kollo Tamam', nl:'alles goed'},
+  {id:'a_nawartna', w:'B1', ar:'نورتنا', ph:'Nawwartena', nl:'fijn dat je er bent', g:'you', fem:{ar:'نورتينا', ph:'Nawwarteena'}},
+  {id:'a_da_noorak', w:'B1', ar:'ده نورك', ph:'Da Noorak', nl:'dank je (antwoord op nawwartena)', g:'you', fem:{ar:'ده نورك', ph:'Da Noorek'}},
+  {id:'a_eeh', w:'B2', ar:'إيه؟', ph:'Eeh?', nl:'wat?'},
+  {id:'a_emta', w:'B2', ar:'إمتى؟', ph:'Emta?', nl:'wanneer?'},
+  {id:'a_leeh', w:'B2', ar:'ليه؟', ph:'Leeh?', nl:'waarom?'},
+  {id:'a_mien', w:'B2', ar:'مين؟', ph:'Meen?', nl:'wie?'},
+  {id:'a_ezzay', w:'B2', ar:'إزاي؟', ph:'Ezzay?', nl:'hoe?'},
+  {id:'a_kam', w:'B2', ar:'كام؟', ph:'Kam?', nl:'hoeveel?'},
+  {id:'a_fahem', w:'B2', ar:'فاهم؟', ph:'Fahem?', nl:'begrijp je het?', g:'you', fem:{ar:'فاهمة؟', ph:'Fahma?'}},
+  {id:'a_mesh_fahem', w:'B3', ar:'أنا مش فاهم', ph:'Ana Mesh Fahem', nl:'ik begrijp het niet', g:'self', fem:{ar:'أنا مش فاهمة', ph:'Ana Mesh Fahma'}},
+  {id:'a_tani', w:'B3', ar:'ممكن تاني؟', ph:'Momken Tani?', nl:'nog een keer, alstublieft?'},
+  {id:'a_beraha', w:'B3', ar:'براحة', ph:'Be-Ra7a', nl:'rustig / langzaam'},
+  {id:'a_tab3an', w:'B3', ar:'طبعاً', ph:'Tab3an', nl:'natuurlijk'},
+  {id:'a_ma3rafsh', w:'B3', ar:'معرفش', ph:'Ma3rafsh', nl:'ik weet het niet'},
+  {id:'a_sa7', w:'B3', ar:'صح', ph:'Sa77', nl:'klopt'},
+  {id:'a_tenazzel', w:'B4', ar:'ممكن تنزل شوية؟', ph:'Momken Tenazzel Shwayya?', nl:'kunt u wat lager gaan (met de prijs)?', g:'you', fem:{ar:'ممكن تنزلي شوية؟', ph:'Momken Tenazzeli Shwayya?'}},
+  {id:'a_akher_kalam', w:'B4', ar:'آخر كلام؟', ph:'Akher Kalam?', nl:'wat is uw laatste prijs?'},
+  {id:'a_khod', w:'B4', ar:'خد', ph:'Khod', nl:'pak aan / hier', g:'you', fem:{ar:'خدي', ph:'Khodi'}},
+  {id:'a_menu', w:'B5', ar:'المنيو لو سمحت', ph:'El-Menyoo Law Sama7t', nl:'de menukaart alstublieft'},
+  {id:'a_hesab', w:'B5', ar:'الحساب', ph:'El-7esab', nl:'de rekening'},
+  {id:'a_3ayez_akol', w:'B5', ar:'عايز آكل', ph:'3ayez Akol', nl:'ik wil eten', g:'self', fem:{ar:'عايزة آكل', ph:'3ayza Akol'}},
+  {id:'a_men_gheer', w:'B5', ar:'من غير لحمة', ph:'Men Gheer La7ma', nl:'zonder vlees'},
+  {id:'a_bel_hana', w:'B5', ar:'بالهنا والشفا', ph:'Bel-Hana Wesh-Shefa', nl:'eet smakelijk'},
+  {id:'a_akl_helw_awi', w:'B5', ar:'الأكل حلو أوي', ph:'El-Akl 7elw Awi', nl:'het eten is heel lekker'},
+  {id:'a_kam_3ayel', w:'B6', ar:'عندك كام عيل؟', ph:'3andak Kam 3ayyel?', nl:'hoeveel kinderen heb je?', g:'you', fem:{ar:'عندك كام عيل؟', ph:'3andek Kam 3ayyel?'}},
+  {id:'a_da_ebni', w:'B6', ar:'ده ابني', ph:'Da Ebni', nl:'dit is mijn zoon'},
+  {id:'a_di_benti', w:'B6', ar:'دي بنتي', ph:'Di Benti', nl:'dit is mijn dochter'},
+  {id:'a_gozi_masri', w:'B6', ar:'جوزي مصري', ph:'Goozi Masri', nl:'mijn man is Egyptisch'},
+  {id:'a_ahl_gozi', w:'B6', ar:'أهل جوزي', ph:'Ahl Goozi', nl:'de familie van mijn man'},
   // Niveau 3
-  {id:'a_wahashtona', w:'C1', ar:'وحشتونا', ph:'wahasjtoena', nl:'we hebben jullie gemist'},
-  {id:'a_beetak', w:'C1', ar:'البيت بيتك', ph:'el-beet beetak', nl:'voel je thuis', g:'you', fem:{ar:'البيت بيتك', ph:'el-beet beetek'}},
-  {id:'a_matet3absh', w:'C1', ar:'متتعبش نفسك', ph:"ma tet'absj nafsak", nl:'doe geen moeite', g:'you', fem:{ar:'متتعبيش نفسك', ph:"ma tet'abiesj nafsek"}},
-  {id:'a_rabena_ykhalik', w:'C1', ar:'ربنا يخليك', ph:'rabbena jechalliek', nl:'dank je (God bewaar je)', g:'you', fem:{ar:'ربنا يخليكي', ph:'rabbena jechalliiki'}},
-  {id:'a_kol_sana', w:'C1', ar:'كل سنة وإنت طيب', ph:'kol sana w enta tajjeb', nl:'fijne feestdagen', g:'you', fem:{ar:'كل سنة وإنتي طيبة', ph:'kol sana w enti tajjeba'}},
-  {id:'a_eh_el_akhbar', w:'C2', ar:'إيه الأخبار؟', ph:'eeh el-achbaar?', nl:'hoe staat het ervoor?'},
-  {id:'a_wala_7aga', w:'C2', ar:'ولا حاجة', ph:'wala haaga', nl:'niks bijzonders'},
-  {id:'a_begad', w:'C2', ar:'بجد؟', ph:'begadd?', nl:'echt?'},
-  {id:'a_ya_salam', w:'C2', ar:'يا سلام!', ph:'ja salaam!', nl:'wauw!'},
-  {id:'a_helw', w:'C2', ar:'حلو', ph:'helw', nl:'leuk / mooi / lekker'},
-  {id:'a_mesh_moshkela', w:'C2', ar:'مش مشكلة', ph:'mesj mosjkela', nl:'geen probleem'},
-  {id:'a_farhan', w:'C3', ar:'فرحان', ph:'farhaan', nl:'vrolijk', g:'self', fem:{ar:'فرحانة', ph:'farhaana'}},
-  {id:'a_metdaye2', w:'C3', ar:'متضايق', ph:"metdaaje'", nl:'geïrriteerd / balen', g:'self', fem:{ar:'متضايقة', ph:"metdaj'a"}},
-  {id:'a_za3lan_meni', w:'C3', ar:'إنت زعلان مني؟', ph:"enta za'laan menni?", nl:'ben je boos op me?', g:'you', fem:{ar:'إنتي زعلانة مني؟', ph:"enti za'laana menni?"}},
-  {id:'a_hena', w:'C4', ar:'هنا', ph:'hena', nl:'hier'},
-  {id:'a_nazzelni', w:'C4', ar:'نزلني هنا', ph:'nazzelni hena', nl:'zet me hier af'},
-  {id:'a_besor3a', w:'C4', ar:'بسرعة', ph:"be-sor'a", nl:'snel'},
-  {id:'a_zahma', w:'C4', ar:'فيه زحمة', ph:'fieh zahma', nl:'het is druk'},
-  {id:'a_mashallah', w:'C5', ar:'ما شاء الله', ph:"masja'allah", nl:'wat mooi! (bewondering)'},
-  {id:'a_ya_rab', w:'C5', ar:'يا رب', ph:'ja rabb', nl:'hopelijk / o God'},
-  {id:'a_yalla_bina', w:'C5', ar:'يلا بينا', ph:'jalla biena', nl:'kom, we gaan'},
-  {id:'a_3ala_rasi', w:'C5', ar:'على راسي', ph:"'ala raasi", nl:'met alle plezier'},
+  {id:'a_wahashtona', w:'C1', ar:'وحشتونا', ph:'Wa7ashtoona', nl:'we hebben jullie gemist'},
+  {id:'a_beetak', w:'C1', ar:'البيت بيتك', ph:'El-Beet Beetak', nl:'voel je thuis', g:'you', fem:{ar:'البيت بيتك', ph:'El-Beet Beetek'}},
+  {id:'a_matet3absh', w:'C1', ar:'متتعبش نفسك', ph:'Ma Tet3absh Nafsak', nl:'doe geen moeite', g:'you', fem:{ar:'متتعبيش نفسك', ph:'Ma Tet3abeesh Nafsek'}},
+  {id:'a_rabena_ykhalik', w:'C1', ar:'ربنا يخليك', ph:'Rabbena Yekhalleek', nl:'dank je (God bewaar je)', g:'you', fem:{ar:'ربنا يخليكي', ph:'Rabbena Yekhalleeki'}},
+  {id:'a_kol_sana', w:'C1', ar:'كل سنة وإنت طيب', ph:'Kol Sana W Enta Tayyeb', nl:'fijne feestdagen', g:'you', fem:{ar:'كل سنة وإنتي طيبة', ph:'Kol Sana W Enti Tayyeba'}},
+  {id:'a_eh_el_akhbar', w:'C2', ar:'إيه الأخبار؟', ph:'Eeh El-Akhbar?', nl:'hoe staat het ervoor?'},
+  {id:'a_wala_7aga', w:'C2', ar:'ولا حاجة', ph:'Wala 7aga', nl:'niks bijzonders'},
+  {id:'a_begad', w:'C2', ar:'بجد؟', ph:'Begadd?', nl:'echt?'},
+  {id:'a_ya_salam', w:'C2', ar:'يا سلام!', ph:'Ya Salam!', nl:'wauw!'},
+  {id:'a_helw', w:'C2', ar:'حلو', ph:'7elw', nl:'leuk / mooi / lekker'},
+  {id:'a_mesh_moshkela', w:'C2', ar:'مش مشكلة', ph:'Mesh Moshkela', nl:'geen probleem'},
+  {id:'a_farhan', w:'C3', ar:'فرحان', ph:'Far7an', nl:'vrolijk', g:'self', fem:{ar:'فرحانة', ph:'Far7ana'}},
+  {id:'a_metdaye2', w:'C3', ar:'متضايق', ph:"Metdaye'", nl:'geïrriteerd / balen', g:'self', fem:{ar:'متضايقة', ph:"Metday'a"}},
+  {id:'a_za3lan_meni', w:'C3', ar:'إنت زعلان مني؟', ph:'Enta Za3lan Menni?', nl:'ben je boos op me?', g:'you', fem:{ar:'إنتي زعلانة مني؟', ph:'Enti Za3lana Menni?'}},
+  {id:'a_hena', w:'C4', ar:'هنا', ph:'Hena', nl:'hier'},
+  {id:'a_nazzelni', w:'C4', ar:'نزلني هنا', ph:'Nazzelni Hena', nl:'zet me hier af'},
+  {id:'a_besor3a', w:'C4', ar:'بسرعة', ph:'Be-Sor3a', nl:'snel'},
+  {id:'a_zahma', w:'C4', ar:'فيه زحمة', ph:'Feeh Za7ma', nl:'het is druk'},
+  {id:'a_mashallah', w:'C5', ar:'ما شاء الله', ph:"Masha'allah", nl:'wat mooi! (bewondering)'},
+  {id:'a_ya_rab', w:'C5', ar:'يا رب', ph:'Ya Rabb', nl:'hopelijk / o God'},
+  {id:'a_yalla_bina', w:'C5', ar:'يلا بينا', ph:'Yalla Beena', nl:'kom, we gaan'},
+  {id:'a_3ala_rasi', w:'C5', ar:'على راسي', ph:'3ala Rasi', nl:'met alle plezier'},
   // Niveau 4
-  {id:'a_bahebb_masr', w:'D1', ar:'أنا بحب مصر أوي', ph:'ana bahebb masr awi', nl:'ik hou heel erg van Egypte'},
-  {id:'a_batkallem', w:'D1', ar:'بتكلم عربي شوية بس بتعلم', ph:"batkallem 'arabi sjwajja bas bat'allem", nl:'ik spreek een beetje Arabisch, maar ik leer het'},
-  {id:'a_tetkallem_beraha', w:'D1', ar:'ممكن تتكلم براحة؟', ph:'momken tetkallem be-raaha?', nl:'kun je langzamer praten?', g:'you', fem:{ar:'ممكن تتكلمي براحة؟', ph:'momken tetkallemi be-raaha?'}},
-  {id:'a_bet3mel_eh', w:'D1', ar:'بتعمل إيه؟', ph:"bte'mel eeh?", nl:'wat ben je aan het doen?', g:'you', fem:{ar:'بتعملي إيه؟', ph:"bte'meli eeh?"}},
-  {id:'a_tab', w:'D2', ar:'طب', ph:'tabb', nl:'nou / oké dan'},
-  {id:'a_ya3ni', w:'D2', ar:'يعني', ph:"ja'ni", nl:'dus / zeg maar'},
-  {id:'a_akeed', w:'D2', ar:'أكيد', ph:'akkied', nl:'zeker'},
-  {id:'a_wallahi', w:'D2', ar:'والله', ph:'wallaahi', nl:'echt waar'},
-  {id:'a_ezzay_ya3ni', w:'D2', ar:'إزاي يعني؟', ph:"ezzaj ja'ni?", nl:'hoe bedoel je?'},
-  {id:'a_ya_3am', w:'D3', ar:'يا عم', ph:"ja 'amm", nl:'hé man (informeel)'},
-  {id:'a_ya_gama3a', w:'D3', ar:'يا جماعة', ph:"ja gamaa'a", nl:'jongens / mensen'},
-  {id:'a_3amel_eh', w:'D3', ar:'عامل إيه؟', ph:"'aamel eeh?", nl:'hoe gaat het? (informeel)', g:'you', fem:{ar:'عاملة إيه؟', ph:"'amla eeh?"}},
-  {id:'a_fol', w:'D3', ar:'فل', ph:'foll', nl:'top'},
-  {id:'a_gamed', w:'D3', ar:'جامد', ph:'gaamed', nl:'gaaf'},
-  {id:'a_bakol', w:'D4', ar:'باكل', ph:'baakol', nl:'ik eet (nu / gewoonlijk)'},
-  {id:'a_hakol', w:'D4', ar:'هاكل', ph:'haakol', nl:'ik ga eten'},
-  {id:'a_kalt', w:'D4', ar:'كلت', ph:'kalt', nl:'ik heb gegeten'},
-  {id:'a_mabakolsh', w:'D4', ar:'مباكلش', ph:'mabakolsj', nl:'ik eet niet', check:'Spelling uitspraak: mabakolsj of mabaklsj?'},
-  {id:'a_rooht', w:'D4', ar:'رحت', ph:'roht', nl:'ik ging'},
-  {id:'a_mesh_harooh', w:'D4', ar:'مش هروح', ph:'mesj harooh', nl:'ik ga niet'},
+  {id:'a_bahebb_masr', w:'D1', ar:'أنا بحب مصر أوي', ph:'Ana Ba7ebb Masr Awi', nl:'ik hou heel erg van Egypte'},
+  {id:'a_batkallem', w:'D1', ar:'بتكلم عربي شوية بس بتعلم', ph:'Batkallem 3arabi Shwayya Bas Bat3allem', nl:'ik spreek een beetje Arabisch, maar ik leer het'},
+  {id:'a_tetkallem_beraha', w:'D1', ar:'ممكن تتكلم براحة؟', ph:'Momken Tetkallem Be-Ra7a?', nl:'kun je langzamer praten?', g:'you', fem:{ar:'ممكن تتكلمي براحة؟', ph:'Momken Tetkallemi Be-Ra7a?'}},
+  {id:'a_bet3mel_eh', w:'D1', ar:'بتعمل إيه؟', ph:'Bte3mel Eeh?', nl:'wat ben je aan het doen?', g:'you', fem:{ar:'بتعملي إيه؟', ph:'Bte3meli Eeh?'}},
+  {id:'a_tab', w:'D2', ar:'طب', ph:'Tabb', nl:'nou / oké dan'},
+  {id:'a_ya3ni', w:'D2', ar:'يعني', ph:'Ya3ni', nl:'dus / zeg maar'},
+  {id:'a_akeed', w:'D2', ar:'أكيد', ph:'Akkeed', nl:'zeker'},
+  {id:'a_wallahi', w:'D2', ar:'والله', ph:'Wallahi', nl:'echt waar'},
+  {id:'a_ezzay_ya3ni', w:'D2', ar:'إزاي يعني؟', ph:'Ezzay Ya3ni?', nl:'hoe bedoel je?'},
+  {id:'a_ya_3am', w:'D3', ar:'يا عم', ph:'Ya 3amm', nl:'hé man (informeel)'},
+  {id:'a_ya_gama3a', w:'D3', ar:'يا جماعة', ph:'Ya Gama3a', nl:'jongens / mensen'},
+  {id:'a_3amel_eh', w:'D3', ar:'عامل إيه؟', ph:'3amel Eeh?', nl:'hoe gaat het? (informeel)', g:'you', fem:{ar:'عاملة إيه؟', ph:'3amla Eeh?'}},
+  {id:'a_fol', w:'D3', ar:'فل', ph:'Foll', nl:'top'},
+  {id:'a_gamed', w:'D3', ar:'جامد', ph:'Gamed', nl:'gaaf'},
+  {id:'a_bakol', w:'D4', ar:'باكل', ph:'Bakol', nl:'ik eet (nu / gewoonlijk)'},
+  {id:'a_hakol', w:'D4', ar:'هاكل', ph:'Hakol', nl:'ik ga eten'},
+  {id:'a_kalt', w:'D4', ar:'كلت', ph:'Kalt', nl:'ik heb gegeten'},
+  {id:'a_mabakolsh', w:'D4', ar:'مباكلش', ph:'Mabakolsh', nl:'ik eet niet', check:'Uitspraak: Mabakolsh of Mabaklsh?'},
+  {id:'a_rooht', w:'D4', ar:'رحت', ph:'Ro7t', nl:'ik ging'},
+  {id:'a_mesh_harooh', w:'D4', ar:'مش هروح', ph:'Mesh Haroo7', nl:'ik ga niet'},
 ];
 const ADULT_LEVELS = [
   {n:1, title:'Beginner', desc:'De eerste woorden en zinnen'},
@@ -1577,63 +1577,63 @@ const ADULT_MODS = [
   {id:'D4', lv:4, title:'Zinsbouw en grammatica', icon:'📘', items:['a_bakol','a_hakol','a_kalt','a_mabakolsh','a_rooht','a_mesh_harooh']},
 ];
 const GRAMMAR = {
-  A2: `<p><b>"Zijn" bestaat niet in de tegenwoordige tijd.</b> Je zegt gewoon <i>ana masri</i> = ik (ben) Egyptisch, <i>ana men holanda</i> = ik (kom) uit Nederland.</p><p><b>Mannelijk en vrouwelijk.</b> Een vrouw zegt vaak het woord met <i>-a</i> erachter: <i>modarres</i> → <i>modarresa</i>, <i>metgawwez</i> → <i>metgawweza</i>. De app laat vrouwen automatisch de vrouwelijke vorm zien.</p>`,
-  A3: `<p><b>"Mijn, jouw, zijn" plak je achter het woord.</b></p><p><i>beet</i> (huis) → <i>beeti</i> (mijn huis), <i>beetak</i> (jouw, tegen een man), <i>beetek</i> (jouw, tegen een vrouw), <i>beeto</i> (zijn), <i>beetha</i> (haar).</p><p>Zo ook: <i>goozi</i> = mijn man, <i>ebni</i> = mijn zoon.</p>`,
-  A4: `<p><b>Tellen.</b> Na 3 tot en met 10 gebruik je het meervoud, vanaf 11 het enkelvoud. Voor 2 gebruik je vaak een eigen vorm (tweevoud) in plaats van <i>etneen</i>.</p>`,
-  A5: `<p><b>"Ik wil".</b> Een man zegt <i>'aajez</i>, een vrouw <i>'ajza</i>. Daarna komt gewoon wat je wilt: <i>'aajez sjaai</i> = ik wil thee.</p>`,
-  B2: `<p><b>Vraagwoorden staan vaak achteraan.</b> <i>esmak eeh?</i> = je naam wat? (hoe heet je?), <i>enta raajeh feen?</i> = jij gaat waar? (waar ga je heen?). Je stem gaat omhoog aan het eind.</p>`,
-  B5: `<p><b>Met en zonder.</b> <i>be-</i> = met: <i>sjaai be-laban</i> (thee met melk). <i>men gheer</i> = zonder: <i>men gheer sokkar</i> (zonder suiker).</p>`,
-  C3: `<p><b>Gevoelens hebben een mannelijke en vrouwelijke vorm.</b> <i>za'laan / za'laana</i>, <i>farhaan / farhaana</i>.</p><p><b>Niet.</b> Voor een bijvoeglijk naamwoord zet je <i>mesj</i>: <i>ana mesj ta'baan</i> = ik ben niet moe.</p>`,
-  C5: `<p><b>Uitdrukkingen met God</b> horen bij gewone beleefdheid, ook voor wie niet gelovig is. <i>insja'allah</i> = hopelijk, <i>masja'allah</i> = wat mooi (bij complimenten, vooral over kinderen), <i>el-hamdoe lellaah</i> = gelukkig / dank God.</p>`,
-  D2: `<p><b>Opvulwoorden maken je Egyptisch natuurlijk.</b> <i>tabb</i> (nou), <i>ja'ni</i> (dus, zeg maar), <i>akkied</i> (zeker), <i>wallaahi</i> (echt waar). Egyptenaren gebruiken ze de hele dag.</p>`,
-  D4: `<p><b>Werkwoorden in drie stappen:</b></p><p><i>b-</i> = nu of gewoonlijk: <i>baakol</i> = ik eet.<br><i>h-</i> = straks: <i>haakol</i> = ik ga eten.<br>Verleden tijd heeft een eigen vorm: <i>kalt</i> = ik at, <i>roht</i> = ik ging.</p><p><b>Ontkennen:</b> <i>ma-…-sj</i> om het werkwoord heen: <i>mabakolsj</i> = ik eet niet. Bij de toekomst: <i>mesj harooh</i> = ik ga niet.</p>`,
+  A2: `<p><b>"Zijn" bestaat niet in de tegenwoordige tijd.</b> Je zegt gewoon <i>Ana Masri</i> = ik (ben) Egyptisch, <i>Ana Men Holanda</i> = ik (kom) uit Nederland.</p><p><b>Mannelijk en vrouwelijk.</b> Een vrouw zegt vaak het woord met <i>-a</i> erachter: <i>Modarres</i> → <i>Modarresa</i>, <i>Metgawwez</i> → <i>Metgawweza</i>. De app laat vrouwen automatisch de vrouwelijke vorm zien.</p>`,
+  A3: `<p><b>"Mijn, jouw, zijn" plak je achter het woord.</b></p><p><i>Beet</i> (huis) → <i>Beeti</i> (mijn huis), <i>Beetak</i> (jouw, tegen een man), <i>Beetek</i> (jouw, tegen een vrouw), <i>Beeto</i> (zijn), <i>Beetha</i> (haar).</p><p>Zo ook: <i>Goozi</i> = mijn man, <i>Ebni</i> = mijn zoon.</p>`,
+  A4: `<p><b>Tellen.</b> Na 3 tot en met 10 gebruik je het meervoud, vanaf 11 het enkelvoud. Voor 2 gebruik je vaak een eigen vorm (tweevoud) in plaats van <i>Etneen</i>.</p>`,
+  A5: `<p><b>"Ik wil".</b> Een man zegt <i>3ayez</i>, een vrouw <i>3ayza</i>. Daarna komt gewoon wat je wilt: <i>3ayez Shai</i> = ik wil thee.</p>`,
+  B2: `<p><b>Vraagwoorden staan vaak achteraan.</b> <i>Esmak Eeh?</i> = je naam wat? (hoe heet je?), <i>Enta Raye7 Feen?</i> = jij gaat waar? (waar ga je heen?). Je stem gaat omhoog aan het eind.</p>`,
+  B5: `<p><b>Met en zonder.</b> <i>be-</i> = met: <i>Shai Be-Laban</i> (thee met melk). <i>Men Gheer</i> = zonder: <i>Men Gheer Sokkar</i> (zonder suiker).</p>`,
+  C3: `<p><b>Gevoelens hebben een mannelijke en vrouwelijke vorm.</b> <i>Za3lan / Za3lana</i>, <i>Far7an / Far7ana</i>.</p><p><b>Niet.</b> Voor een bijvoeglijk naamwoord zet je <i>Mesh</i>: <i>Ana Mesh Ta3ban</i> = ik ben niet moe.</p>`,
+  C5: `<p><b>Uitdrukkingen met God</b> horen bij gewone beleefdheid, ook voor wie niet gelovig is. <i>Insha'allah</i> = hopelijk, <i>Masha'allah</i> = wat mooi (bij complimenten, vooral over kinderen), <i>El-7amdo Lellah</i> = gelukkig / dank God.</p>`,
+  D2: `<p><b>Opvulwoorden maken je Egyptisch natuurlijk.</b> <i>Tabb</i> (nou), <i>Ya3ni</i> (dus, zeg maar), <i>Akkeed</i> (zeker), <i>Wallahi</i> (echt waar). Egyptenaren gebruiken ze de hele dag.</p>`,
+  D4: `<p><b>Werkwoorden in drie stappen:</b></p><p><i>b-</i> = nu of gewoonlijk: <i>Bakol</i> = ik eet.<br><i>h-</i> = straks: <i>Hakol</i> = ik ga eten.<br>Verleden tijd heeft een eigen vorm: <i>Kalt</i> = ik at, <i>Ro7t</i> = ik ging.</p><p><b>Ontkennen:</b> <i>Ma-…-sh</i> om het werkwoord heen: <i>Mabakolsh</i> = ik eet niet. Bij de toekomst: <i>Mesh Haroo7</i> = ik ga niet.</p>`,
 };
 // Gesprekssituaties: Mishmish of een rolfiguur spreekt, jij kiest je antwoord.
 const SC_LINES = [
-  {id:'sc_nawwartena', w:'S1', ar:'أهلاً أهلاً! نورتنا', ph:'ahlan ahlan! nawwartena', nl:'Welkom welkom! Fijn dat je er bent!', g:'you', fem:{ar:'أهلاً أهلاً! نورتينا', ph:'ahlan ahlan! nawwarteena'}},
-  {id:'sc_da_noorek', w:'S1', ar:'ده نورك', ph:'da noorek', nl:'Dank je (tegen een vrouw)'},
-  {id:'sc_o3od', w:'S1', ar:'اتفضل اقعد', ph:"etfaddal o''od", nl:'Kom, ga zitten.', g:'you', fem:{ar:'اتفضلي اقعدي', ph:"etfaddali o''odi"}},
-  {id:'sc_shay_sokkar', w:'S1', ar:'شاي بسكر خفيف', ph:'sjaai be-sokkar chafief', nl:'Thee met een beetje suiker.'},
-  {id:'sc_kol_kaman', w:'S1', ar:'كل كمان!', ph:'kol kamaan!', nl:'Eet nog wat!', g:'you', fem:{ar:'كلي كمان!', ph:'koli kamaan!'}},
-  {id:'sc_shbe3t', w:'S1', ar:'أنا شبعت، الحمد لله', ph:"ana sjebe't, el-hamdoe lellaah", nl:'Ik zit vol, dank God.'},
-  {id:'sc_3eyal', w:'S2', ar:'العيال عاملين إيه؟', ph:"el-'ijaal 'amliin eeh?", nl:'Hoe gaat het met de kinderen?'},
-  {id:'sc_kwayyesin', w:'S2', ar:'كويسين الحمد لله', ph:'kwajjesien, el-hamdoe lellaah', nl:'Goed, dank God.'},
-  {id:'sc_hatigo_emta', w:'S2', ar:'هتيجوا مصر إمتى؟', ph:'hatiegoe masr emta?', nl:'Wanneer komen jullie naar Egypte?'},
-  {id:'sc_fel_seif', w:'S2', ar:'في الصيف إن شاء الله', ph:"fes-seef insja'allah", nl:'In de zomer, als God het wil.'},
-  {id:'sc_wentom_aktar', w:'S2', ar:'وإنتوا أكتر', ph:'w entoe aktar', nl:'En jullie (mij) nog meer.'},
-  {id:'sc_kilo', w:'S3', ar:'عايز كيلو طماطم', ph:"'aajez kielo tamaatem", nl:'Ik wil een kilo tomaten.', g:'self', fem:{ar:'عايزة كيلو طماطم', ph:"'ajza kielo tamaatem"}},
-  {id:'sc_haga_tanya', w:'S3', ar:'حاجة تانية؟', ph:'haaga tanja?', nl:'Nog iets?'},
-  {id:'sc_la_bekam', w:'S3', ar:'لأ، شكراً. بكام؟', ph:"la', sjoekran. bekaam?", nl:'Nee, dank je. Hoeveel is het?'},
-  {id:'sc_25', w:'S3', ar:'خمسة وعشرين جنيه', ph:"chamsa w 'esjrien geneeh", nl:'Vijfentwintig pond.'},
-  {id:'sc_khalas_20', w:'S3', ar:'خلاص، عشرين', ph:"chalaas, 'esjrien", nl:'Oké, twintig dan.'},
-  {id:'sc_tamam_shokran', w:'S3', ar:'تمام، شكراً', ph:'tamaam, sjoekran', nl:'Prima, dank je.'},
-  {id:'sc_rayeh_feen', w:'S4', ar:'رايح فين؟', ph:'raajeh feen?', nl:'Waar wil je heen?', g:'you', fem:{ar:'رايحة فين؟', ph:'rajha feen?'}},
-  {id:'sc_el_mathaf', w:'S4', ar:'على المتحف لو سمحت', ph:"'al-mathaf law samaht", nl:'Naar het museum, alstublieft.'},
-  {id:'sc_men_hena', w:'S4', ar:'من هنا ولا من هنا؟', ph:'men hena walla men hena?', nl:'Deze kant of die kant?'},
-  {id:'sc_weselna', w:'S4', ar:'وصلنا', ph:'weselna', nl:'We zijn er.'},
-  {id:'sc_nazzelni', w:'S4', ar:'نزلني هنا لو سمحت', ph:'nazzelni hena law samaht', nl:'Zet me hier maar af, alstublieft.'},
-  {id:'sc_100', w:'S4', ar:'مية جنيه', ph:'mieet geneeh', nl:'Honderd pond.'},
-  {id:'sc_ktir', w:'S4', ar:'ده كتير! خد ستين', ph:'da ktier! chod settien', nl:'Dat is veel! Hier, zestig.'},
-  {id:'sc_totlob', w:'S5', ar:'تحب تطلب إيه؟', ph:'tehebb totlob eeh?', nl:'Wat wil je bestellen?', g:'you', fem:{ar:'تحبي تطلبي إيه؟', ph:'tehebbi totlobi eeh?'}},
-  {id:'sc_koshari_manga', w:'S5', ar:'واحد كشري وعصير مانجة', ph:"waahed kosjari we 'asier manga", nl:'Een koshari en een mangosap.'},
-  {id:'sc_kebir', w:'S5', ar:'كبير ولا صغير؟', ph:'kebier walla soeghajjar?', nl:'Groot of klein?'},
-  {id:'sc_hesab_law', w:'S5', ar:'الحساب لو سمحت', ph:'el-hesaab law samaht', nl:'De rekening, alstublieft.'},
-  {id:'sc_yehanik', w:'S5', ar:'الله يهنيك', ph:'allaah jehanniek', nl:'Dank je (antwoord op eet smakelijk).'},
-  {id:'sc_gedid', w:'S6', ar:'إنت جديد هنا؟', ph:'enta gediid hena?', nl:'Ben je nieuw hier?', g:'you', fem:{ar:'إنتي جديدة هنا؟', ph:'enti gediida hena?'}},
-  {id:'sc_lessa_gay', w:'S6', ar:'أيوه، لسه جاي', ph:'ajwa, lessa gaaj', nl:'Ja, net aangekomen.', g:'self', fem:{ar:'أيوه، لسه جاية', ph:'ajwa, lessa gajja'}},
-  {id:'sc_law_ehtagt', w:'S6', ar:'لو احتجت حاجة قولي', ph:"law ehtagt haaga, 'oolli", nl:'Als je iets nodig hebt, zeg het.', g:'you', fem:{ar:'لو احتجتي حاجة قوليلي', ph:"law ehtagti haaga, 'oolieli"}},
-  {id:'sc_ga3an_mama', w:'S7', ar:'ماما، أنا جعان', ph:"mama, ana ga'aan", nl:'Mama, ik heb honger.'},
-  {id:'sc_hader', w:'S7', ar:'حاضر يا حبيبي', ph:'haader ja habiebi', nl:'Oké, lieverd.'},
-  {id:'sc_al3ab_barra', w:'S7', ar:'ممكن ألعب برة؟', ph:"momken al'ab barra?", nl:'Mag ik buiten spelen?'},
-  {id:'sc_ba3d_akl', w:'S7', ar:'أيوه، بس بعد الأكل', ph:"ajwa, bas ba'd el-akl", nl:'Ja, maar na het eten.'},
-  {id:'sc_mesh_anam', w:'S7', ar:'مش عايز أنام!', ph:"mesj 'aajez anaam!", nl:'Ik wil niet slapen!'},
-  {id:'sc_batal', w:'S7', ar:'يلا يا بطل، نام', ph:'jalla ja batal, naam', nl:'Kom op, kampioen, slapen.'},
-  {id:'sc_awel_mara', w:'S8', ar:'أول مرة في مصر؟', ph:'awwel marra f-masr?', nl:'Eerste keer in Egypte?'},
-  {id:'sc_tany_mara', w:'S8', ar:'لأ، تاني مرة', ph:"la', taani marra", nl:'Nee, de tweede keer.'},
-  {id:'sc_masr_3agbetak', w:'S8', ar:'مصر عجبتك؟', ph:"masr 'agabetak?", nl:'Vind je Egypte leuk?', g:'you', fem:{ar:'مصر عجبتك؟', ph:"masr 'agabetek?"}},
-  {id:'sc_hato3od', w:'S8', ar:'هتقعد قد إيه؟', ph:"hato''od 'add eeh?", nl:'Hoe lang blijf je?', g:'you', fem:{ar:'هتقعدي قد إيه؟', ph:"hato''odi 'add eeh?"}},
-  {id:'sc_esbo3een', w:'S8', ar:'أسبوعين', ph:"esboe'een", nl:'Twee weken.'},
-  {id:'sc_rehla', w:'S8', ar:'رحلة سعيدة', ph:"rehla sa'iida", nl:'Goede reis!'},
+  {id:'sc_nawwartena', w:'S1', ar:'أهلاً أهلاً! نورتنا', ph:'Ahlan Ahlan! Nawwartena', nl:'Welkom welkom! Fijn dat je er bent!', g:'you', fem:{ar:'أهلاً أهلاً! نورتينا', ph:'Ahlan Ahlan! Nawwarteena'}},
+  {id:'sc_da_noorek', w:'S1', ar:'ده نورك', ph:'Da Noorek', nl:'Dank je (tegen een vrouw)'},
+  {id:'sc_o3od', w:'S1', ar:'اتفضل اقعد', ph:"Etfaddal O'3od", nl:'Kom, ga zitten.', g:'you', fem:{ar:'اتفضلي اقعدي', ph:"Etfaddali O'3odi"}},
+  {id:'sc_shay_sokkar', w:'S1', ar:'شاي بسكر خفيف', ph:'Shai Be-Sokkar Khafeef', nl:'Thee met een beetje suiker.'},
+  {id:'sc_kol_kaman', w:'S1', ar:'كل كمان!', ph:'Kol Kaman!', nl:'Eet nog wat!', g:'you', fem:{ar:'كلي كمان!', ph:'Koli Kaman!'}},
+  {id:'sc_shbe3t', w:'S1', ar:'أنا شبعت، الحمد لله', ph:'Ana Shebe3t, El-7amdo Lellah', nl:'Ik zit vol, dank God.'},
+  {id:'sc_3eyal', w:'S2', ar:'العيال عاملين إيه؟', ph:'El-3iyal 3amleen Eeh?', nl:'Hoe gaat het met de kinderen?'},
+  {id:'sc_kwayyesin', w:'S2', ar:'كويسين الحمد لله', ph:'Kwayyeseen, El-7amdo Lellah', nl:'Goed, dank God.'},
+  {id:'sc_hatigo_emta', w:'S2', ar:'هتيجوا مصر إمتى؟', ph:'Hateegoo Masr Emta?', nl:'Wanneer komen jullie naar Egypte?'},
+  {id:'sc_fel_seif', w:'S2', ar:'في الصيف إن شاء الله', ph:"Fes-Seef Insha'allah", nl:'In de zomer, als God het wil.'},
+  {id:'sc_wentom_aktar', w:'S2', ar:'وإنتوا أكتر', ph:'W Ento Aktar', nl:'En jullie (mij) nog meer.'},
+  {id:'sc_kilo', w:'S3', ar:'عايز كيلو طماطم', ph:'3ayez Keelo Tamatem', nl:'Ik wil een kilo tomaten.', g:'self', fem:{ar:'عايزة كيلو طماطم', ph:'3ayza Keelo Tamatem'}},
+  {id:'sc_haga_tanya', w:'S3', ar:'حاجة تانية؟', ph:'7aga Tanya?', nl:'Nog iets?'},
+  {id:'sc_la_bekam', w:'S3', ar:'لأ، شكراً. بكام؟', ph:"La', Shokran. Bekam?", nl:'Nee, dank je. Hoeveel is het?'},
+  {id:'sc_25', w:'S3', ar:'خمسة وعشرين جنيه', ph:'Khamsa W 3eshreen Geneeh', nl:'Vijfentwintig pond.'},
+  {id:'sc_khalas_20', w:'S3', ar:'خلاص، عشرين', ph:'Khalas, 3eshreen', nl:'Oké, twintig dan.'},
+  {id:'sc_tamam_shokran', w:'S3', ar:'تمام، شكراً', ph:'Tamam, Shokran', nl:'Prima, dank je.'},
+  {id:'sc_rayeh_feen', w:'S4', ar:'رايح فين؟', ph:'Raye7 Feen?', nl:'Waar wil je heen?', g:'you', fem:{ar:'رايحة فين؟', ph:'Ray7a Feen?'}},
+  {id:'sc_el_mathaf', w:'S4', ar:'على المتحف لو سمحت', ph:'3al-Mat7af Law Sama7t', nl:'Naar het museum, alstublieft.'},
+  {id:'sc_men_hena', w:'S4', ar:'من هنا ولا من هنا؟', ph:'Men Hena Walla Men Hena?', nl:'Deze kant of die kant?'},
+  {id:'sc_weselna', w:'S4', ar:'وصلنا', ph:'Weselna', nl:'We zijn er.'},
+  {id:'sc_nazzelni', w:'S4', ar:'نزلني هنا لو سمحت', ph:'Nazzelni Hena Law Sama7t', nl:'Zet me hier maar af, alstublieft.'},
+  {id:'sc_100', w:'S4', ar:'مية جنيه', ph:'Meet Geneeh', nl:'Honderd pond.'},
+  {id:'sc_ktir', w:'S4', ar:'ده كتير! خد ستين', ph:'Da Kteer! Khod Setteen', nl:'Dat is veel! Hier, zestig.'},
+  {id:'sc_totlob', w:'S5', ar:'تحب تطلب إيه؟', ph:'Te7ebb Totlob Eeh?', nl:'Wat wil je bestellen?', g:'you', fem:{ar:'تحبي تطلبي إيه؟', ph:'Te7ebbi Totlobi Eeh?'}},
+  {id:'sc_koshari_manga', w:'S5', ar:'واحد كشري وعصير مانجة', ph:'Wa7ed Koshari We 3aseer Manga', nl:'Een koshari en een mangosap.'},
+  {id:'sc_kebir', w:'S5', ar:'كبير ولا صغير؟', ph:'Kebeer Walla Soghayyar?', nl:'Groot of klein?'},
+  {id:'sc_hesab_law', w:'S5', ar:'الحساب لو سمحت', ph:'El-7esab Law Sama7t', nl:'De rekening, alstublieft.'},
+  {id:'sc_yehanik', w:'S5', ar:'الله يهنيك', ph:'Allah Yehanneek', nl:'Dank je (antwoord op eet smakelijk).'},
+  {id:'sc_gedid', w:'S6', ar:'إنت جديد هنا؟', ph:'Enta Gedeed Hena?', nl:'Ben je nieuw hier?', g:'you', fem:{ar:'إنتي جديدة هنا؟', ph:'Enti Gedeeda Hena?'}},
+  {id:'sc_lessa_gay', w:'S6', ar:'أيوه، لسه جاي', ph:'Aywa, Lessa Gay', nl:'Ja, net aangekomen.', g:'self', fem:{ar:'أيوه، لسه جاية', ph:'Aywa, Lessa Gayya'}},
+  {id:'sc_law_ehtagt', w:'S6', ar:'لو احتجت حاجة قولي', ph:"Law E7tagt 7aga, 'Oolli", nl:'Als je iets nodig hebt, zeg het.', g:'you', fem:{ar:'لو احتجتي حاجة قوليلي', ph:"Law E7tagti 7aga, 'Ooleeli"}},
+  {id:'sc_ga3an_mama', w:'S7', ar:'ماما، أنا جعان', ph:'Mama, Ana Ga3an', nl:'Mama, ik heb honger.'},
+  {id:'sc_hader', w:'S7', ar:'حاضر يا حبيبي', ph:'7ader Ya 7abeebi', nl:'Oké, lieverd.'},
+  {id:'sc_al3ab_barra', w:'S7', ar:'ممكن ألعب برة؟', ph:'Momken Al3ab Barra?', nl:'Mag ik buiten spelen?'},
+  {id:'sc_ba3d_akl', w:'S7', ar:'أيوه، بس بعد الأكل', ph:'Aywa, Bas Ba3d El-Akl', nl:'Ja, maar na het eten.'},
+  {id:'sc_mesh_anam', w:'S7', ar:'مش عايز أنام!', ph:'Mesh 3ayez Anam!', nl:'Ik wil niet slapen!'},
+  {id:'sc_batal', w:'S7', ar:'يلا يا بطل، نام', ph:'Yalla Ya Batal, Nam', nl:'Kom op, kampioen, slapen.'},
+  {id:'sc_awel_mara', w:'S8', ar:'أول مرة في مصر؟', ph:'Awwel Marra F-Masr?', nl:'Eerste keer in Egypte?'},
+  {id:'sc_tany_mara', w:'S8', ar:'لأ، تاني مرة', ph:"La', Tani Marra", nl:'Nee, de tweede keer.'},
+  {id:'sc_masr_3agbetak', w:'S8', ar:'مصر عجبتك؟', ph:'Masr 3agabetak?', nl:'Vind je Egypte leuk?', g:'you', fem:{ar:'مصر عجبتك؟', ph:'Masr 3agabetek?'}},
+  {id:'sc_hato3od', w:'S8', ar:'هتقعد قد إيه؟', ph:"Hato'3od 'Add Eeh?", nl:'Hoe lang blijf je?', g:'you', fem:{ar:'هتقعدي قد إيه؟', ph:"Hato'3odi 'Add Eeh?"}},
+  {id:'sc_esbo3een', w:'S8', ar:'أسبوعين', ph:'Esboo3een', nl:'Twee weken.'},
+  {id:'sc_rehla', w:'S8', ar:'رحلة سعيدة', ph:'Re7la Sa3eeda', nl:'Goede reis!'},
 ];
 const SCENARIOS = [
   {id:'S1', lv:3, title:'Op bezoek bij je schoonfamilie', who:'👵', intro:'Je komt binnen bij je schoonmoeder in Caïro. Zij praat met jou.', turns:[
@@ -1662,12 +1662,98 @@ const SCENARIOS = [
     {q:'sc_hato3od', a:'sc_esbo3een', d:['a_emta','talata']}, {q:'sc_rehla', a:'shukran', d:['la','a_khalas']}]},
 ];
 
+/* =====================================================================
+   CENTRALE SCHRIJFWIJZE (transliteratie) VAN HET EGYPTISCH
+   Elke uitspraak in de app gaat door translit(uitspraak, arabisch).
+   Regels:
+   - Ieder woord begint met een hoofdletter (ook na een koppelteken: El-Kheer).
+   - ع = 3, ح = 7, خ = Kh, ش = Sh, غ = Gh, ء/ق (als glottisslag) = '
+   - Klinkers: lange a = a, lange i (ي) = ee, oe = o (of oo bij een و), ee en oo blijven.
+   - Nederlandse spelling wordt omgezet: sj→sh, ch→kh, j→y.
+   3 en 7 worden bepaald door het Arabische schrift ernaast: de app zoekt de ع, ح en ه
+   in het Arabisch en zet de ' en h in dezelfde volgorde om. Klopt het aantal niet,
+   dan blijft het teken staan en wordt het woord gemarkeerd om te controleren.
+   De functie is veilig om vaker uit te voeren: al omgezette tekst blijft gelijk.
+   ===================================================================== */
+const TL_MANUAL = {
+  'mieet geneeh':'Meet Geneeh',
+  "ma'as-salaama":'Ma3a Salama',
+  'bahebbik':'Ba7ebbek',
+  'bahebbik ja mama':'Ba7ebbek Ya Mama',
+};   // vaste uitzonderingen: oude of nieuwe uitspraak (kleine letters) -> gewenste schrijfwijze
+function tlArabic(ar){
+  const s = String(ar||'').replace(/[ً-ٰٟـ]/g,'').replace(/[،؟!?.,:;"()]/g,'');
+  const H = [], A = [];
+  s.split(/\s+/).forEach(w=>{
+    [...w].forEach((c,i)=>{
+      const last = i===w.length-1;
+      if(c==='ح') H.push({v:'7'}); else if(c==='ه') H.push({v:'h', fin:last, short:w.length<=3});
+      if(c==='ع') A.push({v:'3'}); else if(c==='ق') A.push({v:"'", q:1});
+      else if('ءؤئ'.includes(c) || ('أإآ'.includes(c) && i>0)) A.push({v:"'", hz:1});
+    });
+  });
+  return {H, A};
+}
+function tlTokens(s){
+  const H = [], A = [];
+  for(let i=0;i<s.length;i++){
+    const two = s.slice(i,i+2);
+    if(two==='sh' || two==='kh' || two==='gh'){ i++; continue; }
+    if((s[i]==='h' && s[i+1]==='h') || (s[i]==='7' && s[i+1]==='7')){ H.push([i,i+1]); i++; continue; }
+    if(s[i]==='h' || s[i]==='7') H.push([i]);
+    else if(s[i]==="'" || s[i]==='3') A.push([i]);
+  }
+  return {H, A};
+}
+function tlFit(lat, ar, drops){
+  if(lat.length===ar.length) return ar;
+  for(const d of drops){ const r = ar.filter(x=>!d(x)); if(r.length===lat.length) return r; }
+  return null;
+}
+function translit(ph, ar, issues){
+  if(!ph) return ph;
+  const raw = String(ph).trim();
+  const key = raw.toLowerCase();
+  if(TL_MANUAL[key]) return TL_MANUAL[key];
+  let s = key;
+  const arW = String(ar||'').trim().split(/\s+/), laW = s.split(' ');
+  // oe -> oo voor zoveel keer als er een و (als klinker) in het Arabische woord staat (de laatste), anders o
+  s = laW.map((w,k)=>{ const a = arW.length===laW.length ? arW[k] : ''; let n = [...a].filter((c,i)=>c==='و' && i>0).length;
+    const idx = []; w.replace(/oe/g, (m,i)=>{ idx.push(i); return m; });
+    const longSet = new Set(idx.slice(Math.max(0, idx.length-n)));
+    return w.replace(/oe/g, (m,i)=> longSet.has(i) ? 'oo' : 'o'); }).join(' ');
+  s = s.replace(/sj/g,'sh').replace(/ch/g,'kh').replace(/aa/g,'a').replace(/ii/g,'ee').replace(/ie/g,'ee').replace(/j/g,'y');
+  // 3 / 7 via het Arabisch: per woord als het aantal woorden gelijk is, anders over de hele zin
+  const conv = (lat, a, iss) => {
+    const t = tlTokens(lat), g = tlArabic(a), out = lat.split('');
+    const H = tlFit(t.H, g.H, [x=>x.v==='h'&&x.fin&&x.short, x=>x.v==='h'&&x.fin]);
+    if(H) t.H.forEach((ps,k)=>ps.forEach(p=>{ out[p] = H[k].v; })); else iss.push('h/7');
+    const A = tlFit(t.A, g.A, [x=>x.q, x=>x.hz, x=>x.q||x.hz]);
+    if(A) t.A.forEach((ps,k)=>ps.forEach(p=>{ out[p] = A[k].v; })); else iss.push("'/3");
+    return out.join('');
+  };
+  const aw = String(ar||'').trim().split(/\s+/), lw = s.split(' ');
+  const iss = [];
+  if(aw.length===lw.length){ const per = lw.map((w,k)=>{ const i2=[]; const r = conv(w, aw[k], i2); i2.forEach(x=>iss.push(x+' in '+w)); return {r, ok:!i2.length}; });
+    if(per.every(x=>x.ok)) s = per.map(x=>x.r).join(' ');
+    else { const i3 = []; const whole = conv(s, ar, i3); if(!i3.length){ s = whole; iss.length = 0; } else s = per.map(x=>x.r).join(' '); } }
+  else s = conv(s, ar, iss);
+  if(issues) iss.forEach(x=>issues.push(x));
+  // hoofdletters: ieder woord en na een koppelteken
+  s = s.replace(/(^|[\s\-])([^a-z0-9\s\-]*)([a-z])/g, (m,a,b,c)=>a+b+c.toUpperCase());
+  return s;
+}
+function tlList(list){ (list||[]).forEach(x=>{ if(x.ph) x.ph = translit(x.ph, x.ar); if(x.fem && x.fem.ph) x.fem.ph = translit(x.fem.ph, x.fem.ar); }); }
+// zoeken: ook oude Nederlandse spelling vinden (sjoekran -> shokran)
+const tlQuery = q => translit(q, '').toLowerCase();
+
 /* ===================================================================== */
 /* ======================  VANAF HIER: DE APP-LOGICA  ==================== */
 /* ===================================================================== */
 
 const ITEM = {};
 const VARIANTS = [];
+[WORDS, SENTENCES, DLINES, A_ITEMS, SC_LINES].forEach(tlList);
 A_ITEMS.forEach(a=>WORDS.push({pic:'💬', ...a}));
 WORDS.forEach(w=>ITEM[w.id]={...w,kind:'word'});
 SENTENCES.forEach(s=>ITEM[s.id]={...s,kind:'sentence',pic:s.pic||'💬'});
@@ -1886,7 +1972,7 @@ async function loadContent(){
 function applyContent(){
   Object.entries(CONTENT).forEach(([id, d])=>{
     if(d.new && !ITEM[id]){
-      const w = {id, w:+d.w, ar:d.ar||'', ph:d.ph||'', nl:d.nl||'', pic:d.pic||'🆕'};
+      const w = {id, w:+d.w, ar:d.ar||'', ph:translit(d.ph||'', d.ar||''), nl:d.nl||'', pic:d.pic||'🆕'};
       WORDS.push(w); ITEM[id] = {...w, kind:'word'};
       const wl = WORLDS.find(x=>x.id===+d.w), les = wl && wl.lessons.find(l=>l.id===d.lesson);
       if(les && les.words && !les.words.includes(id)) les.words.push(id);
@@ -1895,7 +1981,7 @@ function applyContent(){
     const it = ITEM[id]; if(!it) return;
     if(!ORIG[id]) ORIG[id] = Object.fromEntries(EDIT_KEYS.map(k=>[k, it[k]]));
     const src = WORDS.find(x=>x.id===id) || SENTENCES.find(x=>x.id===id) || DLINES.find(x=>x.id===id);
-    EDIT_KEYS.forEach(k=>{ const v = (d[k]!==undefined && d[k]!=='') ? d[k] : ORIG[id][k]; it[k] = v; if(src) src[k] = v; });
+    EDIT_KEYS.forEach(k=>{ let v = (d[k]!==undefined && d[k]!=='') ? d[k] : ORIG[id][k]; if(k==='ph') v = translit(v, (d.ar||ORIG[id].ar||it.ar)); it[k] = v; if(src) src[k] = v; });
   });
 }
 const isVerified = id => !!(CONTENT[id] && CONTENT[id].verified) || !!(DB.verified||{})[id];
@@ -2954,7 +3040,7 @@ function adultHomeHTML(){
   const p = me(); daily(p);
   const goal = p.dgoal || 20, xpT = p.today.xp || 0, due = dueWords(p, 2).length;
   const nx = nextAdultLesson(p), lv = S.alv || p.alevel || 1;
-  const hr = new Date().getHours(), greet = hr<12 ? 'Sabaah el-cheer' : hr<18 ? 'Ahlan' : 'Masa el-cheer';
+  const hr = new Date().getHours(), greet = hr<12 ? ITEM.sabah.ph : hr<18 ? ITEM.ahlan.ph : ITEM.masa.ph;
   let h = topbarHTML(p);
   h += `<div class="ahead"><div><span class="akind">${KINDS[kindOf(p)]} · niveau ${p.alevel||1}</span><h1>${greet}, ${esc(p.name)}</h1></div>${mascot(56,'happy','')}</div>`;
   h += `<div class="acards">
@@ -2994,7 +3080,8 @@ function dictHTML(){
   const p = me(), favs = new Set(p.favs||[]), f = S.df || 'mine', q = (S.dq||'').trim().toLowerCase();
   const adultIds = [...new Set(ADULT_MODS.flatMap(m=>m.items))];
   let ids = f==='fav' ? [...favs] : f==='err' ? Object.keys(p.words||{}).filter(id=>ITEM[id] && (p.words[id].w||0)>0) : f==='all' ? adultIds : Object.keys(p.words||{}).filter(id=>ITEM[id] && ITEM[id].kind==='word');
-  if(q) ids = adultIds.concat(allItems().map(x=>x.id)).filter((id,i,a)=>a.indexOf(id)===i && ITEM[id] && [ITEM[id].ph, ITEM[id].nl, ITEM[id].ar].join(' ').toLowerCase().includes(q));
+  const q2 = q ? tlQuery(q) : '';
+  if(q) ids = adultIds.concat(allItems().map(x=>x.id)).filter((id,i,a)=>{ if(a.indexOf(id)!==i || !ITEM[id]) return false; const h = [ITEM[id].ph, ITEM[id].nl, ITEM[id].ar].join(' ').toLowerCase(); return h.includes(q) || h.includes(q2); });
   const lim = S.dlimit || 50;
   return topbarHTML(p) + `<h1 class="page-h">Mijn woordenboek</h1><p class="page-sub">${adultLearned(p)} van ${adultTotal()} woorden en zinnen geleerd · ${favs.size} favorieten</p>
   <input class="inp" id="dq" type="search" placeholder="Zoek in het Nederlands, Egyptisch of Arabisch" value="${esc(S.dq||'')}" data-dq="1">
@@ -3173,7 +3260,7 @@ function topbarHTML(p){
 }
 function greetHTML(p, missed){
   const hr = new Date().getHours();
-  const g = hr<12 ? ['sabah','Sabaah el-cheer'] : hr<18 ? ['ahlan','Ahlan'] : ['masa','Masa el-cheer'];
+  const g = hr<12 ? ['sabah',ITEM.sabah.ph] : hr<18 ? ['ahlan',ITEM.ahlan.ph] : ['masa',ITEM.masa.ph];
   const due = dueWords(p, p.level).length;
   const msg = due>=3 ? `Je hebt ${due} woordjes om te herhalen. Dan vergeet je ze niet!`
     : missed ? 'Fijn dat je er weer bent! Zullen we verder spelen?'
@@ -3289,7 +3376,7 @@ function contentPanel(){
   </div>
   ${N ? `<div class="panel cedit"><h3>Nieuw woord</h3>
     <div class="setrow"><label for="cn-ar">Arabisch schrift</label><input class="inp ar-in" id="cn-ar" dir="rtl" lang="ar" value="${esc(N.ar||'')}"></div>
-    <div class="setrow"><label for="cn-ph">Uitspraak (Nederlandse spelling)</label><input class="inp" id="cn-ph" value="${esc(N.ph||'')}"></div>
+    <div class="setrow"><label for="cn-ph">Uitspraak</label><input class="inp" id="cn-ph" value="${esc(N.ph||'')}"><p class="hint">Wordt automatisch gelijkgetrokken: hoofdletters, 3 = ع, 7 = ح, Kh = خ, Sh = ش. Oude spelling (sj, ch, oe) mag ook.</p></div>
     <div class="setrow"><label for="cn-nl">Nederlands</label><input class="inp" id="cn-nl" value="${esc(N.nl||'')}"></div>
     <div class="setrow"><label for="cn-pic">Plaatje (emoji)</label><input class="inp" id="cn-pic" maxlength="8" placeholder="🍉" value="${esc(N.pic||'')}"></div>
     <div class="setrow"><label for="cn-w">Wereld</label>${wsel(N.w, 'cn-w')}</div>
@@ -3301,7 +3388,7 @@ function contentPanel(){
     <div class="ptabs" style="margin-top:10px"><button class="${f==='check'?'on':''}" data-act="cf:check">Nog controleren (${nCheck})</button><button class="${f==='note'?'on':''}" data-act="cf:note">⚠️ Twijfel (${nNote})</button><button class="${f==='all'?'on':''}" data-act="cf:all">Alles</button>${GROUPS().map(w=>`<button class="${f==='w'+w.id?'on':''}" data-act="cf:w${w.id}">${w.emoji} ${esc(w.name)}</button>`).join('')}</div>
     ${list.slice(0, lim).map(x=>{ const ed = S.cedit===x.id, note = checkNote(x.id), v = isVerified(x.id), changed = CONTENT[x.id] && EDIT_KEYS.some(k=>CONTENT[x.id][k]!==undefined);
       if(ed) return `<div class="crow cedit"><div class="setrow"><label for="ce-ar">Arabisch schrift</label><input class="inp ar-in" id="ce-ar" dir="rtl" lang="ar" value="${esc(x.ar)}"></div>
-        <div class="setrow"><label for="ce-ph">Uitspraak</label><input class="inp" id="ce-ph" value="${esc(x.ph)}"></div>
+        <div class="setrow"><label for="ce-ph">Uitspraak</label><input class="inp" id="ce-ph" value="${esc(x.ph)}"><p class="hint">Wordt automatisch gelijkgetrokken: hoofdletters, 3 = ع, 7 = ح, Kh = خ, Sh = ش.</p></div>
         <div class="setrow"><label for="ce-nl">Nederlands</label><input class="inp" id="ce-nl" value="${esc(x.nl)}"></div>
         <div class="setrow"><label for="ce-pic">Plaatje (emoji)</label><input class="inp" id="ce-pic" maxlength="8" value="${esc(x.pic||'')}"></div>
         <div class="setrow"><label for="ce-tip">Uitspraaktip (optioneel)</label><input class="inp" id="ce-tip" value="${esc(x.tip||'')}"></div>
@@ -3556,6 +3643,7 @@ document.addEventListener('click', e=>{
     case 'csave': { const g = k => ($('#ce-'+k) ? $('#ce-'+k).value.trim() : '');
       const patch = {ar:g('ar'), ph:g('ph'), nl:g('nl'), pic:g('pic'), tip:g('tip'), note:g('note'), verified:!!($('#ce-ok') && $('#ce-ok').checked)};
       if(!patch.ar || !patch.ph || !patch.nl){ toast('Vul Arabisch, uitspraak en Nederlands in.'); return; }
+      patch.ph = translit(patch.ph, patch.ar);
       saveContent(a, patch).then(ok=>{ if(ok){ S.cedit = null; toast('Opgeslagen voor alle gezinnen'); render(); } }); return; }
     case 'creset': resetContent(a).then(()=>{ S.cedit = null; toast('Origineel teruggezet'); render(); }); return;
     case 'cnew': S.cnew = {w: WORLDS[0].id}; S.cedit = null; window.scrollTo(0,0); break;
@@ -3563,6 +3651,7 @@ document.addEventListener('click', e=>{
     case 'cnew-save': { const g = k => ($('#cn-'+k) ? $('#cn-'+k).value.trim() : '');
       const d = {new:true, ar:g('ar'), ph:g('ph'), nl:g('nl'), pic:g('pic')||'🆕', w:+g('w'), lesson:g('l'), concrete:!!($('#cn-con') && $('#cn-con').checked), verified:true};
       if(!d.ar || !d.ph || !d.nl || !d.lesson){ toast('Vul Arabisch, uitspraak, Nederlands en les in.'); return; }
+      d.ph = translit(d.ph, d.ar);
       const id = 'u_' + uid() + uid();
       saveContent(id, d).then(ok=>{ if(ok){ S.cnew = null; toast('Nieuw woord toegevoegd: ' + d.ph); render(); } }); return; }
     case 'rec-skip': recNext(); break;
@@ -3644,6 +3733,14 @@ document.addEventListener('click', e=>{
     default: return;
   }
   render();
+});
+// zoekvakken: direct zoeken tijdens het typen
+let SEARCH_T = null;
+document.addEventListener('input', e=>{
+  const t = e.target; if(!t || !(t.dataset.dq || t.dataset.cq)) return;
+  clearTimeout(SEARCH_T);
+  SEARCH_T = setTimeout(()=>{ const k = t.dataset.dq ? 'dq' : 'cq'; S[k] = t.value; if(k==='dq') S.dlimit = 50; else S.climit = 40; render();
+    const el = $('#'+k); if(el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); } }, 180);
 });
 document.addEventListener('change', async e=>{
   const t = e.target;

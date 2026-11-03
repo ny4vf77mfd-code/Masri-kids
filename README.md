@@ -23,3 +23,14 @@ Bestaande profielen blijven automatisch in de kinderomgeving. In Ouders → Inst
 - Grammatica-uitleg: `GRAMMAR`.
 - Opnames gaan via dezelfde opnamestudio (Ouders → Audio), met eigen tabbladen per module en situatie.
 - Zelf-opnames bij "Uitspraak oefenen" blijven op het apparaat en worden niet opgeslagen.
+
+## Schrijfwijze van de uitspraak
+
+Alle uitspraak (`ph`) gaat door één functie: `translit(ph, ar)` in `index.html`. Die wordt gebruikt bij het laden van de woordenlijsten, bij woorden uit de woordeditor en bij nieuwe woorden.
+
+- Ieder woord begint met een hoofdletter, ook na een koppelteken: `Saba7 El-Kheer`.
+- `3` = ع, `7` = ح, `Kh` = خ, `Sh` = ش, `Gh` = غ, `'` = stopje (ء of ق), `y` = j-klank.
+- Lange klinkers: `ee` = lange i (ي), `oo` = lange oe (و). `ee` gebruik je ook voor de ee-klank (`Feen`, `Beet`).
+- Typ je oude spelling in (sj, ch, oe, j, aa), dan zet de app die automatisch om.
+- De 3 en de 7 komen uit het Arabische schrift ernaast. Klopt het aantal niet, dan blijft het teken staan.
+- Vaste uitzonderingen staan in `TL_MANUAL`, bijvoorbeeld `Ma3a Salama`.
