@@ -557,6 +557,168 @@ body::before{background:rgba(243,245,250,.9)}
 .rec-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;align-items:center}
 .mini.rec-on{background:#FFE9E4;border-color:#FFC6B9;color:var(--coral-d);animation:recpulse 1s ease-in-out infinite}
 .mini[disabled]{opacity:.45;cursor:default}
+/* =================== Duo-stijl: plat, wit, dikke randjes, 3D-knoppen =================== */
+:root{
+  --duo-line:#E5E5E5; --duo-line-d:#CECECE; --duo-ink:#3C3C3C; --duo-mute:#777777; --duo-bg:#FFFFFF;
+  --duo-sel:#DDF4FF; --duo-sel-b:#84D8FF; --duo-sel-t:#1899D6;
+  --nile:#17B6AA; --nile-d:#0E8C82;
+  --ok:#3FBF48; --ok-d:#2E9A36; --ok-bg:#D7FFB8; --ok-t:#2D8A2F;
+  --try:#FF9F1C; --try-d:#D97E00; --try-bg:#FFE9C9; --try-t:#B86200;
+  --sun:#FFC800; --sun-d:#E0A800; --coral:#FF6B57; --coral-d:#D94A38;
+  --lapis:#3C3C3C; --sand:#F7F7F7; --sand-2:#E5E5E5; --line:#E5E5E5; --muted:#777777; --grey:#E5E5E5; --grey-d:#AFAFAF;
+  --f-display:"Nunito",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --shadow:none; --shadow-sm:none;
+}
+body{background:var(--duo-bg)!important;color:var(--duo-ink)}
+body::before{background:var(--duo-bg)}
+h1,h2,h3,.ptitle,.page-h,.ex-k,.pname,.auth-h{font-family:var(--f-display);font-weight:900;color:var(--duo-ink);letter-spacing:-.01em}
+.splash h1 span,.auth-hero h1 span{color:var(--nile)}
+/* knoppen */
+.btn{border-radius:16px;background:var(--nile);color:#fff;box-shadow:0 4px 0 var(--nile-d);font-family:var(--f-display);font-weight:900;font-size:16px;letter-spacing:.06em;text-transform:uppercase;min-height:52px;border:0}
+.btn:active{transform:translateY(4px);box-shadow:0 0 0 var(--nile-d)}
+.btn.sun{background:var(--sun);color:#fff;box-shadow:0 4px 0 var(--sun-d);text-shadow:0 1px 0 rgba(0,0,0,.08)}
+.btn.ok{background:var(--ok);box-shadow:0 4px 0 var(--ok-d)}
+.btn.try{background:var(--try);box-shadow:0 4px 0 var(--try-d)}
+.btn.coral{background:var(--coral);box-shadow:0 4px 0 var(--coral-d)}
+.btn.ghost{background:#fff;color:var(--nile);border:2px solid var(--duo-line);box-shadow:0 4px 0 var(--duo-line)}
+.btn.ghost:active{box-shadow:0 0 0 var(--duo-line)}
+.btn[disabled]{background:var(--duo-line);color:#AFAFAF;box-shadow:0 4px 0 var(--duo-line-d)!important;transform:none}
+.link{color:var(--duo-sel-t);text-decoration:none;font-weight:900;text-transform:uppercase;letter-spacing:.05em;font-size:14px}
+/* kaarten en vlakken: wit met grijze rand, geen schaduw */
+.pcard,.form,.prompt,.wordcard,.wrow,.panel,.soon-card,.welcome,.bubble,.tile,.chip,.nlabel,.wlock,.ptabs button,.mini{background:#fff;border:2px solid var(--duo-line);box-shadow:none}
+.pcard{border-radius:16px;box-shadow:0 4px 0 var(--duo-line)}
+.pcard:active{transform:translateY(4px);box-shadow:0 0 0 var(--duo-line)}
+.pcard.add{border-style:solid;border-color:var(--duo-line)}
+.pcard.add .pav{background:var(--duo-sel);color:var(--duo-sel-t)}
+.pav{background:var(--sand)}
+.panel,.form{border-radius:16px}
+.wordcard,.prompt{border-radius:16px}
+.bubble{border-radius:16px}
+.bubble::before{background:#fff;border-left:2px solid var(--duo-line);border-bottom:2px solid var(--duo-line);box-shadow:none}
+.inp{background:var(--sand);border:2px solid var(--duo-line);border-radius:12px;color:var(--duo-ink)}
+.inp:focus{border-color:var(--duo-sel-b);outline:0;background:#fff}
+.seg button{background:#fff;border:2px solid var(--duo-line);box-shadow:0 3px 0 var(--duo-line);border-radius:12px;color:var(--duo-ink)}
+.seg button.on{background:var(--duo-sel);border-color:var(--duo-sel-b);color:var(--duo-sel-t);box-shadow:0 3px 0 var(--duo-sel-b)}
+.status{background:var(--sand);border-radius:12px}
+.status.on{background:var(--duo-sel);color:var(--duo-sel-t)}
+.muted,.hint,.page-sub,.psub,.plvl{color:var(--duo-mute)}
+.tile-n{background:#fff;border:2px solid var(--duo-line);border-radius:14px}
+.chip{border-radius:12px}
+.mini{border-radius:12px;box-shadow:0 2px 0 var(--duo-line);color:var(--duo-ink)}
+.mini.on{background:var(--ok-bg);border-color:#A5ED6E;color:var(--ok-t)}
+.ptabs button{border-radius:12px;color:var(--duo-mute);box-shadow:0 2px 0 var(--duo-line)}
+.ptabs button.on{background:var(--duo-sel);border-color:var(--duo-sel-b);color:var(--duo-sel-t);box-shadow:0 2px 0 var(--duo-sel-b)}
+.switch input{background:var(--duo-line)}
+.switch input:checked{background:var(--nile)}
+/* topbalk */
+.topbar{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom:2px solid var(--duo-line);padding-bottom:10px;margin-bottom:14px}
+.topbar .me .pav{background:#fff;border:2px solid var(--duo-line);box-shadow:none}
+.stat{background:none;border:0;box-shadow:none;padding:4px 6px;font-weight:900;font-size:17px}
+.st-fire{color:#FF9600}.st-fire.off{color:#AFAFAF;filter:grayscale(1)}.st-star{color:#E0A800}.st-xp{color:#1CB0F6}
+/* dagelijkse uitdaging (zoals een dagopdracht) */
+.daily{background:#fff;color:var(--duo-ink);border:2px solid var(--duo-line);border-radius:16px;box-shadow:none;padding:14px 16px}
+.daily .ic{background:#FFF4CC;box-shadow:none;border-radius:12px}
+.daily .k{color:var(--duo-mute)}
+.daily .t{color:var(--duo-ink)}
+.daily .bar{background:var(--duo-line);height:16px}
+.daily .bar i{background:var(--sun);box-shadow:inset 0 4px 0 rgba(255,255,255,.35)}
+.pen-card{border-radius:16px;box-shadow:0 4px 0 #1C7537;background:#3FBF48}
+.pen-card:active{transform:translateY(4px);box-shadow:none}
+.pen-card .ic{box-shadow:none}
+.welcome{border-radius:16px}
+/* werelden en pad */
+.wband{background:var(--wc);border-radius:16px;box-shadow:0 4px 0 var(--wcd);padding:16px 18px}
+.wband::before,.wband::after{display:none}
+.wband .wemoji{width:auto;height:auto;background:none;border-radius:0;-webkit-backdrop-filter:none;backdrop-filter:none;font-size:46px}
+.wband h2{color:#fff;font-size:24px}
+.wband .wnum{opacity:.85}
+.wband .wprog{background:rgba(0,0,0,.15);border-radius:8px}
+.path{gap:30px;padding-top:34px}
+.node-row:has(.startbub){margin-top:30px}
+.startbub{top:-52px}
+.path::before{display:none}
+.node{width:72px;height:66px;border:0;border-radius:50%;font-size:30px;background:var(--wc);box-shadow:0 7px 0 var(--wcd)}
+.node:active{transform:translateY(6px);box-shadow:0 1px 0 var(--wcd)}
+.node.locked{background:var(--duo-line);box-shadow:0 7px 0 var(--duo-line-d);opacity:1;filter:none}
+.node.locked:active{transform:none;box-shadow:0 7px 0 var(--duo-line-d)}
+.node.cur{animation:none;outline:none;position:relative}
+.node.cur{box-shadow:0 7px 0 var(--wcd),0 0 0 8px #fff,0 0 0 14px color-mix(in srgb,var(--wc) 30%,#fff)}
+.node.cur:active{box-shadow:0 1px 0 var(--wcd),0 0 0 8px #fff,0 0 0 14px color-mix(in srgb,var(--wc) 30%,#fff)}
+.nlabel{border-radius:10px;font-size:13px;color:var(--duo-mute)}
+.startbub{top:-44px;background:#fff;color:var(--wc);border:2px solid var(--duo-line);border-radius:12px;font-weight:900;letter-spacing:.08em;box-shadow:none}
+.startbub::after{content:"";position:absolute;left:50%;bottom:-8px;width:12px;height:12px;margin-left:-6px;background:#fff;border-right:2px solid var(--duo-line);border-bottom:2px solid var(--duo-line);transform:rotate(45deg)}
+.wlock{border-style:solid;border-radius:14px}
+.soon-card{border-radius:14px;opacity:1}
+.soon-card .e{filter:grayscale(1);opacity:.6}
+/* onderbalk */
+.nav{background:#fff;border-top:2px solid var(--duo-line);padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.nav-in{background:none;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none;border-radius:0;padding:0}
+.nav button{border:2px solid transparent;border-radius:12px;color:var(--duo-mute);text-transform:uppercase;letter-spacing:.04em;font-size:10px}
+.nav button.on{background:var(--duo-sel);border-color:var(--duo-sel-b);color:var(--duo-sel-t)}
+/* les */
+.lbar{gap:14px}
+.xbtn{color:#AFAFAF}
+.pbar{height:16px;background:var(--duo-line)}
+.pbar i{background:var(--ok);box-shadow:inset 0 -0 0 transparent;position:relative}
+.pbar i::after{content:"";position:absolute;left:8px;right:8px;top:4px;height:4px;border-radius:4px;background:rgba(255,255,255,.35)}
+.lxp{color:#1CB0F6}
+.ex-k{font-size:24px}
+.ex-k small{color:var(--duo-mute)}
+.opt{background:#fff;border:2px solid var(--duo-line);border-radius:16px;box-shadow:0 4px 0 var(--duo-line)}
+.opt:active{transform:translateY(4px);box-shadow:0 0 0 var(--duo-line)}
+.opt .lbl{color:var(--duo-ink)}
+.opt.sel{background:var(--duo-sel);border-color:var(--duo-sel-b);box-shadow:0 4px 0 var(--duo-sel-b)}
+.opt.sel .lbl,.opt.sel .ph{color:var(--duo-sel-t)}
+.opt.right{background:var(--ok-bg);border-color:#A5ED6E;box-shadow:0 4px 0 #A5ED6E}
+.opt.right .lbl,.opt.right .ph{color:var(--ok-t)}
+.opt.wrong{background:var(--try-bg);border-color:#FFC97A;box-shadow:0 4px 0 #FFC97A}
+.opt .pic,.wordcard .pic,.prompt .pic,.wrow .pic,.mcard .b .pic,.grid2 .opt .pic{background:none!important;box-shadow:none!important;border-radius:16px}
+.opt.sel .pic{transform:none}
+.play{background:#1CB0F6;box-shadow:0 4px 0 #1899D6;border-radius:16px}
+.play:active{transform:translateY(4px);box-shadow:0 0 0 #1899D6}
+.play.noaudio{background:#fff;border:2px dashed var(--duo-line-d);box-shadow:none;color:#AFAFAF}
+.wordcard .ph,.prompt .ph{color:var(--duo-sel-t)}
+.answer-line{border-color:var(--duo-line)}
+.tile{border-radius:12px;box-shadow:0 3px 0 var(--duo-line);color:var(--duo-ink)}
+.mcard .f{background:#1CB0F6;box-shadow:0 4px 0 #1899D6;border-radius:16px}
+.mcard .f::after{border-color:rgba(255,255,255,.4)}
+.mcard .b{border:2px solid var(--duo-line);box-shadow:0 4px 0 var(--duo-line);border-radius:16px}
+.mcard.matched .b{background:var(--ok-bg);border-color:#A5ED6E;box-shadow:0 4px 0 #A5ED6E}
+.lfoot{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none;border-top:2px solid var(--duo-line);box-shadow:none;border-radius:0}
+.lfoot.ok{background:var(--ok-bg);border-color:var(--ok-bg)}
+.lfoot.bad{background:var(--try-bg);border-color:var(--try-bg)}
+.lfoot.ok .big{color:var(--ok-t)} .lfoot.bad .big{color:var(--try-t)}
+.lfoot.ok .sm{color:var(--ok-t)} .lfoot.bad .sm{color:var(--try-t)}
+.tip{background:var(--sand);border-radius:12px}
+/* klaar-scherm: statistiekblokken met gekleurde kop */
+.done-scr h1{color:#E0A800;font-size:34px}
+.rewards{gap:10px;width:100%;justify-content:center}
+.rw{flex:1;max-width:150px;min-width:0;padding:0;border-radius:16px;border:2px solid;overflow:hidden;background:#fff;box-shadow:none}
+.rw .rwh{display:block;padding:6px 4px;color:#fff;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.05em}
+.rw b{display:block;padding:10px 4px;font-family:var(--f-display);font-weight:900;font-size:22px}
+.rw-xp{border-color:#FFC800}.rw-xp .rwh{background:#FFC800}.rw-xp b{color:#E0A800}
+.rw-star{border-color:#1CB0F6}.rw-star .rwh{background:#1CB0F6}.rw-star b{color:#1899D6}
+.rw-ok{border-color:var(--ok)}.rw-ok .rwh{background:var(--ok)}.rw-ok b{color:var(--ok-t)}
+.extra-msg{background:var(--sand);border:2px solid var(--duo-line);color:var(--duo-ink)}
+.sticker-reveal{background:#fff;color:var(--duo-ink);border:2px solid var(--duo-line);border-radius:16px;box-shadow:none}
+.sticker-reveal .k{color:#E0A800}
+.stk{box-shadow:0 4px 0 var(--sun-d);border-color:#fff}
+/* scorebord en duel */
+.srow.me{background:var(--duo-sel)}
+.you{background:var(--duo-sel-t)}
+.pod .pav{border:2px solid var(--duo-line);box-shadow:none}
+.pod .block{border-radius:12px 12px 0 0}
+.pod.p1 .block{background:#FFC800;box-shadow:inset 0 -6px 0 #E0A800}
+.pod.p2 .block{background:#CECECE;box-shadow:inset 0 -6px 0 #AFAFAF}
+.pod.p3 .block{background:#FF9600;box-shadow:inset 0 -6px 0 #D97E00}
+.drow.turn{background:var(--duo-sel);box-shadow:none;border:2px solid var(--duo-sel-b)}
+.turn-av,.winner .pav{box-shadow:none;border:3px solid var(--duo-line)}
+.pitch{box-shadow:none;border-radius:16px}
+.shots i{background:#fff;border-color:var(--duo-line)}
+.recbig{box-shadow:0 6px 0 var(--coral-d)}
+.sun-disc{box-shadow:none}
+.daily .tx .bar{border-radius:999px}
+.toast{background:var(--duo-ink);border-radius:12px}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 
@@ -1319,7 +1481,7 @@ function finishLesson(){
   const nxt = WORLDS.findIndex((x,i)=>!x.bonus && prevWorld(p,i)===L.wi);
   const unlockedNext = firstTime && nxt>=0 && w.lessons.filter(l=>p.lessons[l.id]).length===3;
   save();
-  LAST = {stars, xp, sticker, dailyBonus, worldDone, unlockedNext, nextName: WORLDS[nxt]?.name, worldName:w.name};
+  LAST = {stars, xp, mistakes:L.mistakes, sticker, dailyBonus, worldDone, unlockedNext, nextName: WORLDS[nxt]?.name, worldName:w.name};
   L = null; S.screen='done'; render(); confetti(stars===3||worldDone?90:50); sfx('goal');
   if(voiceOn()) setTimeout(()=>speakNL(sticker ? 'Hoera! De les is klaar. Je krijgt een nieuwe sticker!' : 'Hoera! De les is klaar!'), 500);
 }
@@ -1329,7 +1491,7 @@ function doneHTML(){
     ${mascot(140,'cheer','m-dance')}
     <h1>${r.worldDone ? 'Wereld voltooid!' : 'Les klaar!'}</h1>
     <div class="bigstars">${[1,2,3].map(n=>`<span class="s">${STAR(n<=r.stars,80)}</span>`).join('')}</div>
-    <div class="rewards"><div class="rw"><b>+${r.xp}</b>XP verdiend</div><div class="rw"><b>${r.stars}/3</b>sterren</div></div>
+    <div class="rewards"><div class="rw rw-xp"><span class="rwh">XP verdiend</span><b>⚡ ${r.xp}</b></div><div class="rw rw-star"><span class="rwh">Sterren</span><b>⭐ ${r.stars}/3</b></div><div class="rw rw-ok"><span class="rwh">Foutjes</span><b>🎯 ${r.mistakes}</b></div></div>
     ${r.sticker?`<div class="sticker-reveal"><span class="k">Nieuwe sticker!</span><div class="stk">${stickerFace(r.sticker)}</div><b>${esc(r.sticker.n)}</b></div>`:''}
     ${r.dailyBonus?`<p class="extra-msg">⭐ Dagelijkse uitdaging gehaald! +20 XP</p>`:''}
     ${r.worldDone?`<p class="extra-msg">Mishmish danst! Je hebt alle lessen van ${esc(r.worldName)} gedaan.</p>`:''}
@@ -1411,7 +1573,7 @@ function penHTML(){
     return `<div class="lesson">${head}<div class="done-scr">${mascot(130,'cheer','m-dance')}
       <h1>${g>=4?'Kampioen!':g>=2?'Mooi gespeeld!':'Goed geprobeerd!'}</h1>
       <p class="muted" style="font-size:18px">Je scoorde <b>${g} van de 5</b> penalty's.</p>
-      <div class="rewards"><div class="rw"><b>+${PEN.xp[PEN.players[0]]}</b>XP verdiend</div><div class="rw"><b>${g}</b>doelpunten</div></div>
+      <div class="rewards"><div class="rw rw-xp"><span class="rwh">XP verdiend</span><b>⚡ ${PEN.xp[PEN.players[0]]}</b></div><div class="rw rw-ok"><span class="rwh">Doelpunten</span><b>⚽ ${g}/5</b></div></div>
       <p class="extra-msg">Wist je dat? In het Egyptisch roep je bij een doelpunt: <b>goooon!</b></p>
       <button class="btn ok wide" data-act="pen-again">Nog een keer!</button><button class="btn ghost wide" data-act="go:home">Klaar</button>
     </div></div>`;
@@ -1633,7 +1795,7 @@ function newProfileHTML(){
 function topbarHTML(p){
   return `<div class="topbar">
     <button class="me" data-act="go:profiles" aria-label="Wissel van profiel"><span class="pav">${p.avatar}</span><span>${esc(p.name)}</span></button>
-    <div class="stats"><span class="stat" title="Dagen op rij">🔥 ${curStreak(p)}</span><span class="stat" title="Sterren">⭐ ${totalStars(p)}</span><span class="stat" title="XP">⚡ ${p.xp}</span></div>
+    <div class="stats"><span class="stat st-fire ${curStreak(p)?'':'off'}" title="Dagen op rij">🔥 ${curStreak(p)}</span><span class="stat st-star" title="Sterren">⭐ ${totalStars(p)}</span><span class="stat st-xp" title="XP">⚡ ${p.xp}</span></div>
   </div>`;
 }
 function homeHTML(){
