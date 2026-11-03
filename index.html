@@ -1733,6 +1733,7 @@ function settingsPanel(p){
     <div class="setrow"><label>Leeftijd</label><div class="seg">${[4,5,6,7,8,9].map(a=>`<button class="${p.age===a?'on':''}" data-act="setp-age:${a}">${a}</button>`).join('')}<button class="${p.age>=18?'on':''}" data-act="setp-age:18">volwassene</button></div></div>
     <div class="setrow"><label>Niveau</label><div class="seg"><button class="${p.level===1?'on':''}" data-act="setp-lvl:1">1 · 4–6 jaar</button><button class="${p.level===2?'on':''}" data-act="setp-lvl:2">2 · 7+ en volwassenen</button></div>
       <p class="hint">Niveau 1: plaatjes, luisteren, memory en nazeggen. Niveau 2: vertalen, zinnen bouwen, memory en nazeggen.</p></div>
+    <div class="setrow"><label>Dier</label><div class="seg av">${AVATARS.map(a=>`<button class="${p.avatar===a?'on':''}" data-act="setp-av:${a}" aria-label="${a}">${a}</button>`).join('')}</div></div>
     <div class="setrow"><label>Jongen of meisje</label><div class="seg"><button class="${p.gender==='m'?'on':''}" data-act="setp-g:m">jongen</button><button class="${p.gender==='f'?'on':''}" data-act="setp-g:f">meisje</button></div></div>
     <label class="switch"><input type="checkbox" id="set-unlock" data-setp="unlockAll" ${p.unlockAll?'checked':''}> Alle werelden en lessen openzetten</label>
   </div>
@@ -1941,6 +1942,7 @@ document.addEventListener('click', e=>{
     case 'setp-age': { const k=DB.profiles.find(x=>x.id===S.pkid); k.age=+a; k.level=+a<=6?1:2; save(); break; }
     case 'setp-lvl': { const k=DB.profiles.find(x=>x.id===S.pkid); k.level=+a; save(); break; }
     case 'setp-g': { const k=DB.profiles.find(x=>x.id===S.pkid); k.gender=a; save(); break; }
+    case 'setp-av': { const k=DB.profiles.find(x=>x.id===S.pkid); k.avatar=a; save(); break; }
     case 'del-ask': S.confirmDel=true; break;
     case 'del-no': S.confirmDel=false; break;
     case 'del-yes': if(sb && AUTH.user) sb.from('players').delete().eq('id', S.pkid).then(({error})=>{ if(error) toast('Verwijderen lukte niet online.'); }); DB.profiles=DB.profiles.filter(x=>x.id!==S.pkid); if(DB.activeId===S.pkid) DB.activeId=DB.profiles[0]?.id||null; S.pkid=null; S.confirmDel=false; save(); toast('Profiel verwijderd'); break;
