@@ -11,3 +11,15 @@ Leer Egyptisch Arabisch (Masri) met Mishmish de kat. Voor kinderen van 4 tot 9 j
 - **In de code:** `WORDS`, `SENTENCES`, `WORLDS`, `DLINES`/`DIALOGS` (gesprekjes) en `STICKERS` bovenaan het script in `index.html`.
 - **Ids nooit veranderen:** opnames zijn gekoppeld aan het id van een woord (`shared/audio/<id>`). Meisjesvormen hebben `<id>_f`.
 - Velden: `g:'self'` = vorm hangt af van wie spreekt, `g:'you'` = van wie je aanspreekt, `fem:{ar,ph}` = vrouwelijke vorm, `check:'…'` = twijfel die nog gecontroleerd moet worden.
+
+## Volwassenen en tieners
+
+Bij een nieuw profiel kies je: Kind 4–6, Kind 7–9, Tiener of Volwassene. Tieners en volwassenen krijgen de volwassen leeromgeving.
+Bestaande profielen blijven automatisch in de kinderomgeving. In Ouders → Instellingen kun je de leeromgeving wisselen; de voortgang van beide blijft bewaard.
+
+- Leerprogramma: `ADULT_LEVELS` en `ADULT_MODS` (modules A1–D4) in `index.html`. Een module gebruikt bestaande woord-id's waar dat kan.
+- Nieuwe woorden en zinnen voor volwassenen: `A_ITEMS` (id's beginnen met `a_`).
+- Gesprekssituaties: `SC_LINES` (id's `sc_`) en `SCENARIOS` (S1–S8).
+- Grammatica-uitleg: `GRAMMAR`.
+- Opnames gaan via dezelfde opnamestudio (Ouders → Audio), met eigen tabbladen per module en situatie.
+- Zelf-opnames bij "Uitspraak oefenen" blijven op het apparaat en worden niet opgeslagen.
