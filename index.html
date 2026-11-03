@@ -753,6 +753,121 @@ h1,h2,h3,.ptitle,.page-h,.ex-k,.pname,.auth-h{font-family:var(--f-display);font-
 .stepper button:active{transform:translateY(3px);box-shadow:none}
 .stepper b{min-width:80px;text-align:center;font-family:var(--f-display);font-size:20px}
 .goal-edit .seg.av button,.panel .seg.av button{min-width:44px;min-height:44px;font-size:24px}
+/* ---------- v3: nieuwe spelvormen, Mishmish, prijzen, editor ---------- */
+button,.opt,.mitem,.tile,.node{touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.playrow{display:flex;align-items:center;gap:8px}
+.slowbtn{width:44px;height:44px;border-radius:14px;background:#fff;border:2px solid var(--duo-line);box-shadow:0 3px 0 var(--duo-line);font-size:22px;display:grid;place-items:center}
+.slowbtn:active{transform:translateY(3px);box-shadow:none}
+.welcome-step{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding-top:10px}
+.bubble.big{font-size:18px;font-weight:800;max-width:420px}
+.bubble.big::before{display:none}
+.wl-pics{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.wl-pics .pic{width:64px;height:64px;font-size:40px;display:grid;place-items:center;border:2px solid var(--duo-line);border-radius:16px;background:#fff}
+.wl-pics .pic img{border-radius:14px}
+.wl-plan{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.wl-plan span{padding:6px 12px;border-radius:999px;border:2px solid var(--duo-line);font-weight:900;font-size:13px;color:var(--duo-mute)}
+.forms{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-top:6px}
+.forms>div{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px;border-radius:14px;background:var(--sand)}
+.forms span{font-size:12px;font-weight:900;color:var(--duo-mute);text-transform:uppercase;letter-spacing:.04em}
+.forms b{font-size:18px;color:var(--duo-sel-t)}
+.chips-k{display:flex;gap:6px;margin-bottom:-6px}
+.chip-k{font-size:12px;font-weight:900;padding:3px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.05em}
+.chip-k.test{background:#FFF4CC;color:#B88A00}
+.chip-k.rev{background:var(--duo-sel);color:var(--duo-sel-t)}
+.prompt.bigpic{justify-content:center}
+.prompt.bigpic .pic{width:150px;font-size:96px}
+.aopts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.audopt{min-height:110px;gap:6px}
+.audopt .aicon{width:48px;height:48px;color:#1CB0F6}
+.audopt .aicon svg{width:100%;height:100%}
+.audopt .anum{font-weight:900;color:var(--duo-mute)}
+.aicon.big{width:48px;height:48px;color:#1CB0F6;display:block}
+.aicon.big svg{width:100%;height:100%}
+.nlopt{color:var(--duo-ink)!important}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mcol{display:flex;flex-direction:column;gap:10px}
+.mitem{min-height:64px;padding:8px 10px;border-radius:14px;background:#fff;border:2px solid var(--duo-line);box-shadow:0 4px 0 var(--duo-line);font-weight:900;font-size:16px;color:var(--duo-ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center}
+.mitem .ar{font-size:15px;color:var(--duo-mute);font-weight:700}
+.mitem.sel{background:var(--duo-sel);border-color:var(--duo-sel-b);box-shadow:0 4px 0 var(--duo-sel-b);color:var(--duo-sel-t)}
+.mitem.done{background:var(--ok-bg);border-color:#A5ED6E;box-shadow:none;color:var(--ok-t);opacity:.7}
+.mitem.bad{background:var(--try-bg);border-color:#FFC97A;animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.fill-line{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:22px;font-weight:900;padding:14px;border:2px solid var(--duo-line);border-radius:16px}
+.fill-line .gap{min-width:90px;padding:2px 10px;border-bottom:3px solid var(--duo-sel-b);text-align:center;color:var(--duo-sel-t)}
+.chat{display:flex;flex-direction:column;gap:10px}
+.cmsg{display:flex;align-items:flex-end;gap:8px}
+.cmsg.me{justify-content:flex-end}
+.cmsg .cb{max-width:78%;padding:10px 14px;border-radius:16px;border:2px solid var(--duo-line);background:#fff;font-weight:800;display:flex;flex-direction:column;gap:2px}
+.cmsg.me .cb{background:var(--ok-bg);border-color:#A5ED6E;color:var(--ok-t)}
+.cmsg.now .cb b{font-size:19px;color:var(--duo-ink)}
+.cmsg .cb small{color:var(--duo-mute);font-weight:700}
+.cmsg .cb .ar{font-size:18px}
+.cav{flex:none;font-size:26px;line-height:1}
+.foot-row{display:flex;gap:10px;align-items:center}
+.hintbtn{flex:none;width:56px;height:52px;border-radius:16px;background:#fff;border:2px solid var(--duo-line);box-shadow:0 4px 0 var(--duo-line);font-size:24px}
+.hintbtn:active{transform:translateY(4px);box-shadow:none}
+.hintbtn[disabled]{opacity:.4}
+.hint-msg{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px;color:var(--duo-mute)}
+.world-done{display:flex;align-items:center;gap:14px;width:100%;max-width:420px;padding:14px 16px;border-radius:16px;background:var(--wc);color:#fff;text-align:left;animation:pop .5s .3s both}
+.world-done .wde{font-size:46px}
+.world-done b{display:block;font-family:var(--f-display);font-size:20px;color:#fff}
+.world-done span{font-weight:800;font-size:14px}
+.unlock{display:flex;align-items:center;gap:12px;width:100%;max-width:420px;padding:12px 16px;border-radius:16px;border:2px solid var(--duo-sel-b);background:var(--duo-sel);text-align:left}
+.unlock .k{display:block;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:var(--duo-sel-t)}
+.unlock b{font-family:var(--f-display);font-size:19px}
+.new-badges{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%}
+.new-badges .k{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:#B88A00}
+.nb-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.badge-big{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 14px;border-radius:16px;border:2px solid #FFC800;background:#FFFBEA;min-width:110px;animation:pop .5s .5s both}
+.badge-big span{font-size:40px}
+.badge-big b{font-size:14px}
+.greet{display:flex;align-items:flex-end;gap:10px;margin-bottom:14px}
+.greet .bubble{flex:1;min-width:0}
+.greet .bubble .playwrap{display:inline-flex;vertical-align:middle;margin-left:6px}
+.review-card{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px;border-radius:16px;margin-bottom:14px;background:#fff;border:2px solid var(--duo-sel-b);box-shadow:0 4px 0 var(--duo-sel-b)}
+.review-card:active{transform:translateY(4px);box-shadow:none}
+.review-card .ic{flex:none;width:52px;height:52px;border-radius:14px;background:var(--duo-sel);display:grid;place-items:center;font-size:30px}
+.review-card b{display:block;font-family:var(--f-display);font-size:20px;color:var(--duo-sel-t)}
+.review-card span span{font-weight:800;font-size:14px;color:var(--duo-mute)}
+.review-card .go{margin-left:auto;font-size:30px;color:var(--duo-sel-t);font-weight:900}
+.badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
+.bdg{display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;padding:12px 6px;border-radius:14px;border:2px solid #FFC800;background:#FFFBEA}
+.bdg .be{font-size:34px}
+.bdg b{font-size:13px;line-height:1.2}
+.bdg small{font-size:11px;font-weight:700;color:var(--duo-mute)}
+.bdg.locked{border-color:var(--duo-line);background:#fff}
+.bdg.locked .be{filter:grayscale(1);opacity:.35}
+.hist{display:flex;flex-direction:column}
+.hrow{display:grid;grid-template-columns:44px minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--duo-line)}
+.hrow:last-child{border-bottom:0}
+.hd{font-weight:900;font-size:13px;color:var(--duo-mute)}
+.hrow .mid{display:flex;flex-direction:column;min-width:0}
+.hrow .mid b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hrow .mid span{font-size:12px;font-weight:700;color:var(--duo-mute)}
+.hs{font-weight:900;font-variant-numeric:tabular-nums}
+.crow{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--duo-line)}
+.crow .ar{font-size:22px;font-weight:700}
+.crow .acts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.crow .ph{font-weight:900}
+.crow .nl{font-size:13px;color:var(--duo-mute);font-weight:700}
+.cnote{font-size:12px;font-weight:800;color:var(--try-t);margin-top:2px}
+.crow.cedit{display:block;background:var(--sand);border-radius:14px;padding:12px;margin:8px 0}
+.ar-in{font-family:var(--f-ar);font-size:22px}
+.miss-w{margin-bottom:12px}
+.mw-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.mw-name{font-weight:900;text-align:left;padding:6px 0;color:var(--duo-ink)}
+.mchip{cursor:pointer}
+.mchip.rec-on{background:#FFE9E4;border-color:#FFC6B9;color:var(--coral-d)}
+@media (min-width:760px){
+  #app{max-width:700px}
+  .nav-in{max-width:700px}
+  .opt{min-height:150px}
+  .opt .pic{width:110px;font-size:64px}
+  .lvl1 .opt .pic{width:130px;font-size:78px}
+  .wordcard .pic{width:180px;font-size:110px}
+  .ex-k{font-size:28px}
+  .memgrid{grid-template-columns:repeat(4,1fr);gap:14px}
+}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 
@@ -787,17 +902,17 @@ const WORDS = [
   {id:'salam',   w:1, ar:'السلام عليكم',  ph:"es-salaamoe 'aleekoem", nl:'hallo (vrede voor jou)', pic:'🤝'},
   {id:'sabah',   w:1, ar:'صباح الخير',    ph:'sabaah el-cheer',    nl:'goedemorgen',      pic:'🌅', tip:'h = hete h, ch = als in "lachen"'},
   {id:'masa',    w:1, ar:'مساء الخير',    ph:'masa el-cheer',      nl:'goedenavond',      pic:'🌆'},
-  {id:'tesbah',  w:1, ar:'تصبح على خير',  ph:"tesbah 'ala cheer",  nl:'welterusten',      pic:'🌙', tip:'Tegen een meisje: tesbahi \'ala cheer'},
+  {id:'tesbah',  w:1, ar:'تصبح على خير',  ph:"tesbah 'ala cheer",  nl:'welterusten',      pic:'🌙', g:'you', fem:{ar:'تصبحي على خير', ph:"tesbahi 'ala cheer"}},
   {id:'bye',     w:1, ar:'مع السلامة',    ph:"ma'as-salaama",      nl:'doei!',            pic:'👋'},
   {id:'shukran', w:1, ar:'شكراً',         ph:'sjoekran',           nl:'dank je wel',      pic:'💝'},
-  {id:'fadlak',  w:1, ar:'من فضلك',       ph:'men fadlak',         nl:'alsjeblieft',      pic:'🙏', tip:'Tegen een meisje: men fadlek'},
+  {id:'fadlak',  w:1, ar:'من فضلك',       ph:'men fadlak',         nl:'alsjeblieft',      pic:'🙏', g:'you', fem:{ar:'من فضلك', ph:'men fadlek'}},
   {id:'aywa',    w:1, ar:'أيوه',          ph:'ajwa',               nl:'ja',               pic:'👍'},
   {id:'la',      w:1, ar:'لأ',            ph:"la'",                nl:'nee',              pic:'🙅'},
   {id:'ana',     w:1, ar:'أنا',           ph:'ana',                nl:'ik',               pic:'🙋'},
-  {id:'enta',    w:1, ar:'إنت',           ph:'enta',               nl:'jij',              pic:'👉', tip:'Tegen een meisje: enti'},
+  {id:'enta',    w:1, ar:'إنت',           ph:'enta',               nl:'jij',              pic:'👉', g:'you', fem:{ar:'إنتي', ph:'enti'}},
   {id:'ismi',    w:1, ar:'اسمي',          ph:'esmi',               nl:'ik heet',          pic:'📛'},
-  {id:'izzayak', w:1, ar:'إزيك',          ph:'ezzajjak',           nl:'hoe gaat het?',    pic:'🙂', tip:'Tegen een meisje: ezzajjek'},
-  {id:'kwayyes', w:1, ar:'كويس',          ph:'kwajjes',            nl:'goed',             pic:'😀', tip:'Een meisje zegt: kwajjesa'},
+  {id:'izzayak', w:1, ar:'إزيك',          ph:'ezzajjak',           nl:'hoe gaat het?',    pic:'🙂', g:'you', fem:{ar:'إزيك', ph:'ezzajjek'}},
+  {id:'kwayyes', w:1, ar:'كويس',          ph:'kwajjes',            nl:'goed',             pic:'😀', g:'self', fem:{ar:'كويسة', ph:'kwajjesa'}},
   {id:'hamdu',   w:1, ar:'الحمد لله',     ph:'el-hamdoe lellaah',  nl:'goed, dank God',   pic:'✨'},
   {id:'holanda', w:1, ar:'هولندا',        ph:'holanda',            nl:'Nederland',        pic:'🌷'},
   {id:'masr',    w:1, ar:'مصر',           ph:'masr',               nl:'Egypte',           pic:'🏜️'},
@@ -817,7 +932,7 @@ const WORDS = [
   {id:'khalto',  w:2, ar:'خالتو',         ph:'chaalto',            nl:'tante (zus van mama)',  pic:'👩‍🦰'},
   {id:'ammeto',  w:2, ar:'عمتو',          ph:"'ammeto",            nl:'tante (zus van papa)',  pic:'👩‍🦱'},
   {id:'beet',    w:2, ar:'بيت',           ph:'beet',               nl:'huis',             pic:'🏠'},
-  {id:'bahebbak',w:2, ar:'بحبك',          ph:'bahebbak',           nl:'ik hou van jou',   pic:'❤️', tip:'Tegen een meisje of mama: bahebbik'},
+  {id:'bahebbak',w:2, ar:'بحبك',          ph:'bahebbak',           nl:'ik hou van jou',   pic:'❤️', g:'you', fem:{ar:'بحبك', ph:'bahebbik'}},
   // Wereld 3 – Dieren
   {id:'otta',    w:3, ar:'قطة',           ph:'otta',               nl:'kat',              pic:'🐱'},
   {id:'kalb',    w:3, ar:'كلب',           ph:'kalb',               nl:'hond',             pic:'🐶'},
@@ -835,7 +950,7 @@ const WORDS = [
   {id:'fiil',    w:3, ar:'فيل',           ph:'fiel',               nl:'olifant',          pic:'🐘'},
   {id:'asfoora', w:3, ar:'عصفورة',        ph:"'asfoera",           nl:'vogeltje',         pic:'🐦'},
   {id:'farasha', w:3, ar:'فراشة',         ph:'faraasja',           nl:'vlinder',          pic:'🦋'},
-  {id:'selahfa', w:3, ar:'سلحفة',         ph:'selahfa',            nl:'schildpad',        pic:'🐢'},
+  {id:'selahfa', w:3, ar:'سلحفة',         ph:'selahfa',            nl:'schildpad',        pic:'🐢', check:'Uitspraak: selahfa of zelahfa?'},
   {id:'kebiir',  w:3, ar:'كبير',          ph:'kebier',             nl:'groot',            pic:'⬆️'},
   {id:'soghayyar',w:3,ar:'صغير',          ph:'soeghajjar',         nl:'klein',            pic:'🐭', tip:'gh = Nederlandse g, als in "gaan"'},
   // Wereld 4 – Voetbal! (bonuswereld)
@@ -845,7 +960,7 @@ const WORDS = [
   {id:'yalla',    w:4, ar:'يلا',         ph:'jalla',             nl:'kom op!',           pic:'🏃'},
   {id:'malab',    w:4, ar:'ملعب',        ph:"mal'ab",            nl:'voetbalveld',       pic:'🏟️'},
   {id:'laeeb',    w:4, ar:'لعيب',        ph:"la'ieb",            nl:'speler',            pic:'👟'},
-  {id:'goolee',   w:4, ar:'جولي',        ph:'goolie',            nl:'keeper',            pic:'🧤', tip:'g = harde g, als in "goal"'},
+  {id:'goolee',   w:4, ar:'جولي',        ph:'goolie',            nl:'keeper',            pic:'🧤', tip:'g = harde g, als in "goal"', check:'Zeggen kinderen goolie of haris (حارس)?'},
   {id:'hakam',    w:4, ar:'حكم',         ph:'hakam',             nl:'scheidsrechter',    pic:'🟨'},
   {id:'matsh',    w:4, ar:'ماتش',        ph:'matsj',             nl:'wedstrijd',         pic:'⏱️'},
   {id:'faree',    w:4, ar:'فريق',        ph:"faree'",            nl:'team',              pic:'👥'},
@@ -853,6 +968,145 @@ const WORDS = [
   {id:'gomhoor',  w:4, ar:'جمهور',       ph:'gomhoer',           nl:'publiek',           pic:'📣'},
   {id:'kesebna',  w:4, ar:'كسبنا',       ph:'kesebna',           nl:'we hebben gewonnen!', pic:'🏆'},
   {id:'montakhab',w:4, ar:'منتخب مصر',   ph:'montachab masr',    nl:'het Egyptische elftal', pic:'🇪🇬'},
+  // Wereld 5 – Eten en drinken
+  {id:'eesh',     w:5, ar:'عيش',          ph:"'eesj",           nl:'brood',              pic:'🍞'},
+  {id:'gebna',    w:5, ar:'جبنة',         ph:'gebna',           nl:'kaas',               pic:'🧀'},
+  {id:'beed',     w:5, ar:'بيض',          ph:'beed',            nl:'eieren',             pic:'🥚'},
+  {id:'laban',    w:5, ar:'لبن',          ph:'laban',           nl:'melk',               pic:'🥛'},
+  {id:'toffah',   w:5, ar:'تفاح',         ph:'toffaah',         nl:'appel',              pic:'🍎'},
+  {id:'mooz',     w:5, ar:'موز',          ph:'mooz',            nl:'banaan',             pic:'🍌'},
+  {id:'bortoaan', w:5, ar:'برتقان',       ph:"borto'aan",       nl:'sinaasappel',        pic:'🍊'},
+  {id:'manga',    w:5, ar:'مانجة',        ph:'manga',           nl:'mango',              pic:'🥭'},
+  {id:'mayya',    w:5, ar:'مية',          ph:'majja',           nl:'water',              pic:'💧'},
+  {id:'shay',     w:5, ar:'شاي',          ph:'sjaai',           nl:'thee',               pic:'🍵'},
+  {id:'aseer',    w:5, ar:'عصير',         ph:"'asier",          nl:'sap',                pic:'🧃'},
+  {id:'atshan',   w:5, ar:'عطشان',        ph:"'atsjaan",        nl:'ik heb dorst',       pic:'🥤', g:'self', fem:{ar:'عطشانة', ph:"'atsjaana"}},
+  {id:'roz',      w:5, ar:'رز',           ph:'roz',             nl:'rijst',              pic:'🍚'},
+  {id:'koshari',  w:5, ar:'كشري',         ph:'kosjari',         nl:'koshari',            pic:'🍲'},
+  {id:'tameya',   w:5, ar:'طعمية',        ph:"ta'mejja",        nl:'falafel (ta\'meya)', pic:'🧆'},
+  {id:'gaaan',    w:5, ar:'جعان',         ph:"ga'aan",          nl:'ik heb honger',      pic:'😋', g:'self', fem:{ar:'جعانة', ph:"ga'aana"}},
+  // Wereld 6 – Kleuren en cijfers
+  {id:'ahmar',    w:6, ar:'أحمر',         ph:'ahmar',           nl:'rood',               pic:'🔴'},
+  {id:'azra',     w:6, ar:'أزرق',         ph:"azra'",           nl:'blauw',              pic:'🔵'},
+  {id:'akhdar',   w:6, ar:'أخضر',         ph:'achdar',          nl:'groen',              pic:'🟢'},
+  {id:'asfar',    w:6, ar:'أصفر',         ph:'asfar',           nl:'geel',               pic:'🟡'},
+  {id:'abyad',    w:6, ar:'أبيض',         ph:'abjad',           nl:'wit',                pic:'⚪'},
+  {id:'eswed',    w:6, ar:'إسود',         ph:'eswed',           nl:'zwart',              pic:'⚫'},
+  {id:'bonni',    w:6, ar:'بني',          ph:'bonni',           nl:'bruin',              pic:'🟤'},
+  {id:'bortoani', w:6, ar:'برتقاني',      ph:"borto'aani",      nl:'oranje',             pic:'🟠'},
+  {id:'wahed',    w:6, ar:'واحد',         ph:'waahed',          nl:'één',                pic:'1️⃣'},
+  {id:'etneen',   w:6, ar:'اتنين',        ph:'etneen',          nl:'twee',               pic:'2️⃣'},
+  {id:'talata',   w:6, ar:'تلاتة',        ph:'talaata',         nl:'drie',               pic:'3️⃣'},
+  {id:'arbaa',    w:6, ar:'أربعة',        ph:"arba'a",          nl:'vier',               pic:'4️⃣'},
+  {id:'khamsa',   w:6, ar:'خمسة',         ph:'chamsa',          nl:'vijf',               pic:'5️⃣'},
+  {id:'setta',    w:6, ar:'ستة',          ph:'setta',           nl:'zes',                pic:'6️⃣'},
+  {id:'sabaa',    w:6, ar:'سبعة',         ph:"sab'a",           nl:'zeven',              pic:'7️⃣'},
+  {id:'tamanya',  w:6, ar:'تمانية',       ph:'tamanja',         nl:'acht',               pic:'8️⃣'},
+  {id:'tesaa',    w:6, ar:'تسعة',         ph:"tes'a",           nl:'negen',              pic:'9️⃣'},
+  {id:'ashara',   w:6, ar:'عشرة',         ph:"'asjara",         nl:'tien',               pic:'🔟'},
+  // Wereld 7 – Mijn lichaam
+  {id:'wesh',     w:7, ar:'وش',           ph:'wesj',            nl:'gezicht',            pic:'😊'},
+  {id:'een',      w:7, ar:'عين',          ph:"'een",            nl:'oog',                pic:'👁️'},
+  {id:'wedn',     w:7, ar:'ودن',          ph:'wedn',            nl:'oor',                pic:'👂'},
+  {id:'manakheer',w:7, ar:'مناخير',       ph:'manachier',       nl:'neus',               pic:'👃'},
+  {id:'bo',       w:7, ar:'بق',           ph:"bo'",             nl:'mond',               pic:'👄'},
+  {id:'senaan',   w:7, ar:'سنان',         ph:'senaan',          nl:'tanden',             pic:'🦷'},
+  {id:'shaar',    w:7, ar:'شعر',          ph:"sja'r",           nl:'haar',               pic:'💇'},
+  {id:'raas',     w:7, ar:'راس',          ph:'raas',            nl:'hoofd',              pic:'🙆'},
+  {id:'eed',      w:7, ar:'إيد',          ph:'eed',             nl:'hand',               pic:'✋'},
+  {id:'sawabe',   w:7, ar:'صوابع',        ph:"sawaabe'",        nl:'vingers',            pic:'🖐️'},
+  {id:'regl',     w:7, ar:'رجل',          ph:'regl',            nl:'been / voet',        pic:'🦵'},
+  {id:'batn',     w:7, ar:'بطن',          ph:'batn',            nl:'buik',               pic:'🫃', check:'Zeg je tegen kinderen batn of kersj?'},
+  {id:'mabsoot',  w:7, ar:'مبسوط',        ph:'mabsoet',         nl:'blij',               pic:'😀', g:'self', fem:{ar:'مبسوطة', ph:'mabsoeta'}},
+  {id:'zaalan',   w:7, ar:'زعلان',        ph:"za'laan",         nl:'verdrietig',         pic:'😢', g:'self', fem:{ar:'زعلانة', ph:"za'laana"}},
+  {id:'taaban',   w:7, ar:'تعبان',        ph:"ta'baan",         nl:'moe / ziek',         pic:'😴', g:'self', fem:{ar:'تعبانة', ph:"ta'baana"}},
+  {id:'khayef',   w:7, ar:'خايف',         ph:'chaajef',         nl:'bang',               pic:'😨', g:'self', fem:{ar:'خايفة', ph:'chajfa'}},
+  // Wereld 8 – Thuis
+  {id:'ooda',     w:8, ar:'أوضة',         ph:'ooda',            nl:'kamer',              pic:'🏠'},
+  {id:'baab',     w:8, ar:'باب',          ph:'baab',            nl:'deur',               pic:'🚪'},
+  {id:'shebbak',  w:8, ar:'شباك',         ph:'sjebbaak',        nl:'raam',               pic:'🪟'},
+  {id:'noor',     w:8, ar:'نور',          ph:'noer',            nl:'licht',              pic:'💡'},
+  {id:'sereer',   w:8, ar:'سرير',         ph:'serier',          nl:'bed',                pic:'🛏️'},
+  {id:'korsi',    w:8, ar:'كرسي',         ph:'korsi',           nl:'stoel',              pic:'🪑'},
+  {id:'kanaba',   w:8, ar:'كنبة',         ph:'kanaba',          nl:'bank',               pic:'🛋️'},
+  {id:'tilifizyon',w:8,ar:'تليفزيون',     ph:'tilifizjoon',     nl:'televisie',          pic:'📺'},
+  {id:'matbakh',  w:8, ar:'مطبخ',         ph:'matbach',         nl:'keuken',             pic:'🍳'},
+  {id:'hammam',   w:8, ar:'حمام',         ph:'hammaam',         nl:'badkamer / wc',      pic:'🛁'},
+  {id:'kobbaya',  w:8, ar:'كوباية',       ph:'kobbaaja',        nl:'glas',               pic:'🥃'},
+  {id:'tarabeeza',w:8, ar:'ترابيزة',      ph:'tarabeeza',       nl:'tafel',              pic:'🍽️'},
+  // Wereld 9 – Op vakantie in Egypte
+  {id:'tayyara',  w:9, ar:'طيارة',        ph:'tajjaara',        nl:'vliegtuig',          pic:'✈️'},
+  {id:'shanta',   w:9, ar:'شنطة',         ph:'sjanta',          nl:'koffer / tas',       pic:'🧳'},
+  {id:'fondo',    w:9, ar:'فندق',         ph:"fondo'",          nl:'hotel',              pic:'🏨'},
+  {id:'agaza',    w:9, ar:'أجازة',        ph:'agaaza',          nl:'vakantie',           pic:'🌴'},
+  {id:'bahr',     w:9, ar:'بحر',          ph:'bahr',            nl:'zee',                pic:'🌊'},
+  {id:'shams',    w:9, ar:'شمس',          ph:'sjams',           nl:'zon',                pic:'☀️'},
+  {id:'ramla',    w:9, ar:'رملة',         ph:'ramla',           nl:'zand',               pic:'🏖️'},
+  {id:'hammamsebaha',w:9,ar:'حمام سباحة', ph:'hammaam sebaaha', nl:'zwembad',            pic:'🏊'},
+  {id:'ahramat',  w:9, ar:'الأهرامات',    ph:'el-ahramaat',     nl:'de piramides',       pic:'🔺'},
+  {id:'nil',      w:9, ar:'النيل',        ph:'en-niel',         nl:'de Nijl',            pic:'🏞️'},
+  {id:'markeb',   w:9, ar:'مركب',         ph:'markeb',          nl:'boot',               pic:'⛵'},
+  {id:'samak_hayy',w:9,ar:'شعاب',         ph:"sjo'aab",         nl:'koraalrif',          pic:'🪸', check:'Is sjo\'aab het woord dat jullie gebruiken voor het rif?'},
+  {id:'harr',     w:9, ar:'حر',           ph:'harr',            nl:'warm (heet weer)',   pic:'🥵'},
+  {id:'gamil',    w:9, ar:'جميل',         ph:'gamiel',          nl:'mooi',               pic:'🌅', g:'self', fem:{ar:'جميلة', ph:'gamiela'}, check:'Hangt af van waar het over gaat; nu als "ik vind het mooi"'},
+  {id:'awam',     w:9, ar:'عوم',          ph:"'oom",            nl:'zwemmen',            pic:'🤽'},
+  {id:'sowar',    w:9, ar:'صور',          ph:'sowar',           nl:"foto's",             pic:'📸'},
+  // Wereld 10 – Mijn vriendjes
+  {id:'sahbi',    w:10, ar:'صاحبي',       ph:'saahbi',          nl:'mijn vriend',        pic:'🧑‍🤝‍🧑'},
+  {id:'sahbeti',  w:10, ar:'صاحبتي',      ph:'sahbeti',         nl:'mijn vriendin',      pic:'👭'},
+  {id:'taala',    w:10, ar:'تعالى',       ph:"ta'aala",         nl:'kom (hier)',         pic:'🫴', g:'you', fem:{ar:'تعالي', ph:"ta'aali"}},
+  {id:'nelab',    w:10, ar:'نلعب',        ph:"nel'ab",          nl:'we spelen',          pic:'🎲'},
+  {id:'dori',     w:10, ar:'دوري',        ph:'doori',           nl:'ik ben aan de beurt',pic:'🙋'},
+  {id:'dorak',    w:10, ar:'دورك',        ph:'doorak',          nl:'jij bent aan de beurt',pic:'🫵', g:'you', fem:{ar:'دورك', ph:'doorek'}},
+  {id:'estanna',  w:10, ar:'استنى',       ph:'estanna',         nl:'wacht even',         pic:'✋', g:'you', fem:{ar:'استني', ph:'estanni'}},
+  {id:'mashi',    w:10, ar:'ماشي',        ph:'maasji',          nl:'oké',                pic:'👌'},
+  {id:'maalesh',  w:10, ar:'معلش',        ph:"ma'lesj",         nl:'geeft niet / sorry', pic:'🤗'},
+  {id:'anakaman', w:10, ar:'أنا كمان',    ph:'ana kamaan',      nl:'ik ook',             pic:'🙌'},
+  {id:'mesh',     w:10, ar:'مش',          ph:'mesj',            nl:'niet',               pic:'🚫'},
+  {id:'momken',   w:10, ar:'ممكن؟',       ph:'momken?',         nl:'mag het? / kan het?',pic:'🤔'},
+  // Wereld 11 – Bij opa en oma
+  {id:'wahashteeni',w:11,ar:'وحشتيني',    ph:'wahasjtieni',     nl:'ik heb je gemist (tegen oma)', pic:'🥰'},
+  {id:'wahashtni',w:11, ar:'وحشتني',      ph:'wahasjtini',      nl:'ik heb je gemist (tegen opa)', pic:'🤗'},
+  {id:'habibi',   w:11, ar:'حبيبي',       ph:'habiebi',         nl:'lieverd (jongen)',   pic:'💙'},
+  {id:'habibti',  w:11, ar:'حبيبتي',      ph:'habiebti',        nl:'lieverd (meisje)',   pic:'💗'},
+  {id:'boosa',    w:11, ar:'بوسة',        ph:'boosa',           nl:'kusje',              pic:'😘'},
+  {id:'hodn',     w:11, ar:'حضن',         ph:'hodn',            nl:'knuffel',            pic:'🫂'},
+  {id:'hekaya',   w:11, ar:'حكاية',       ph:'hekaaja',         nl:'verhaal',            pic:'📖'},
+  {id:'kahk',     w:11, ar:'كحك',         ph:'kahk',            nl:'koekjes (voor het Suikerfeest)', pic:'🍪'},
+  {id:'genena',   w:11, ar:'جنينة',       ph:'geniena',         nl:'tuin',               pic:'🏡'},
+  {id:'shagara',  w:11, ar:'شجرة',        ph:'sjagara',         nl:'boom',               pic:'🌳'},
+  {id:'warda',    w:11, ar:'وردة',        ph:'warda',           nl:'bloem',              pic:'🌹'},
+  {id:'ahwa',     w:11, ar:'قهوة',        ph:"'ahwa",           nl:'koffie',             pic:'☕'},
+  // Wereld 12 – Winkelen in Egypte
+  {id:'soo',      w:12, ar:'سوق',         ph:"soe'",            nl:'markt',              pic:'🏪'},
+  {id:'feloos',   w:12, ar:'فلوس',        ph:'feloes',          nl:'geld',               pic:'💵'},
+  {id:'geneh',    w:12, ar:'جنيه',        ph:'geneeh',          nl:'pond (Egyptisch geld)', pic:'🪙'},
+  {id:'bekam',    w:12, ar:'بكام؟',       ph:'bekaam?',         nl:'hoeveel kost het?',  pic:'🏷️'},
+  {id:'ghali',    w:12, ar:'غالي',        ph:'ghaali',          nl:'duur',               pic:'💎'},
+  {id:'rekhees',  w:12, ar:'رخيص',        ph:'rachies',         nl:'goedkoop',           pic:'🪶'},
+  {id:'aawez',    w:12, ar:'عايز',        ph:"'aajez",          nl:'ik wil',             pic:'🙋', g:'self', fem:{ar:'عايزة', ph:"'ajza"}},
+  {id:'ayskreem', w:12, ar:'آيس كريم',    ph:'ajs kriem',       nl:'ijsje',              pic:'🍦'},
+  {id:'leaba',    w:12, ar:'لعبة',        ph:"le'ba",           nl:'speelgoed',          pic:'🧸'},
+  {id:'hodoom',   w:12, ar:'هدوم',        ph:'hoedoem',         nl:'kleren',             pic:'👗'},
+  {id:'gazma',    w:12, ar:'جزمة',        ph:'gazma',           nl:'schoenen',           pic:'👞'},
+  {id:'shanta2',  w:12, ar:'كيس',         ph:'kies',            nl:'zakje / tasje',      pic:'🛍️'},
+  // Wereld 13 – Op avontuur in Cairo
+  {id:'qahera',   w:13, ar:'القاهرة',     ph:"el-'aahera",      nl:'Caïro',              pic:'🏙️'},
+  {id:'share',    w:13, ar:'شارع',        ph:"sjaare'",         nl:'straat',             pic:'🛣️'},
+  {id:'zahma',    w:13, ar:'زحمة',        ph:'zahma',           nl:'druk',               pic:'🚦'},
+  {id:'borg',     w:13, ar:'برج',         ph:'borg',            nl:'toren',              pic:'🗼'},
+  {id:'taksi',    w:13, ar:'تاكسي',       ph:'taksi',           nl:'taxi',               pic:'🚕'},
+  {id:'metro',    w:13, ar:'مترو',        ph:'metro',           nl:'metro',              pic:'🚇'},
+  {id:'otobees',  w:13, ar:'أتوبيس',      ph:'otobies',         nl:'bus',                pic:'🚌'},
+  {id:'arabeyya', w:13, ar:'عربية',       ph:"'arabejja",       nl:'auto',               pic:'🚗'},
+  {id:'yemeen',   w:13, ar:'يمين',        ph:'jemien',          nl:'rechts',             pic:'➡️'},
+  {id:'shemal',   w:13, ar:'شمال',        ph:'sjmaal',          nl:'links',              pic:'⬅️'},
+  {id:'alatool',  w:13, ar:'على طول',     ph:"'ala toel",       nl:'rechtdoor',          pic:'⬆️'},
+  {id:'feen',     w:13, ar:'فين؟',        ph:'feen?',           nl:'waar?',              pic:'🗺️'},
+  {id:'mathaf',   w:13, ar:'متحف',        ph:'mathaf',          nl:'museum',             pic:'🏛️'},
+  {id:'faraon',   w:13, ar:'فرعون',       ph:"far'oon",         nl:'farao',              pic:'👑'},
+  {id:'momya',    w:13, ar:'مومياء',      ph:'momja',           nl:'mummie',             pic:'⚱️', check:'Uitspraak: momja of mumja?'},
+  {id:'dahab',    w:13, ar:'دهب',         ph:'dahab',           nl:'goud',               pic:'🥇'},
 ];
 
 // ---- Zinnen. lesson = bij welke les de zin hoort. Arabisch en uitspraak
@@ -863,7 +1117,7 @@ const SENTENCES = [
   {id:'s_sabah_noor',  w:1, lesson:'w1l2', ar:'صباح النور',          ph:'sabaah en-noer',        nl:'Goedemorgen! (antwoord)'},
   {id:'s_shukran_baba',w:1, lesson:'w1l2', ar:'شكراً يا بابا',        ph:'sjoekran ja baba',      nl:'Dank je wel, papa!'},
   {id:'s_esmi',        w:1, lesson:'w1l3', ar:'اسمي سارة',           ph:'esmi Sara',             nl:'Ik heet Sara.'},
-  {id:'s_esmak',       w:1, lesson:'w1l3', ar:'اسمك إيه؟',           ph:'esmak eeh?',            nl:'Hoe heet jij? (tegen een jongen)'},
+  {id:'s_esmak',       w:1, lesson:'w1l3', ar:'اسمك إيه؟',           ph:'esmak eeh?',            nl:'Hoe heet jij?', g:'you', fem:{ar:'اسمك إيه؟', ph:'esmek eeh?'}},
   {id:'s_kwayyes',     w:1, lesson:'w1l4', ar:'أنا كويس',            ph:'ana kwajjes',           nl:'Het gaat goed met mij. (jongen)'},
   {id:'s_kwayyesa',    w:1, lesson:'w1l4', ar:'أنا كويسة',           ph:'ana kwajjesa',          nl:'Het gaat goed met mij. (meisje)'},
   {id:'s_izzayek',     w:1, lesson:'w1l4', ar:'إزيك يا تيتة؟',       ph:'ezzajjek ja teeta?',    nl:'Hoe gaat het, oma?'},
@@ -893,6 +1147,41 @@ const SENTENCES = [
   {id:'s_bahebb_kora', w:4, lesson:'w4l3', ar:'أنا بحب الكورة',      ph:'ana bahebb el-kora',    nl:'Ik hou van voetbal.'},
   {id:'s_kesebna',     w:4, lesson:'w4l4', ar:'كسبنا الماتش',        ph:'kesebna el-matsj',      nl:'We hebben de wedstrijd gewonnen!'},
   {id:'s_montakhab',   w:4, lesson:'w4l4', ar:'منتخب مصر كسب',       ph:'montachab masr keseb',  nl:'Egypte heeft gewonnen!'},
+  {id:'s_majja',       w:5, lesson:'w5l3', ar:'مية من فضلك',          ph:'majja men fadlak',       nl:'Water alsjeblieft.'},
+  {id:'s_akl_helw',    w:5, lesson:'w5l4', ar:'الأكل حلو',            ph:'el-akl helw',            nl:'Het eten is lekker.'},
+  {id:'s_bahebb_manga',w:5, lesson:'w5l2', ar:'بحب المانجة',          ph:'bahebb el-manga',        nl:'Ik hou van mango.'},
+  {id:'s_shay_laban',  w:5, lesson:'w5l3', ar:'شاي بلبن',             ph:'sjaai be-laban',         nl:'Thee met melk.'},
+  {id:'s_feen_eesh',   w:5, lesson:'w5l1', ar:'فين العيش؟',           ph:"feen el-'eesj?",         nl:'Waar is het brood?'},
+  {id:'s_toffaha_hamra',w:6, lesson:'w6l1', ar:'التفاحة حمرا',        ph:'et-toffaaha hamra',      nl:'De appel is rood.'},
+  {id:'s_sama_zar2a',  w:6, lesson:'w6l2', ar:'السما زرقا',           ph:"es-sama zar'a",          nl:'De lucht is blauw.'},
+  {id:'s_waahed_etneen',w:6, lesson:'w6l3', ar:'واحد اتنين تلاتة',    ph:'waahed etneen talaata',  nl:'Eén, twee, drie.'},
+  {id:'s_andi_khamsa', w:6, lesson:'w6l3', ar:'عندي خمسة',            ph:"'andi chamsa",           nl:'Ik heb er vijf.'},
+  {id:'s_di_eedi',     w:7, lesson:'w7l3', ar:'دي إيدي',              ph:'di iedi',                nl:'Dit is mijn hand.'},
+  {id:'s_ana_mabsoot', w:7, lesson:'w7l4', ar:'أنا مبسوط',            ph:'ana mabsoet',            nl:'Ik ben blij. (jongen)'},
+  {id:'s_ana_mabsoota',w:7, lesson:'w7l4', ar:'أنا مبسوطة',           ph:'ana mabsoeta',           nl:'Ik ben blij. (meisje)'},
+  {id:'s_batni',       w:7, lesson:'w7l3', ar:'بطني بتوجعني',         ph:"batni betewga'ni",       nl:'Mijn buik doet pijn.'},
+  {id:'s_feen_hammam', w:8, lesson:'w8l3', ar:'فين الحمام؟',          ph:'feen el-hammaam?',       nl:'Waar is de wc?'},
+  {id:'s_eftah_baab',  w:8, lesson:'w8l1', ar:'افتح الباب',           ph:'eftah el-baab',          nl:'Doe de deur open.'},
+  {id:'s_efel_noor',   w:8, lesson:'w8l1', ar:'اقفل النور',           ph:"e'fel en-noer",          nl:'Doe het licht uit.'},
+  {id:'s_yalla_nenam', w:8, lesson:'w8l2', ar:'يلا ننام',             ph:'jalla nenaam',           nl:'Kom, we gaan slapen.'},
+  {id:'s_rayhin_masr', w:9, lesson:'w9l1', ar:'رايحين مصر',           ph:'rajhien masr',           nl:'We gaan naar Egypte.'},
+  {id:'s_gaww_harr',   w:9, lesson:'w9l4', ar:'الجو حر',              ph:'el-gaww harr',           nl:'Het is warm.'},
+  {id:'s_yalla_bahr',  w:9, lesson:'w9l2', ar:'يلا على البحر',        ph:"jalla 'al-bahr",         nl:'Kom, naar de zee!'},
+  {id:'s_shoft_ahramat',w:9, lesson:'w9l3', ar:'شفت الأهرامات',       ph:'sjoft el-ahramaat',      nl:'Ik heb de piramides gezien.'},
+  {id:'s_taala_nelab', w:10, lesson:'w10l1', ar:'تعالى نلعب',         ph:"ta'aala nel'ab",         nl:'Kom, we gaan spelen.'},
+  {id:'s_enta_sahbi',  w:10, lesson:'w10l1', ar:'إنت صاحبي',          ph:'enta saahbi',            nl:'Jij bent mijn vriend.'},
+  {id:'s_momken_alab', w:10, lesson:'w10l3', ar:'ممكن ألعب معاكم؟',   ph:"momken al'ab ma'aakom?", nl:'Mag ik met jullie meespelen?'},
+  {id:'s_maalesh',     w:10, lesson:'w10l3', ar:'معلش يا صاحبي',      ph:"ma'lesj ja saahbi",      nl:'Geeft niet, vriend.'},
+  {id:'s_wahashteeni_teeta',w:11, lesson:'w11l1', ar:'وحشتيني يا تيتة',ph:'wahasjtieni ja teeta',   nl:'Ik heb je gemist, oma.'},
+  {id:'s_bahebbak_geddo',w:11, lesson:'w11l1', ar:'بحبك يا جدو',      ph:'bahebbak ja geddo',      nl:'Ik hou van je, opa.'},
+  {id:'s_ehkili',      w:11, lesson:'w11l2', ar:'احكيلي حكاية',       ph:'ehkieli hekaaja',        nl:'Vertel me een verhaal.'},
+  {id:'s_kahk_helw',   w:11, lesson:'w11l3', ar:'الكحك حلو',          ph:'el-kahk helw',           nl:'De koekjes zijn lekker.'},
+  {id:'s_bekam_da',    w:12, lesson:'w12l1', ar:'بكام ده؟',           ph:'bekaam da?',             nl:'Hoeveel kost dit?'},
+  {id:'s_ghali_awi',   w:12, lesson:'w12l2', ar:'ده غالي أوي',        ph:'da ghaali awi',          nl:'Dit is heel duur.'},
+  {id:'s_momken_ays',  w:12, lesson:'w12l3', ar:'ممكن آيس كريم؟',     ph:'momken ajs kriem?',      nl:'Mag ik een ijsje?'},
+  {id:'s_feen_metro',  w:13, lesson:'w13l2', ar:'فين المترو؟',        ph:'feen el-metro?',         nl:'Waar is de metro?'},
+  {id:'s_ala_tool_yemeen',w:13, lesson:'w13l3', ar:'على طول وبعدين يمين', ph:"'ala toel we ba'deen jemien", nl:'Rechtdoor en dan rechts.'},
+  {id:'s_qahera_zahma',w:13, lesson:'w13l1', ar:'القاهرة زحمة أوي',   ph:"el-'aahera zahma awi",   nl:'Caïro is heel druk.'},
 ];
 
 // ---- Werelden en lessen (5 lessen per wereld; review = herhaling van de hele wereld)
@@ -925,11 +1214,71 @@ const WORLDS = [
     {id:'w4l4', title:'Wij winnen!',     icon:'🏆', words:['gomhoor','kesebna','montakhab']},
     {id:'w4l5', title:'Finale',          icon:'💬', review:true},
   ]},
+  {id:5, name:'Eten en drinken', desc:'Brood, fruit en koshari', emoji:'🍞', color:'#FF9600', dark:'#CC7800', lessons:[
+    {id:'w5l1', title:'Ontbijt',        icon:'🍳', words:['eesh','gebna','beed','laban']},
+    {id:'w5l2', title:'Fruit',          icon:'🍎', words:['toffah','mooz','bortoaan','manga']},
+    {id:'w5l3', title:'Drinken',        icon:'🧃', words:['mayya','shay','aseer','atshan']},
+    {id:'w5l4', title:'Egyptisch eten', icon:'🍲', words:['roz','koshari','tameya','gaaan']},
+    {id:'w5l5', title:'Aan tafel',      icon:'💬', review:true},
+  ]},
+  {id:6, name:'Kleuren en cijfers', desc:'Van rood tot tien', emoji:'🎨', color:'#CE82FF', dark:'#A568CC', lessons:[
+    {id:'w6l1', title:'Kleuren 1',      icon:'🔴', words:['ahmar','azra','akhdar','asfar']},
+    {id:'w6l2', title:'Kleuren 2',      icon:'⚫', words:['abyad','eswed','bonni','bortoani']},
+    {id:'w6l3', title:'Tellen tot 5',   icon:'5️⃣', words:['wahed','etneen','talata','arbaa','khamsa']},
+    {id:'w6l4', title:'Tellen tot 10',  icon:'🔟', words:['setta','sabaa','tamanya','tesaa','ashara']},
+    {id:'w6l5', title:'Regenboog',      icon:'💬', review:true},
+  ]},
+  {id:7, name:'Mijn lichaam', desc:'Van je hoofd tot je tenen', emoji:'🙆', color:'#FF4B4B', dark:'#D33131', lessons:[
+    {id:'w7l1', title:'Mijn gezicht',   icon:'😊', words:['wesh','een','wedn','manakheer']},
+    {id:'w7l2', title:'Mond en haar',   icon:'🦷', words:['bo','senaan','shaar','raas']},
+    {id:'w7l3', title:'Handen en voeten',icon:'✋', words:['eed','sawabe','regl','batn']},
+    {id:'w7l4', title:'Hoe voel je je?',icon:'😀', words:['mabsoot','zaalan','taaban','khayef']},
+    {id:'w7l5', title:'Hoofd, schouders',icon:'💬', review:true},
+  ]},
+  {id:8, name:'Thuis', desc:'Kamers en spullen in huis', emoji:'🏠', color:'#1CB0F6', dark:'#1899D6', lessons:[
+    {id:'w8l1', title:'Mijn huis',      icon:'🚪', words:['ooda','baab','shebbak','noor']},
+    {id:'w8l2', title:'Mijn kamer',     icon:'🛏️', words:['sereer','korsi','kanaba','tilifizyon']},
+    {id:'w8l3', title:'Keuken en bad',  icon:'🍳', words:['matbakh','hammam','kobbaya','tarabeeza']},
+    {id:'w8l4', title:'Thuis praten',   icon:'💬', words:[], sentencesOnly:true},
+    {id:'w8l5', title:'Rondleiding',    icon:'💬', review:true},
+  ]},
+  {id:9, name:'Op vakantie in Egypte', desc:'Zee, zon en piramides', emoji:'🏖️', color:'#00C2D1', dark:'#0097A3', lessons:[
+    {id:'w9l1', title:'Op reis',        icon:'✈️', words:['tayyara','shanta','fondo','agaza']},
+    {id:'w9l2', title:'Op het strand',  icon:'🌊', words:['bahr','shams','ramla','hammamsebaha']},
+    {id:'w9l3', title:'Oud Egypte',     icon:'🔺', words:['ahramat','nil','markeb','samak_hayy']},
+    {id:'w9l4', title:'Zomerpret',      icon:'☀️', words:['harr','gamil','awam','sowar']},
+    {id:'w9l5', title:'Vakantiefoto',   icon:'💬', review:true},
+  ]},
+  {id:10, name:'Mijn vriendjes', desc:'Samen spelen en praten', emoji:'🧑‍🤝‍🧑', color:'#58A700', dark:'#467F00', lessons:[
+    {id:'w10l1', title:'Vriendjes',     icon:'👭', words:['sahbi','sahbeti','taala','nelab']},
+    {id:'w10l2', title:'Om de beurt',   icon:'🎲', words:['dori','dorak','estanna','mashi']},
+    {id:'w10l3', title:'Aardig zijn',   icon:'🤗', words:['maalesh','anakaman','mesh','momken']},
+    {id:'w10l4', title:'Samen praten',  icon:'💬', words:[], sentencesOnly:true},
+    {id:'w10l5', title:'Speelplein',    icon:'💬', review:true},
+  ]},
+  {id:11, name:'Bij opa en oma', desc:'Knuffels, verhalen en kahk', emoji:'👵', color:'#E87C9B', dark:'#C25E7C', lessons:[
+    {id:'w11l1', title:'Ik heb je gemist',icon:'🥰', words:['wahashteeni','wahashtni','habibi','habibti']},
+    {id:'w11l2', title:'Knuffels',      icon:'🫂', words:['boosa','hodn','hekaya']},
+    {id:'w11l3', title:'In de tuin',    icon:'🌳', words:['genena','shagara','warda','kahk']},
+    {id:'w11l4', title:'Op bezoek',     icon:'☕', words:['ahwa','shay','teeta','geddo']},
+    {id:'w11l5', title:'Logeren',       icon:'💬', review:true},
+  ]},
+  {id:12, name:'Winkelen in Egypte', desc:'Markt, geld en afdingen', emoji:'🛍️', color:'#FFC800', dark:'#E0A800', lessons:[
+    {id:'w12l1', title:'Op de markt',   icon:'🏪', words:['soo','feloos','geneh','bekam']},
+    {id:'w12l2', title:'Duur of goedkoop',icon:'💎', words:['ghali','rekhees','aawez','shanta2']},
+    {id:'w12l3', title:'Iets kopen',    icon:'🧸', words:['ayskreem','leaba','hodoom','gazma']},
+    {id:'w12l4', title:'Afdingen',      icon:'💬', words:[], sentencesOnly:true},
+    {id:'w12l5', title:'Boodschappen',  icon:'💬', review:true},
+  ]},
+  {id:13, name:'Op avontuur in Caïro', desc:'Taxi, metro en mummies', emoji:'🏙️', color:'#2B70C9', dark:'#1F5599', lessons:[
+    {id:'w13l1', title:'In de stad',    icon:'🏙️', words:['qahera','share','zahma','borg']},
+    {id:'w13l2', title:'Vervoer',       icon:'🚕', words:['taksi','metro','otobees','arabeyya']},
+    {id:'w13l3', title:'De weg vragen', icon:'🗺️', words:['yemeen','shemal','alatool','feen']},
+    {id:'w13l4', title:'In het museum', icon:'🏛️', words:['mathaf','faraon','momya','dahab']},
+    {id:'w13l5', title:'Schattenjacht', icon:'💬', review:true},
+  ]},
 ];
-const COMING = [
-  ['🍞','Eten en drinken'],['🎨','Kleuren en cijfers'],['🖐️','Mijn lichaam'],['🛋️','Thuis'],
-  ['🏖️','Op vakantie in Egypte'],['🛝','Spelen met vriendjes'],['🗣️','Kleine gesprekjes'],
-];
+const COMING = [];
 
 // ---- Verzamelstickers: één per les (zelfde volgorde als de lessen)
 const STICKERS = [
@@ -940,6 +1289,15 @@ const STICKERS = [
   {e:'🏜️', n:'Woestijn'},             {e:'🍉', n:'Watermeloen'},        {e:'🦅', n:'Valk'},
   {e:'⚽', n:'Gouden bal'},           {e:'🥅', n:'Doel'},               {e:'🧤', n:'Keepershandschoenen'},
   {e:'👟', n:'Voetbalschoenen'},      {e:'🏆', n:'Beker'},
+  {e:'🍞', n:'Vers Egyptisch brood'}, {e:'🥭', n:'Zoete mango'}, {e:'🍵', n:'Glaasje thee'}, {e:'🧆', n:'Warme ta\'meya'}, {e:'🍲', n:'Grote pan koshari'},
+  {e:'🌈', n:'Regenboog'}, {e:'🎨', n:'Verfpalet'}, {e:'🔢', n:'Telraam'}, {e:'🎲', n:'Dobbelsteen'}, {e:'🖍️', n:'Krijtjes'},
+  {e:'👁️', n:'Oog van Horus'}, {e:'🦷', n:'Stralende tand'}, {e:'🖐️', n:'Hand van Fatima'}, {e:'😀', n:'Blije smiley'}, {e:'💪', n:'Sterke arm'},
+  {e:'🏠', n:'Huis met dakterras'}, {e:'🛏️', n:'Knus bed'}, {e:'🫖', n:'Theepot'}, {e:'🪟', n:'Mashrabiya-raam'}, {e:'🔑', n:'Huissleutel'},
+  {e:'✈️', n:'Vliegtuig naar Egypte'}, {e:'🐠', n:'Clownvis'}, {e:'🔺', n:'Piramide van Gizeh'}, {e:'🐪', n:'Dromedaris'}, {e:'🌅', n:'Rode Zee-zonsondergang'},
+  {e:'🪁', n:'Vlieger'}, {e:'⚽', n:'Straatvoetbal'}, {e:'🤝', n:'Vriendschap'}, {e:'🎈', n:'Ballon'}, {e:'🧩', n:'Puzzel'},
+  {e:'🍪', n:'Kahk van oma'}, {e:'🌹', n:'Rozen uit de tuin'}, {e:'📖', n:'Verhalenboek'}, {e:'☕', n:'Opa\'s koffie'}, {e:'🫂', n:'Grote knuffel'},
+  {e:'🏮', n:'Ramadanlantaarn'}, {e:'🧺', n:'Marktmand'}, {e:'🪙', n:'Egyptisch pond'}, {e:'🧸', n:'Knuffelbeer'}, {e:'🛍️', n:'Boodschappentas'},
+  {e:'🗼', n:'Toren van Caïro'}, {e:'🚇', n:'Metro van Caïro'}, {e:'🧭', n:'Kompas'}, {e:'⚱️', n:'Oude vaas'}, {e:'👑', n:'Kroon van de farao'},
 ];
 
 // ---- Vaste audiobestanden (optioneel). Zet opnames in een map "audio" naast
@@ -948,13 +1306,73 @@ const STICKERS = [
 //      Opnames die ouders in het dashboard uploaden gaan altijd voor.
 const AUDIO_FILES = {};
 
+
+/* ---------- gesprekjes met Mishmish (niveau 2) ----------
+   Elke beurt: q = wat Mishmish zegt, a = het goede antwoord, d = foute keuzes.
+   Verwijzingen naar bestaande woorden/zinnen gebruiken hun id, zodat jouw opnames meteen werken.
+   Nieuwe regels staan in DLINES en kun je ook inspreken in het ouderdashboard. */
+const DLINES = [
+  {id:'d2_feen_mama',  w:2,  ar:'فين ماما؟',          ph:'feen mama?',            nl:'Waar is mama?'},
+  {id:'d2_fel_beet',   w:2,  ar:'ماما في البيت',      ph:'mama fel-beet',         nl:'Mama is thuis.'},
+  {id:'d2_andak_akh',  w:2,  ar:'عندك أخ؟',           ph:"'andak ach?",           nl:'Heb jij een broer?', g:'you', fem:{ar:'عندك أخ؟', ph:"'andek ach?"}},
+  {id:'d3_da_eeh',     w:3,  ar:'ده إيه؟',            ph:'da eeh?',               nl:'Wat is dit? (🐶)'},
+  {id:'d3_otta_eeh',   w:3,  ar:'القطة بتقول إيه؟',   ph:"el-otta bet'oel eeh?",  nl:'Wat zegt de kat?'},
+  {id:'d4_mien_keseb', w:4,  ar:'مين كسب؟',           ph:'mien keseb?',           nl:'Wie heeft gewonnen?'},
+  {id:'d5_gaaan',      w:5,  ar:'إنت جعان؟',          ph:"enta ga'aan?",          nl:'Heb jij honger?', g:'you', fem:{ar:'إنتي جعانة؟', ph:"enti ga'aana?"}},
+  {id:'d5_aywa_gaaan', w:5,  ar:'أيوه، أنا جعان',     ph:"ajwa, ana ga'aan",      nl:'Ja, ik heb honger.', g:'self', fem:{ar:'أيوه، أنا جعانة', ph:"ajwa, ana ga'aana"}},
+  {id:'d5_teshrab',    w:5,  ar:'عايز تشرب إيه؟',     ph:"'aajez tesjrab eeh?",   nl:'Wat wil je drinken?', g:'you', fem:{ar:'عايزة تشربي إيه؟', ph:"'ajza tesjrabi eeh?"}},
+  {id:'d6_lonha',      w:6,  ar:'التفاحة لونها إيه؟', ph:'et-toffaaha lonha eeh?',nl:'Welke kleur heeft de appel?'},
+  {id:'d6_andak_kam',  w:6,  ar:'عندك كام؟',          ph:"'andak kaam?",          nl:'Hoeveel heb je er?', g:'you', fem:{ar:'عندك كام؟', ph:"'andek kaam?"}},
+  {id:'d7_malak',      w:7,  ar:'مالك؟',              ph:'maalak?',               nl:'Wat is er?', g:'you', fem:{ar:'مالك؟', ph:'maalek?'}},
+  {id:'d7_mabsoot',    w:7,  ar:'إنت مبسوط؟',         ph:'enta mabsoet?',         nl:'Ben je blij?', g:'you', fem:{ar:'إنتي مبسوطة؟', ph:'enti mabsoeta?'}},
+  {id:'d8_mehtag',     w:8,  ar:'محتاج حاجة؟',        ph:'mehtaag haaga?',        nl:'Heb je iets nodig?', g:'you', fem:{ar:'محتاجة حاجة؟', ph:'mehtaaga haaga?'}},
+  {id:'d9_rayhin',     w:9,  ar:'رايحين فين؟',        ph:'rajhien feen?',         nl:'Waar gaan we heen?'},
+  {id:'d9_gaww',       w:9,  ar:'الجو عامل إيه؟',     ph:"el-gaww 'aamel eeh?",   nl:'Hoe is het weer?'},
+  {id:'d10_aywa_taala',w:10, ar:'أيوه، تعالى!',       ph:"ajwa, ta'aala!",        nl:'Ja, kom maar!'},
+  {id:'d10_door_mien', w:10, ar:'دور مين؟',           ph:'door mien?',            nl:'Wie is er aan de beurt?'},
+  {id:'d11_wahashtni', w:11, ar:'وحشتني يا حبيبي!',   ph:'wahasjtini ja habiebi!',nl:'Ik heb je gemist, lieverd!', g:'you', fem:{ar:'وحشتيني يا حبيبتي!', ph:'wahasjtieni ja habiebti!'}},
+  {id:'d11_aawez_eeh', w:11, ar:'عايز إيه؟',          ph:"'aajez eeh?",           nl:'Wat wil je?', g:'you', fem:{ar:'عايزة إيه؟', ph:"'ajza eeh?"}},
+  {id:'d12_ahlan',     w:12, ar:'أهلاً! عايز إيه؟',   ph:"ahlan! 'aajez eeh?",    nl:'Hallo! Wat wil je?', g:'you', fem:{ar:'أهلاً! عايزة إيه؟', ph:"ahlan! 'ajza eeh?"}},
+  {id:'d12_etfaddal',  w:12, ar:'اتفضل',              ph:'etfaddal',              nl:'Alsjeblieft, hier is het.', g:'you', fem:{ar:'اتفضلي', ph:'etfaddali'}},
+  {id:'d13_agabetak',  w:13, ar:'عجبتك القاهرة؟',     ph:"'agabetak el-'aahera?", nl:'Vond je Caïro leuk?', g:'you', fem:{ar:'عجبتك القاهرة؟', ph:"'agabetek el-'aahera?"}},
+  {id:'d13_bas_zahma', w:13, ar:'أيوه، بس زحمة أوي',  ph:'ajwa, bas zahma awi',   nl:'Ja, maar het is heel druk.'},
+];
+const DIALOGS = {
+  1: [{intro:'Mishmish komt je begroeten.', turns:[{q:'ahlan', a:'ahlan', d:['bye','la']}, {q:'izzayak', a:{m:'s_kwayyes', f:'s_kwayyesa'}, d:['s_holanda','shukran']}, {q:'s_esmak', a:'s_esmi', d:['ana','s_holanda']}]},
+      {intro:"Het is 's ochtends.", turns:[{q:'sabah', a:'s_sabah_noor', d:['masa','tesbah']}, {q:'izzayak', a:'hamdu', d:['la','masr']}]}],
+  2: [{intro:'Mishmish zoekt mama.', turns:[{q:'d2_feen_mama', a:'d2_fel_beet', d:['s_feen_geddo','akh']}, {q:'d2_andak_akh', a:'s_andi_akh', d:['s_di_teeta','eela']}]}],
+  3: [{intro:'Mishmish wijst naar een hond.', turns:[{q:'d3_da_eeh', a:'s_da_kalb', d:['s_di_otta','s_gamal']}, {q:'d3_otta_eeh', a:'s_mjau', d:['s_hosaan','s_arnab']}]}],
+  4: [{intro:'Mishmish wil voetballen.', turns:[{q:'s_yalla_kora', a:'yalla', d:['la','hakam']}, {q:'d4_mien_keseb', a:'s_kesebna', d:['s_ana_laeeb','goolee']}]}],
+  5: [{intro:'Het is etenstijd.', turns:[{q:'d5_gaaan', a:'d5_aywa_gaaan', d:['s_shay_laban','toffah']}, {q:'d5_teshrab', a:'s_majja', d:['s_akl_helw','s_feen_eesh']}]}],
+  6: [{intro:'Mishmish heeft een appel.', turns:[{q:'d6_lonha', a:'s_toffaha_hamra', d:['s_sama_zar2a','khamsa']}, {q:'d6_andak_kam', a:'s_andi_khamsa', d:['ahmar','s_waahed_etneen']}]}],
+  7: [{intro:'Je voelt je niet zo lekker.', turns:[{q:'d7_malak', a:'s_batni', d:['shaar','s_di_eedi']}, {q:'d7_mabsoot', a:{m:'s_ana_mabsoot', f:'s_ana_mabsoota'}, d:['senaan','eed']}]}],
+  8: [{intro:'Het is bijna bedtijd.', turns:[{q:'s_yalla_nenam', a:'tesbah', d:['baab','s_feen_hammam']}, {q:'d8_mehtag', a:'s_feen_hammam', d:['kanaba','s_efel_noor']}]}],
+  9: [{intro:'Jullie gaan op vakantie!', turns:[{q:'d9_rayhin', a:'s_rayhin_masr', d:['s_gaww_harr','shanta']}, {q:'d9_gaww', a:'s_gaww_harr', d:['s_shoft_ahramat','bahr']}]}],
+  10:[{intro:'Mishmish wil meespelen.', turns:[{q:'s_momken_alab', a:'d10_aywa_taala', d:['mesh','s_maalesh']}, {q:'d10_door_mien', a:'dori', d:['mashi','sahbeti']}]}],
+  11:[{intro:'Mishmish speelt opa. Hij is blij dat je er bent!', turns:[{q:'d11_wahashtni', a:'s_bahebbak_geddo', d:['kahk','s_ehkili']}, {q:'d11_aawez_eeh', a:'s_ehkili', d:['ahwa','warda']}]}],
+  12:[{intro:'Mishmish verkoopt ijsjes op de markt.', turns:[{q:'d12_ahlan', a:'s_momken_ays', d:['s_ghali_awi','feloos']}, {q:'d12_etfaddal', a:'shukran', d:['bekam','ghali']}]}],
+  13:[{intro:'Jullie zijn in Caïro.', turns:[{q:'s_feen_metro', a:'s_ala_tool_yemeen', d:['s_qahera_zahma','taksi']}, {q:'d13_agabetak', a:'d13_bas_zahma', d:['shemal','mathaf']}]}],
+};
+
 /* ===================================================================== */
 /* ======================  VANAF HIER: DE APP-LOGICA  ==================== */
 /* ===================================================================== */
 
 const ITEM = {};
+const VARIANTS = [];
 WORDS.forEach(w=>ITEM[w.id]={...w,kind:'word'});
-SENTENCES.forEach(s=>ITEM[s.id]={...s,kind:'sentence',pic:'💬'});
+SENTENCES.forEach(s=>ITEM[s.id]={...s,kind:'sentence',pic:s.pic||'💬'});
+DLINES.forEach(l=>ITEM[l.id]={...l,kind:'line',pic:'💬'});
+// Meisjesvormen krijgen een eigen id (<id>_f), zodat je ze apart kunt inspreken.
+function buildVariants(){
+  VARIANTS.length = 0;
+  Object.values(ITEM).filter(it=>it.fem && !it.base).forEach(it=>{
+    const v = {...it, id:it.id+'_f', base:it.id, ar:it.fem.ar, ph:it.fem.ph, nl:it.nl+(it.g==='self'?' (meisje)':' (tegen een meisje)'), kind:it.kind==='word'?'variant':it.kind, fem:null};
+    ITEM[v.id] = v; VARIANTS.push(v);
+  });
+}
+buildVariants();
+const baseOf = id => (ITEM[id] && ITEM[id].base) || id;
 const ALL_LESSONS = WORLDS.flatMap((w,wi)=>w.lessons.map((l,li)=>({...l,wi,li})));
 const OFFS = [0,-60,-30,40,60];
 const AVATARS = ['🐱','🦁','🐫','🐢','🦋','🐬','🦊','🐰','🦉','🐼','🦒','🐊'];
@@ -1105,6 +1523,55 @@ async function removePic(id){
   delete PICS[id];
 }
 
+/* ---------- woordeditor: aanpassingen van de beheerder (Supabase tabel 'content') ---------- */
+const CONTENT = {}, ORIG = {};
+const EDIT_KEYS = ['ar','ph','nl','pic','tip'];
+async function loadContent(){
+  if(!sb || !AUTH.user) return;
+  const {data, error} = await sb.from('content').select('id,data');
+  if(error || !data) return;
+  Object.keys(CONTENT).forEach(k=>delete CONTENT[k]);
+  data.forEach(r=>{ CONTENT[r.id] = r.data || {}; });
+  applyContent();
+}
+function applyContent(){
+  Object.entries(CONTENT).forEach(([id, d])=>{
+    if(d.new && !ITEM[id]){
+      const w = {id, w:+d.w, ar:d.ar||'', ph:d.ph||'', nl:d.nl||'', pic:d.pic||'🆕'};
+      WORDS.push(w); ITEM[id] = {...w, kind:'word'};
+      const wl = WORLDS.find(x=>x.id===+d.w), les = wl && wl.lessons.find(l=>l.id===d.lesson);
+      if(les && les.words && !les.words.includes(id)) les.words.push(id);
+      if(d.concrete) CONCRETE.add(id);
+    }
+    const it = ITEM[id]; if(!it) return;
+    if(!ORIG[id]) ORIG[id] = Object.fromEntries(EDIT_KEYS.map(k=>[k, it[k]]));
+    const src = WORDS.find(x=>x.id===id) || SENTENCES.find(x=>x.id===id) || DLINES.find(x=>x.id===id);
+    EDIT_KEYS.forEach(k=>{ const v = (d[k]!==undefined && d[k]!=='') ? d[k] : ORIG[id][k]; it[k] = v; if(src) src[k] = v; });
+  });
+}
+const isVerified = id => !!(CONTENT[id] && CONTENT[id].verified) || !!(DB.verified||{})[id];
+const checkNote = id => (CONTENT[id] && CONTENT[id].note) || (ITEM[id] && ITEM[id].check) || '';
+async function saveContent(id, patch){
+  if(!AUTH.admin){ toast('Alleen de beheerder kan woorden aanpassen.'); return false; }
+  const data = {...(CONTENT[id]||{}), ...patch};
+  const {error} = await sb.from('content').upsert({id, data, updated_at:new Date().toISOString()});
+  if(error){ toast('Opslaan lukte niet: ' + error.message); return false; }
+  CONTENT[id] = data; applyContent(); return true;
+}
+async function resetContent(id){
+  if(!AUTH.admin) return;
+  const keep = CONTENT[id] && CONTENT[id].new;
+  if(keep){ toast('Een nieuw woord kun je aanpassen, maar niet terugzetten.'); return; }
+  const {error} = await sb.from('content').delete().eq('id', id);
+  if(error){ toast('Terugzetten lukte niet.'); return; }
+  delete CONTENT[id]; const it = ITEM[id]; if(it && ORIG[id]){ EDIT_KEYS.forEach(k=>{ it[k] = ORIG[id][k]; }); const src = WORDS.find(x=>x.id===id) || SENTENCES.find(x=>x.id===id) || DLINES.find(x=>x.id===id); if(src) EDIT_KEYS.forEach(k=>{ src[k] = ORIG[id][k]; }); }
+}
+const allItems = () => [...WORDS, ...VARIANTS, ...SENTENCES, ...DLINES].map(x=>ITEM[x.id]).filter(Boolean);
+const worldOfItem = it => it.w || (ITEM[baseOf(it.id)]||{}).w;
+function weekTime(p){ const d = new Date(); d.setDate(d.getDate() - (d.getDay()+6)%7); const mon = today(d); return Object.entries(p.time||{}).filter(([k])=>k>=mon).reduce((n,[,v])=>n+v,0); }
+const totalTime = p => Object.values(p.time||{}).reduce((n,v)=>n+v,0);
+const fmtMin = sec => sec < 60 ? (sec ? '<1' : '0') : String(Math.round(sec/60));
+
 /* ---------- inspreken in de app (microfoon) ---------- */
 const REC = { stream:null, mr:null, chunks:[], id:null, t:null, busy:false };
 const recSupported = () => !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
@@ -1196,12 +1663,21 @@ function daily(p){
 // Een woord met een eigen foto telt ook mee (bijv. een foto van jullie oom bij khalo).
 const CONCRETE = new Set(['mama','baba','akh','ukht','teeta','geddo','beebi','walad','bent','beet',
   'otta','kalb','arnab','samaka','hosaan','baara','farkha','batta','kharoof','gamal','timsah','asad','erd','fiil','asfoora','farasha','selahfa',
-  'kora','goolee','fanella','malab','laeeb']);
+  'kora','goolee','fanella','malab','laeeb',
+  'eesh','gebna','beed','laban','toffah','mooz','bortoaan','manga','mayya','shay','aseer','roz','koshari','tameya',
+  'ahmar','azra','akhdar','asfar','abyad','eswed','bonni','bortoani','wahed','etneen','talata','arbaa','khamsa','setta','sabaa','tamanya','tesaa','ashara',
+  'wesh','een','wedn','manakheer','bo','senaan','shaar','raas','eed','sawabe','regl','batn','mabsoot','zaalan','taaban','khayef',
+  'ooda','baab','shebbak','noor','sereer','korsi','kanaba','tilifizyon','matbakh','hammam','kobbaya','tarabeeza',
+  'tayyara','shanta','fondo','bahr','shams','ramla','hammamsebaha','ahramat','nil','markeb','samak_hayy','sowar',
+  'boosa','hodn','hekaya','kahk','genena','shagara','warda','ahwa',
+  'soo','feloos','geneh','ayskreem','leaba','hodoom','gazma','shanta2',
+  'qahera','borg','taksi','metro','otobees','arabeyya','yemeen','shemal','alatool','mathaf','faraon','momya','dahab']);
 const PICS = {}, PICMETA = {};
-const isConcrete = id => CONCRETE.has(id) || !!PICS[id];
-function picOf(id){ return PICS[id] ? `<img src="${PICS[id]}" alt="" loading="lazy">` : (ITEM[id] ? ITEM[id].pic : ''); }
+const isConcrete = id => CONCRETE.has(baseOf(id)) || !!PICS[baseOf(id)];
+function picOf(id){ const b = baseOf(id); return PICS[b] ? `<img src="${PICS[b]}" alt="" loading="lazy">` : (ITEM[id] ? ITEM[id].pic : ''); }
 // Niveau 1 begint met wat je kunt aanwijzen: dieren en familie eerst, begroetingen als laatste.
-function worldOrder(p){ return p && p.level===1 ? [2,1,3,0] : WORLDS.map((_,i)=>i); }
+function worldOrder(p){ const byId = ids => ids.map(id=>WORLDS.findIndex(w=>w.id===id)).filter(i=>i>=0);
+  return p && p.level===1 ? byId([3,2,5,6,7,8,11,9,4,1,10,12,13]) : byId([1,2,3,5,6,7,8,9,10,11,12,13,4]); }
 function prevWorld(p,wi){ const o = worldOrder(p).filter(i=>!WORLDS[i].bonus); const k = o.indexOf(wi); return k>0 ? o[k-1] : -1; }
 function worldUnlocked(p,wi){ if(p.unlockAll||WORLDS[wi].bonus) return true; const pv = prevWorld(p,wi); if(pv<0) return true; return WORLDS[pv].lessons.filter(l=>p.lessons[l.id]).length>=3; }
 function lessonUnlocked(p,wi,li){ if(!worldUnlocked(p,wi)) return false; if(p.unlockAll||li===0) return true; return !!p.lessons[WORLDS[wi].lessons[li-1].id]; }
@@ -1218,10 +1694,15 @@ function mascot(size=120, mood='happy', cls='bob'){
     wow:'<ellipse cx="60" cy="63" rx="5" ry="6" fill="#7A2E1E"/>',
     cheer:'<path d="M48 58 Q60 76 72 58 Z" fill="#7A2E1E"/><path d="M53 66 Q60 72 67 66 Q60 63 53 66Z" fill="#FF8C8C"/>',
     encourage:'<path d="M52 61 Q60 67 68 61" stroke="#7A2E1E" stroke-width="3" fill="none" stroke-linecap="round"/>',
+    think:'<path d="M54 63 Q60 61 66 64" stroke="#7A2E1E" stroke-width="3" fill="none" stroke-linecap="round"/>',
     happy:'<path d="M50 59 Q60 71 70 59" fill="#7A2E1E"/><path d="M54 63 Q60 67 66 63" fill="#FF8C8C"/>',
   };
   const mouth = mouths[mood] || mouths.happy;
-  const eyes = mood==='cheer'
+  const eyes = mood==='think'
+    ? `<ellipse cx="45" cy="46" rx="9.5" ry="11" fill="#fff"/><ellipse cx="75" cy="46" rx="9.5" ry="11" fill="#fff"/>
+       <circle cx="49" cy="41" r="6" fill="#28367C"/><circle cx="79" cy="41" r="6" fill="#28367C"/>
+       <circle cx="51" cy="39" r="2.2" fill="#fff"/><circle cx="81" cy="39" r="2.2" fill="#fff"/>`
+    : mood==='cheer'
     ? '<path d="M37 47 Q45 38 53 47" stroke="#28367C" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M67 47 Q75 38 83 47" stroke="#28367C" stroke-width="4" fill="none" stroke-linecap="round"/>'
     : `<ellipse cx="45" cy="46" rx="9.5" ry="11" fill="#fff"/><ellipse cx="75" cy="46" rx="9.5" ry="11" fill="#fff"/>
        <circle cx="46.5" cy="48" r="6" fill="#28367C"/><circle cx="76.5" cy="48" r="6" fill="#28367C"/>
@@ -1257,25 +1738,22 @@ function mascot(size=120, mood='happy', cls='bob'){
 let curAudio = null;
 const audioSrc = id => MEDIA.audio[id] || MEDIA.shared[id] || AUDIO_FILES[id] || null;
 const hasAudio = id => !!audioSrc(id);
-function audioMode(id){ return hasAudio(id) ? 'real' : (DB.settings.tts && 'speechSynthesis' in window ? 'tts' : 'none'); }
-function playBtn(id, size=''){
+function audioMode(id){ return hasAudio(id) ? 'real' : 'none'; }
+function playBtn(id, size='', slow=(size==='big')){
   const m = audioMode(id);
-  const tag = m==='none' ? '<span class="atag">nog geen opname</span>' : m==='tts' ? '<span class="atag">computerstem</span>' : '';
-  return `<span class="playwrap"><button class="play ${size} ${m==='none'?'noaudio':m==='tts'?'tts':''}" data-play="${id}" aria-label="Luister naar ${esc(ITEM[id]?.ph||'')}">${ICON_SPK}</button>${tag}</span>`;
+  const tag = m==='none' ? '<span class="atag">nog geen opname</span>' : '';
+  const sl = slow && m==='real' ? `<button class="slowbtn" data-play-slow="${id}" aria-label="Langzaam afspelen" title="Langzaam">🐢</button>` : '';
+  return `<span class="playwrap"><span class="playrow"><button class="play ${size} ${m==='none'?'noaudio':''}" data-play="${id}" aria-label="Luister naar ${esc(ITEM[id]?.ph||'')}">${ICON_SPK}</button>${sl}</span>${tag}</span>`;
 }
-async function play(id, quiet=false){
+async function play(id, quiet=false, rate=1){
   try{ if(curAudio){curAudio.pause();curAudio=null;} if('speechSynthesis' in window) speechSynthesis.cancel(); }catch(e){}
   const btn = document.querySelector(`[data-play="${id}"]`);
   if(btn){ btn.classList.remove('playing'); void btn.offsetWidth; btn.classList.add('playing'); }
   const src = audioSrc(id);
-  if(src){ curAudio = new Audio(src); curAudio.play().catch(()=>{ if(!quiet) toast('Deze opname kon niet worden afgespeeld.'); }); return; }
-  if(DB.settings.tts && 'speechSynthesis' in window){
-    const u = new SpeechSynthesisUtterance(ITEM[id].ar);
-    const vs = speechSynthesis.getVoices();
-    const v = vs.find(v=>/^ar[-_]EG/i.test(v.lang)) || vs.find(v=>/^ar/i.test(v.lang));
-    if(v){ u.voice=v; u.lang=v.lang; } else u.lang='ar-EG';
-    u.rate=.8; speechSynthesis.speak(u);
-    if(!quiet) toast('Computerstem: geen echte Egyptische uitspraak');
+  if(src){
+    curAudio = new Audio(src);
+    try{ curAudio.playbackRate = rate; curAudio.preservesPitch = true; curAudio.webkitPreservesPitch = true; }catch(e){}
+    curAudio.play().catch(()=>{ if(!quiet) toast('Deze opname kon niet worden afgespeeld.'); });
     return;
   }
   if(!quiet) toast('Nog geen opname. Lees de uitspraak samen hardop!');
@@ -1307,7 +1785,7 @@ function sfx(kind){
       o.connect(g); g.connect(AC.destination); o.start(st); o.stop(st+.32); });
   }catch(e){}
 }
-const INSTR = {intro:'Luister goed, en zeg het na!', listen:'Luister. Welk plaatje hoort erbij?', memory:'Zoek twee kaartjes die bij elkaar horen.', say:'Luister, en zeg het dan hard op!'};
+const INSTR = {intro:'Luister goed, en zeg het na!', listen:'Luister. Welk plaatje hoort erbij?', memory:'Zoek twee kaartjes die bij elkaar horen.', say:'Luister, en zeg het dan hard op!', picword:'Kijk naar het plaatje. Luister naar de knoppen. Welke hoort erbij?'};
 const PRAISE_NL = ['Goed zo!','Super!','Knap hoor!','Wauw, goed gedaan!'];
 const isKid = () => { const p = me(); return !!p && p.level===1; };
 
@@ -1316,105 +1794,249 @@ let S = { auth:{mode:'login'}, recS:null, screen: 'splash', newP:null, ptab:'ove
 let L = null; // lopende les
 
 /* ---------- lessen bouwen ---------- */
-function buildSteps(wi, li, p){
-  const world = WORLDS[wi], lesson = world.lessons[li], lvl = p.level;
-  const ws = lesson.review ? sample(wordsOfWorld(world.id), lvl===1?5:6) : lesson.words.map(id=>ITEM[id]);
-  const sents = SENTENCES.filter(s=> lesson.review ? s.w===world.id : s.lesson===lesson.id);
-  const intro = lesson.review ? [] : ws.filter(w=>!p.words[w.id]).map(w=>({type:'intro', id:w.id}));
-  const body = [];
-  if(lvl===1){
-    const con = ws.filter(w=>isConcrete(w.id)), abs = ws.filter(w=>!isConcrete(w.id));
-    con.forEach(w=>body.push({type:'listen', id:w.id}));
-    abs.forEach(w=>body.push({type:'say', id:w.id}));
-    if(con.length) body.push({type:'say', id:pick(con).id});
-    if(sents.length) body.push({type:'say', id:pick(sents).id});
-  } else {
-    ws.forEach((w,i)=>body.push({type: i%2 ? 'meaning' : 'translate', id:w.id}));
-    sample(sents, lesson.review?3:2).forEach(s=>body.push({type:'build', id:s.id}));
-    body.push({type:'say', id:(sents.length?pick(sents):pick(ws)).id});
-  }
-  const mixed = shuffle(body);
-  const memPool = lvl===1 ? ws.filter(w=>isConcrete(w.id)) : ws;
-  if(memPool.length>=2) mixed.splice(Math.ceil(mixed.length/2), 0, {type:'memory', ids: sample(memPool, Math.min(4, memPool.length)).map(w=>w.id)});
-  return intro.concat(mixed);
+// Meisjes zien bij 'ik'-woorden (g:'self') automatisch de vrouwelijke vorm.
+const isGirl = () => { const p = me(); return !!p && p.gender==='f'; };
+const lid = id => { const it = ITEM[id]; return (it && it.g==='self' && it.fem && isGirl() && ITEM[id+'_f']) ? id+'_f' : id; };
+// In gesprekjes spreekt Mishmish het kind aan, dus daar telt ook g:'you'.
+function res(id){ if(id && typeof id==='object') return isGirl() ? id.f : id.m; const it = ITEM[id]; return (it && it.fem && isGirl() && ITEM[id+'_f']) ? id+'_f' : id; }
+
+// Herhaalsysteem (Leitner): goed = vakje omhoog en later terug, fout = morgen weer.
+const BOX_DAYS = [0,1,2,4,7,14];
+function addDays(n){ const d = new Date(); d.setDate(d.getDate()+n); return today(d); }
+function record(id, ok){
+  const p = me(); if(!p || !id) return;
+  const b = baseOf(id);
+  const w = p.words[b] || (p.words[b] = {c:0, w:0});
+  if(ok){ w.c++; w.b = Math.min(5, (w.b||0)+1); } else { w.w++; w.b = 1; }
+  w.d = addDays(BOX_DAYS[w.b||0]);
+  p.recent = (p.recent||[]).concat(ok?1:0).slice(-30);
+  if(L){ L.answered = (L.answered||0)+1; if(ok) L.correct = (L.correct||0)+1; }
 }
+function accuracy(p){ const r = p.recent||[]; return r.length>=8 ? r.reduce((a,b)=>a+b,0)/r.length : null; }
+function dueWords(p, lvl){
+  const t = today();
+  return Object.entries(p.words||{})
+    .filter(([id,s])=>ITEM[id] && ITEM[id].kind==='word' && ((s.c||0)+(s.w||0))>0 && (s.d||'') <= t && (lvl!==1 || isConcrete(id)))
+    .sort((a,b)=>(a[1].b||0)-(b[1].b||0) || ((b[1].w||0)-(b[1].c||0))-((a[1].w||0)-(a[1].c||0)))
+    .map(([id])=>id);
+}
+function optN(p, text){ const a = accuracy(p); if(p.level===1) return a!==null && a<0.6 ? 3 : 4; return text ? (a!==null && a>=0.85 ? 4 : 3) : 4; }
 function optsFor(id, n=4){
-  const it = ITEM[id];
-  const kid = isKid();
-  let pool = WORDS.filter(w=>w.w===it.w && w.id!==id && w.pic!==it.pic && w.nl!==it.nl && (!kid || isConcrete(w.id)));
-  if(kid && pool.length < n-1) pool = WORDS.filter(w=>w.id!==id && w.pic!==it.pic && isConcrete(w.id));
-  return shuffle([id, ...sample(pool, n-1).map(w=>w.id)]);
+  const it = ITEM[id], b = baseOf(id), kid = isKid();
+  const ok = w => w.id!==b && w.pic!==it.pic && w.nl!==ITEM[b].nl && (!kid || isConcrete(w.id));
+  let pool = WORDS.filter(w=>w.w===it.w && ok(w));
+  if(pool.length < n-1) pool = pool.concat(WORDS.filter(w=>w.w!==it.w && ok(w)));
+  return shuffle([id, ...sample(pool, n-1).map(w=>lid(w.id))]);
+}
+function audioPool(id){
+  const it = ITEM[id], b = baseOf(id);
+  const ok = w => w.id!==b && w.pic!==it.pic && isConcrete(w.id) && hasAudio(lid(w.id));
+  let pool = WORDS.filter(w=>w.w===it.w && ok(w));
+  if(pool.length < 2) pool = pool.concat(WORDS.filter(w=>w.w!==it.w && ok(w)));
+  return pool.map(w=>lid(w.id));
+}
+function lessonWords(world, lesson, p){
+  if(lesson.review || lesson.sentencesOnly){
+    const all = wordsOfWorld(world.id), pool = all.filter(w=>p.level!==1 || isConcrete(w.id));
+    return sample(pool.length ? pool : all, p.level===1 ? 4 : 5);
+  }
+  return lesson.words.map(id=>ITEM[id]).filter(Boolean);
+}
+function wordTypeL2(id, i){
+  let k = ['translate','meaning','picword','listen-nl'][i%4];
+  if(k==='listen-nl' && !hasAudio(id)) k = 'meaning';
+  if(k==='picword' && !isConcrete(id)) k = 'translate';
+  return k;
+}
+function buildSteps(wi, li, p){
+  const world = WORLDS[wi], lesson = world.lessons[li], lvl = p.level, acc = accuracy(p);
+  const ids = lessonWords(world, lesson, p).map(w=>lid(w.id));
+  const sents = SENTENCES.filter(s=>(lesson.review||lesson.sentencesOnly) ? s.w===world.id : s.lesson===lesson.id).map(s=>lid(s.id));
+  const fresh = ids.filter(id=>!p.words[baseOf(id)]);
+  const steps = [{type:'welcome', ids:fresh, title:lesson.title}];
+  fresh.forEach(id=>steps.push({type:'intro', id}));
+  const body = [];
+  let chat = [];
+  if(lvl===1){
+    const con = ids.filter(isConcrete), abs = ids.filter(id=>!isConcrete(id));
+    con.forEach(id=>body.push({type:'listen', id}));
+    const pw = con.filter(hasAudio).filter(id=>audioPool(id).length>=2);
+    if(pw.length) body.push({type:'picword', id:pick(pw)});
+    abs.forEach(id=>body.push({type:'say', id}));
+    if(sents.length) body.push({type:'say', id:pick(sents)});
+    if(con.length>=2) body.push({type:'memory', ids:sample(con, Math.min(4, con.length))});
+  } else {
+    ids.forEach((id,i)=>body.push({type:wordTypeL2(id,i), id}));
+    if(ids.length>=3) body.push({type:'match', ids:sample(ids, Math.min(4, ids.length))});
+    const sn = sample(sents, (lesson.review||lesson.sentencesOnly) ? 3 : 2);
+    sn.forEach((sid,i)=>body.push({type: (i%2===1 && !(acc!==null && acc<0.6)) ? 'fill' : 'build', id:sid}));
+    if(!sn.length && ids.length>=2) body.push({type:'memory', ids:sample(ids, Math.min(4, ids.length))});
+    const dl = DIALOGS[world.id];
+    if(dl && (lesson.review || lesson.sentencesOnly || li>=2)){ const d = pick(dl); chat = d.turns.map((t,k)=>({type:'chat', turns:d.turns, intro:d.intro, t:k})); }
+    if(sents.length) body.push({type:'say', id:pick(sents)});
+  }
+  // herhaling van woorden uit eerdere lessen (moeilijke woorden komen vaker terug)
+  const own = ids.map(baseOf);
+  const rev = dueWords(p, lvl).filter(id=>!own.includes(id)).slice(0, 2).map(id=>{ const x = lid(id); return {type: lvl===1 ? 'listen' : wordTypeL2(x, Math.floor(Math.random()*4)), id:x, review:true}; });
+  // korte toets aan het eind
+  const tpool = lvl===1 ? ids.filter(isConcrete) : ids;
+  const test = sample(tpool, lvl===1 ? 2 : 3).map((id,i)=>({type: lvl===1 ? 'listen' : ['listen-nl','translate','picword'][i%3], id, test:true}))
+    .map(t=>{ if(t.type==='listen-nl' && !hasAudio(t.id)) t.type='meaning'; if(t.type==='picword' && (!isConcrete(t.id))) t.type='translate'; return t; });
+  return steps.concat(shuffle(body), chat, rev, test);
 }
 function startLesson(wi, li){
   const p = me();
-  L = { wi, li, lesson: WORLDS[wi].lessons[li], steps: buildSteps(wi,li,p), i:0, mistakes:0, xp:0, state:'answer', sel:null, ok:null, retried:new Set() };
-  S.screen='lesson'; render(); autoPlay();
+  L = { wi, li, lesson: WORLDS[wi].lessons[li], steps: buildSteps(wi,li,p), i:0, mistakes:0, xp:0, state:'answer', sel:null, ok:null, retried:new Set(), t0:Date.now(), answered:0, correct:0 };
+  S.screen='lesson'; window.scrollTo(0,0); render(); autoPlay();
+}
+function startReview(){
+  const p = me(); if(!p) return;
+  let ids = dueWords(p, p.level).slice(0, 8);
+  if(ids.length < 4){
+    const extra = Object.entries(p.words||{}).filter(([id,x])=>ITEM[id] && ITEM[id].kind==='word' && ((x.c||0)+(x.w||0))>0 && !ids.includes(id) && (p.level!==1 || isConcrete(id)))
+      .sort((a,b)=>((b[1].w||0)-(b[1].c||0))-((a[1].w||0)-(a[1].c||0))).map(([id])=>id);
+    ids = ids.concat(extra).slice(0, 6);
+  }
+  if(!ids.length){ toast('Nog niets om te herhalen. Speel eerst een les!'); return; }
+  ids = ids.map(lid);
+  const steps = [{type:'welcome', ids:[], srs:true, count:ids.length, title:'Herhalen'}];
+  ids.forEach((id,i)=>steps.push(p.level===1 ? {type: isConcrete(id) ? 'listen' : 'say', id} : {type:wordTypeL2(id,i), id}));
+  const con = ids.filter(isConcrete);
+  if(p.level===1 && con.length>=2) steps.splice(3, 0, {type:'memory', ids:sample(con, Math.min(4, con.length))});
+  if(p.level!==1 && ids.length>=3) steps.splice(3, 0, {type:'match', ids:sample(ids, Math.min(4, ids.length))});
+  L = { wi:null, li:null, lesson:{id:'srs', title:'Herhalen', icon:'🔁', srs:true}, steps, i:0, mistakes:0, xp:0, state:'answer', sel:null, ok:null, retried:new Set(), t0:Date.now(), answered:0, correct:0 };
+  S.screen='lesson'; window.scrollTo(0,0); render(); autoPlay();
 }
 function autoPlay(){
   const st = L && L.steps[L.i]; if(!st) return;
-  const word = ['intro','listen','meaning','say'].includes(st.type) && hasAudio(st.id);
+  if(st.type==='welcome'){ const p = me(); if(voiceOn()) setTimeout(()=>speakNL('Hoi '+p.name+'! '+(st.srs?'We gaan herhalen wat je al kent.':'We gaan leren. Luister goed!')), 300); return; }
+  const word = ['intro','listen','meaning','say','listen-nl'].includes(st.type) && hasAudio(st.id);
   if(voiceOn() && INSTR[st.type]) setTimeout(()=>speakNL(INSTR[st.type], ()=>{ if(word) play(st.id,true); }), 300);
   else if(word) setTimeout(()=>play(st.id,true), 350);
+  else if(st.type==='chat'){ const q = res(st.turns[st.t].q); if(hasAudio(q)) setTimeout(()=>play(q,true), 350); }
 }
 
 /* ---------- oefeningen tekenen ---------- */
+const chips = st => (st.test||st.review) ? `<div class="chips-k">${st.test?'<span class="chip-k test">⭐ Toets</span>':''}${st.review?'<span class="chip-k rev">🔁 Herhaling</span>':''}</div>` : '';
+const vis = st => (st.opts||[]).filter(o=>!(st.hidden||[]).includes(o));
+function formsHTML(it){
+  if(!it.fem || it.base || it.g!=='you') return '';
+  return `<div class="forms"><div><span>tegen een jongen</span><b>${esc(it.ph)}</b>${playBtn(it.id,'sm',false)}</div><div><span>tegen een meisje</span><b>${esc(it.fem.ph)}</b>${playBtn(it.id+'_f','sm',false)}</div></div>`;
+}
 function exHTML(st){
   const it = ITEM[st.id];
   switch(st.type){
+    case 'welcome': {
+      const p = me(), nw = st.ids||[];
+      const msg = st.srs ? `Hoi ${esc(p.name)}! We gaan ${st.count} woordjes herhalen die je al kent. Dan vergeet je ze niet!`
+        : nw.length ? `Hoi ${esc(p.name)}! In de les <b>${esc(st.title||'')}</b> leer je ${nw.length} nieuwe ${nw.length===1?'woordje':'woordjes'}.`
+        : `Hoi ${esc(p.name)}! In <b>${esc(st.title||'')}</b> oefenen we met woorden die je al kent.`;
+      return `<div class="welcome-step">${mascot(140, st.srs?'think':'happy','bob')}<div class="bubble big">${msg}</div>
+        ${nw.length?`<div class="wl-pics">${nw.map(id=>`<span class="pic">${picOf(id)}</span>`).join('')}</div>`:''}
+        <div class="wl-plan"><span>👂 Luisteren</span><span>🎮 Oefenen</span><span>⭐ Toets</span></div></div>`;
+    }
     case 'intro': return `
-      <div class="bubble-row">${mascot(70,'wow','m-peek')}<div class="bubble">Nieuw woord! Luister en zeg het na.</div></div>
+      <div class="bubble-row">${mascot(70,'wow','m-peek')}<div class="bubble">${it.kind==='sentence'?'Een nieuw zinnetje!':'Nieuw woord!'} Luister en zeg het na.${it.tip?`<br><small>💡 ${esc(it.tip)}</small>`:''}</div></div>
       <div class="wordcard pop">
         <div class="pic">${picOf(it.id)}</div>
         <div class="ar" lang="ar">${it.ar}</div>
         <div class="ph">${esc(it.ph)}</div>
         <div class="nl">${esc(it.nl)}</div>
         ${playBtn(st.id,'big')}
-        ${it.tip?`<p class="tip">💡 ${esc(it.tip)}</p>`:''}
+        ${formsHTML(it)}
       </div>`;
     case 'listen': {
-      st.opts = st.opts || optsFor(st.id);
+      st.opts = st.opts || optsFor(st.id, optN(me(), false));
       const kidOnly = isKid() && hasAudio(st.id);
-      return `<p class="ex-k">Luister en kies het plaatje</p>
+      return `${chips(st)}<p class="ex-k">Luister en kies het plaatje</p>
       <div class="prompt ${kidOnly?'kid':''}">${playBtn(st.id,'big')}<div class="meta">${kidOnly?'':`<div class="ar" lang="ar">${it.ar}</div><div class="ph">${esc(it.ph)}</div>${isKid()?'<div class="parent-hint">Voor papa of mama om voor te lezen</div>':''}`}</div></div>
-      <div class="grid2">${st.opts.map(o=>`<button class="opt ${optCls(st,o)}" data-act="opt:${o}"><span class="pic">${picOf(o)}</span><span class="lbl">${esc(ITEM[o].nl)}</span></button>`).join('')}</div>`;
+      <div class="grid2">${vis(st).map(o=>`<button class="opt ${optCls(st,o)}" data-act="opt:${o}"><span class="pic">${picOf(o)}</span><span class="lbl">${esc(ITEM[o].nl)}</span></button>`).join('')}</div>`;
     }
     case 'meaning': {
-      st.opts = st.opts || optsFor(st.id);
-      return `<p class="ex-k">Wat betekent dit?</p>
+      st.opts = st.opts || optsFor(st.id, optN(me(), false));
+      return `${chips(st)}<p class="ex-k">Wat betekent dit?</p>
       <div class="prompt">${playBtn(st.id,'big')}<div class="meta"><div class="ar" lang="ar">${it.ar}</div><div class="ph">${esc(it.ph)}</div></div></div>
-      <div class="grid2">${st.opts.map(o=>`<button class="opt ${optCls(st,o)}" data-act="opt:${o}"><span class="pic">${picOf(o)}</span><span class="lbl">${esc(ITEM[o].nl)}</span></button>`).join('')}</div>`;
+      <div class="grid2">${vis(st).map(o=>`<button class="opt ${optCls(st,o)}" data-act="opt:${o}"><span class="pic">${picOf(o)}</span><span class="lbl">${esc(ITEM[o].nl)}</span></button>`).join('')}</div>`;
+    }
+    case 'listen-nl': {
+      st.opts = st.opts || optsFor(st.id, optN(me(), true));
+      return `${chips(st)}<p class="ex-k">Wat hoor je?<small>Luister en kies de Nederlandse betekenis.</small></p>
+      <div class="prompt kid">${playBtn(st.id,'big')}</div>
+      <div class="list1">${vis(st).map(o=>`<button class="opt row ${optCls(st,o)}" data-act="opt:${o}"><span class="ph nlopt">${esc(ITEM[o].nl)}</span></button>`).join('')}</div>`;
+    }
+    case 'picword': {
+      if(isKid()){
+        st.opts = st.opts || shuffle([st.id, ...sample(audioPool(st.id), 2)]);
+        return `${chips(st)}<p class="ex-k">Welk woord hoort bij het plaatje?<small>Tik op de knoppen om te luisteren.</small></p>
+        <div class="prompt bigpic"><span class="pic">${picOf(st.id)}</span></div>
+        <div class="aopts">${vis(st).map((o,k)=>`<button class="opt audopt ${optCls(st,o)}" data-act="aopt:${o}" aria-label="Keuze ${k+1}"><span class="aicon">${ICON_SPK}</span><span class="anum">${k+1}</span></button>`).join('')}</div>`;
+      }
+      st.opts = st.opts || optsFor(st.id, optN(me(), true));
+      return `${chips(st)}<p class="ex-k">Welk woord hoort bij het plaatje?</p>
+      <div class="prompt bigpic"><span class="pic">${picOf(st.id)}</span></div>
+      <div class="list1">${vis(st).map(o=>`<button class="opt row ${optCls(st,o)}" data-act="opt:${o}"><span class="ph">${esc(ITEM[o].ph)}</span><span class="ar" lang="ar">${ITEM[o].ar}</span></button>`).join('')}</div>`;
     }
     case 'translate': {
-      st.opts = st.opts || optsFor(st.id, 3);
-      return `<p class="ex-k">Hoe zeg je dit in het Egyptisch?</p>
+      st.opts = st.opts || optsFor(st.id, optN(me(), true));
+      return `${chips(st)}<p class="ex-k">Hoe zeg je dit in het Egyptisch?</p>
       <div class="prompt"><span class="pic">${picOf(it.id)}</span><div class="meta"><div class="nl">${esc(it.nl)}</div></div></div>
-      <div class="list1">${st.opts.map(o=>`<button class="opt row ${optCls(st,o)}" data-act="opt:${o}"><span class="ph">${esc(ITEM[o].ph)}</span><span class="ar" lang="ar">${ITEM[o].ar}</span></button>`).join('')}</div>`;
+      <div class="list1">${vis(st).map(o=>`<button class="opt row ${optCls(st,o)}" data-act="opt:${o}"><span class="ph">${esc(ITEM[o].ph)}</span><span class="ar" lang="ar">${ITEM[o].ar}</span></button>`).join('')}</div>`;
+    }
+    case 'match': {
+      if(!st.left){ st.left = shuffle(st.ids); st.right = shuffle(st.ids); st.done = []; st.selL = null; st.bad = null; }
+      return `${chips(st)}<p class="ex-k">Koppel de woorden<small>Tik een Nederlands woord en daarna het Egyptische woord.</small></p>
+      <div class="match"><div class="mcol">${st.left.map(id=>`<button class="mitem ${st.done.includes(id)?'done':st.selL===id?'sel':''} ${st.bad&&st.bad[0]===id?'bad':''}" data-act="ml:${id}" ${st.done.includes(id)?'disabled':''}>${esc(ITEM[id].nl)}</button>`).join('')}</div>
+      <div class="mcol">${st.right.map(id=>`<button class="mitem ${st.done.includes(id)?'done':''} ${st.bad&&st.bad[1]===id?'bad':''}" data-act="mr:${id}" ${st.done.includes(id)?'disabled':''}><b>${esc(ITEM[id].ph)}</b><span class="ar" lang="ar">${ITEM[id].ar}</span></button>`).join('')}</div></div>`;
+    }
+    case 'fill': {
+      if(!st.parts){
+        const ph = it.ph.split(' ');
+        const cand = ph.map((w,i)=>i).filter(i=>!/^(ja|we|ya)$/.test(ph[i]) && ph[i].replace(/[?!.,]/g,'').length>1);
+        st.gap = cand.length ? pick(cand) : ph.length-1; st.parts = ph; st.answer = ph[st.gap];
+        const pool = [...new Set(SENTENCES.filter(x=>x.w===it.w).flatMap(x=>x.ph.split(' ')).concat(WORDS.filter(w=>w.w===it.w).map(w=>w.ph)))].filter(w=>w!==st.answer && !ph.includes(w));
+        st.choices = shuffle([st.answer, ...sample(pool, 2)]);
+      }
+      const shown = L.sel!==null ? st.choices[L.sel] : '';
+      return `${chips(st)}<p class="ex-k">Vul het ontbrekende woord in</p>
+      <div class="bubble-row">${mascot(64,'think','')}<div class="bubble">${esc(it.nl)}</div></div>
+      <div class="fill-line">${st.parts.map((w,i)=>i===st.gap?`<span class="gap ${shown?'filled':''}">${shown?esc(shown):'&nbsp;'}</span>`:`<span>${esc(w)}</span>`).join(' ')}</div>
+      <div class="list1">${st.choices.map((c,k)=>(st.hiddenK||[]).includes(k)?'':`<button class="opt row ${fillCls(st,k)}" data-act="fopt:${k}"><span class="ph">${esc(c)}</span></button>`).join('')}</div>`;
+    }
+    case 'chat': {
+      const t = st.turns[st.t], q = res(t.q), a = res(t.a);
+      st.id = a;
+      st.opts = st.opts || shuffle([a, ...t.d.map(res)]);
+      const hist = st.turns.slice(0, st.t).map(x=>`<div class="cmsg mm"><span class="cav">${mascot(30,'happy','')}</span><div class="cb">${esc(ITEM[res(x.q)].ph)}</div></div><div class="cmsg me"><div class="cb">${esc(ITEM[res(x.a)].ph)}</div><span class="cav">${me().avatar}</span></div>`).join('');
+      return `${chips(st)}<p class="ex-k">Gesprekje met Mishmish<small>${st.t===0&&st.intro?esc(st.intro)+' ':''}Wat zeg jij terug?</small></p>
+      <div class="chat">${hist}<div class="cmsg mm now"><span class="cav">${mascot(42,'wow','')}</span><div class="cb"><b>${esc(ITEM[q].ph)}</b><span class="ar" lang="ar">${ITEM[q].ar}</span><small>${esc(ITEM[q].nl)}</small></div>${playBtn(q,'sm',false)}</div></div>
+      <div class="list1">${vis(st).map(o=>`<button class="opt row ${optCls(st,o)}" data-act="opt:${o}"><span class="ph">${esc(ITEM[o].ph)}</span><span class="ar" lang="ar">${ITEM[o].ar}</span></button>`).join('')}</div>`;
     }
     case 'build': {
       if(!st.tiles){
         const ars = it.ar.split(' '), phs = it.ph.split(' ');
         const own = phs.map((ph,k)=>({ph, ar:ars[k]||''}));
-        const others = SENTENCES.filter(s=>s.w===it.w && s.id!==it.id).flatMap(s=>{const a=s.ar.split(' '); return s.ph.split(' ').map((ph,k)=>({ph,ar:a[k]||''}));})
+        const others = SENTENCES.filter(x=>x.w===it.w && x.id!==baseOf(it.id)).flatMap(x=>{const a=x.ar.split(' '); return x.ph.split(' ').map((ph,k)=>({ph,ar:a[k]||''}));})
           .filter(t=>!phs.includes(t.ph));
         const uniq = []; others.forEach(t=>{ if(!uniq.find(u=>u.ph===t.ph)) uniq.push(t); });
         st.tiles = shuffle([...own, ...sample(uniq,2)]);
         st.ans = [];
       }
-      return `<p class="ex-k">Maak de zin<small>Tik de woorden in de goede volgorde.</small></p>
+      return `${chips(st)}<p class="ex-k">Maak de zin<small>Tik de woorden in de goede volgorde.</small></p>
       <div class="bubble-row">${mascot(72,'happy','')}<div class="bubble">${esc(it.nl)}</div></div>
       <div class="answer-line" aria-label="Jouw zin">${st.ans.map((ti,pos)=>`<button class="tile" data-act="untile:${pos}"><span>${esc(st.tiles[ti].ph)}</span><span class="ar" lang="ar">${st.tiles[ti].ar}</span></button>`).join('')}</div>
       <div class="bank">${st.tiles.map((t,ti)=>`<button class="tile ${st.ans.includes(ti)?'used':''}" data-act="tile:${ti}" ${st.ans.includes(ti)||L.state!=='answer'?'disabled':''}><span>${esc(t.ph)}</span><span class="ar" lang="ar">${t.ar}</span></button>`).join('')}</div>`;
     }
     case 'memory': {
       if(!st.cards){ st.cards = shuffle(st.ids.flatMap(id=>[{k:id,t:'pic'},{k:id,t:'txt'}])); st.open=[]; st.matched=[]; }
-      return `<p class="ex-k">Memory!<small>Zoek het plaatje bij het Egyptische woord.</small></p>
+      const kid = isKid();
+      return `${chips(st)}<p class="ex-k">Memory!<small>${kid?'Zoek het plaatje bij het woord dat je hoort.':'Zoek het plaatje bij het Egyptische woord.'}</small></p>
       <div class="memgrid">${st.cards.map((c,i)=>{
         const w = ITEM[c.k]; const cls = st.matched.includes(i)?'matched':st.open.includes(i)?'open':'';
-        const back = c.t==='pic' ? `<span class="pic">${picOf(w.id)}</span>` : `<span class="ph">${esc(w.ph)}</span><span class="ar" lang="ar">${w.ar}</span>`;
+        const back = c.t==='pic' ? `<span class="pic">${picOf(w.id)}</span>` : (kid && hasAudio(w.id) ? `<span class="aicon big">${ICON_SPK}</span>` : `<span class="ph">${esc(w.ph)}</span><span class="ar" lang="ar">${w.ar}</span>`);
         return `<button class="mcard ${cls}" data-act="mem:${i}" aria-label="Kaart ${i+1}"><span class="in"><span class="f">?</span><span class="b">${back}</span></span></button>`;
       }).join('')}</div>`;
     }
-    case 'say': return `
+    case 'say': return `${chips(st)}
       <p class="ex-k">Zeg het hardop!<small>Luister eerst, en zeg het dan zelf na.</small></p>
       <div class="wordcard saycard pop">
         <div class="pic">${picOf(it.id)}</div>
@@ -1430,27 +2052,37 @@ function optCls(st,o){
   if(L.state==='feedback'){ if(o===st.id) return 'right'; if(o===L.sel) return 'wrong'; return ''; }
   return L.sel===o ? 'sel' : '';
 }
+function fillCls(st,k){
+  if(L.state==='feedback'){ if(st.choices[k]===st.answer) return 'right'; if(k===L.sel) return 'wrong'; return ''; }
+  return L.sel===k ? 'sel' : '';
+}
 function praise(){
   const p = me();
-  const opts = [['Brafo!','Goed zo!'],['Goed zo!','Super!'],['Mabrook!','Gefeliciteerd!']];
+  const opts = [['Brafo!','Goed zo!'],['Goed zo!','Super!'],['Mabrook!','Gefeliciteerd!'],['Gamed!','Te gek!']];
   if(p.gender==='m') opts.push(['Sjaater!','Knap gedaan!']);
   if(p.gender==='f') opts.push(['Sjaatra!','Knap gedaan!']);
   return pick(opts);
 }
+const HINTABLE = ['listen','meaning','listen-nl','picword','translate','fill','chat'];
 function footHTML(st){
   const kid = isKid();
   const nextLbl = kid ? '<span class="big-ic" aria-hidden="true">➜</span>' : 'Verder';
+  if(st.type==='welcome') return `<button class="btn wide" data-act="next" aria-label="Start">${kid?'<span class="big-ic" aria-hidden="true">▶</span>':'Start'}</button>`;
   if(st.type==='intro') return `<button class="btn wide" data-act="next" aria-label="Verder">${nextLbl}</button>`;
   if(L.state==='feedback'){
     if(L.ok){ const [a,b] = L.praise; return `<div class="fb pop">${mascot(70,'cheer','')}<div><div class="big">${a}</div><div class="sm">${b}</div></div></div><button class="btn ok wide" data-act="next" aria-label="Verder">${nextLbl}</button>`; }
     const it = ITEM[st.id];
-    return `<div class="fb pop">${mascot(70,'encourage','')}<div><div class="big">Bijna!</div><div class="sm">Het goede antwoord: <b>${esc(it.ph)}</b> = ${esc(it.nl)}. We oefenen 'm straks nog een keer.</div></div></div><button class="btn try wide" data-act="next" aria-label="Verder">${nextLbl}</button>`;
+    const msg = st.type==='chat' ? `Je kunt zeggen: <b>${esc(it.ph)}</b> (${esc(it.nl)})` : `Het goede antwoord: <b>${esc(it.ph)}</b> = ${esc(it.nl)}.${st.type!=='chat'?' We oefenen het straks nog een keer.':''}`;
+    return `<div class="fb pop">${mascot(70,'encourage','')}<div><div class="big">Bijna!</div><div class="sm">${msg}</div></div></div><button class="btn try wide" data-act="next" aria-label="Verder">${nextLbl}</button>`;
   }
   if(st.type==='memory') return `<p class="muted" style="text-align:center">Draai twee kaarten om.</p>`;
+  if(st.type==='match') return `<p class="muted" style="text-align:center">Koppel alle paren.</p>`;
   if(st.type==='say') return kid ? `<button class="btn sun wide" data-act="said" aria-label="Ik heb het gezegd"><span class="big-ic" aria-hidden="true">🎤 ✓</span></button>` : `<button class="btn sun wide" data-act="said">Ik heb het gezegd! 🎤</button>`;
-  if(kid && st.type==='listen') return `<p class="muted" style="text-align:center">Tik op het goede plaatje.</p>`;
+  const hint = HINTABLE.includes(st.type) ? `<button class="hintbtn" data-act="hint" ${st.hintUsed?'disabled':''} aria-label="Hint van Mishmish">💡</button>` : '';
+  const tip = st.hintUsed ? `<div class="hint-msg">${mascot(36,'think','')}<span>Eentje kan weg! Kijk en luister nog eens goed.</span></div>` : '';
+  if(kid && st.type==='listen') return `${tip}<div class="foot-row">${hint}<p class="muted" style="flex:1;text-align:center">Tik op het goede plaatje.</p></div>`;
   const ready = st.type==='build' ? st.ans.length>0 : L.sel!==null;
-  return `<button class="btn wide" data-act="check" ${ready?'':'disabled'}>Controleer</button>`;
+  return `${tip}<div class="foot-row">${hint}<button class="btn wide" data-act="check" ${ready?'':'disabled'} aria-label="Controleer">${kid?'<span class="big-ic" aria-hidden="true">✓</span>':'Controleer'}</button></div>`;
 }
 function lessonHTML(){
   const st = L.steps[L.i];
@@ -1460,14 +2092,10 @@ function lessonHTML(){
     <div class="lbar"><button class="xbtn" data-act="quit" aria-label="Stoppen">×</button><div class="pbar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${Math.max(4,pct)}%"></i></div>${isKid()?`<button class="helpbtn" data-act="helpme" aria-label="Wat moet ik doen?">${mascot(48,'happy','')}</button>`:`<span class="lxp">${L.xp} XP</span>`}</div>
     <div class="ex">${exHTML(st)}</div>
     <div class="lfoot ${cls}">${footHTML(st)}</div>
-  </div>${S.sheet==='quit'?`<div class="sheet-bg"><div class="sheet">${mascot(90,'wow','')}<h3>Even stoppen?</h3><p class="muted">Deze les telt dan nog niet mee. Je kunt hem later opnieuw doen.</p><button class="btn wide" data-act="quit-no">Verder spelen</button><button class="btn ghost wide" data-act="quit-yes">Stoppen</button></div></div>`:''}`;
+  </div>${S.sheet==='quit'?`<div class="sheet-bg"><div class="sheet">${mascot(90,'encourage','')}<h3>Even stoppen?</h3><p class="muted">Deze les telt dan nog niet mee. Je kunt hem later opnieuw doen.</p><button class="btn wide" data-act="quit-no">Verder spelen</button><button class="btn ghost wide" data-act="quit-yes">Stoppen</button></div></div>`:''}`;
 }
 
 /* ---------- antwoorden ---------- */
-function record(id, ok){
-  const p = me(); const w = p.words[id] || (p.words[id]={c:0,w:0});
-  ok ? w.c++ : w.w++;
-}
 function answer(ok){
   const st = L.steps[L.i];
   L.ok = ok; L.state='feedback';
@@ -1476,24 +2104,37 @@ function answer(ok){
   if(ok){ L.xp += 2; L.praise = praise(); if(st.id) record(st.id,true); }
   else {
     L.mistakes++; if(st.id) record(st.id,false);
-    if(!L.retried.has(L.i)){ L.retried.add(L.i); const copy = {type:st.type, id:st.id}; L.steps.push(copy); }
+    if(!L.retried.has(L.i) && st.type!=='chat'){ L.retried.add(L.i); L.steps.push({type:st.type, id:st.id, ids:st.ids}); }
   }
   render();
 }
 function check(){
   const st = L.steps[L.i];
-  if(st.type==='build'){
-    const said = st.ans.map(ti=>st.tiles[ti].ph).join(' ');
-    answer(said === ITEM[st.id].ph);
-  } else answer(L.sel===st.id);
-  if(L.ok && hasAudio(st.id) && !voiceOn()) play(st.id,true);
+  if(st.type==='build') answer(st.ans.map(ti=>st.tiles[ti].ph).join(' ') === ITEM[st.id].ph);
+  else if(st.type==='fill') answer(st.choices[L.sel]===st.answer);
+  else answer(L.sel===st.id);
+  if(L.ok && hasAudio(st.id) && !voiceOn() && st.type!=='picword') play(st.id,true);
 }
 function next(){
   const st = L.steps[L.i];
-  if(st.type==='intro'){ const p=me(); if(!p.words[st.id]) p.words[st.id]={c:0,w:0}; }
+  if(st.type==='intro'){ const p = me(), b = baseOf(st.id); if(!p.words[b]) p.words[b] = {c:0, w:0, b:0, d:today()}; }
   L.i++; L.sel=null; L.state='answer'; L.ok=null;
   if(L.i >= L.steps.length) return finishLesson();
-  render(); autoPlay();
+  window.scrollTo(0,0); render(); autoPlay();
+}
+function matchTap(side, id){
+  const st = L.steps[L.i]; if(L.state!=='answer' || st.done.includes(id)) return;
+  if(side==='l'){ st.selL = id; render(); return; }
+  play(id, true);
+  if(!st.selL){ render(); return; }
+  if(st.selL===id){
+    st.done.push(id); st.selL = null; record(id, true); sfx('match');
+    if(st.done.length===st.ids.length){ L.xp += 4; L.ok = true; L.state = 'feedback'; L.praise = praise(); }
+    render();
+  } else {
+    st.bad = [st.selL, id]; if(!st.missed){ st.missed = true; L.mistakes++; } record(st.selL, false); sfx('bad'); render();
+    setTimeout(()=>{ st.bad = null; st.selL = null; render(); }, 650);
+  }
 }
 function memTap(i){
   const st = L.steps[L.i];
@@ -1510,24 +2151,65 @@ function memTap(i){
   }
 }
 
+/* ---------- badges ---------- */
+const BADGES = [
+  {id:'first',  e:'🎈', n:'Eerste les',      how:'Maak je eerste les af',           test:p=>Object.keys(p.lessons||{}).length>=1},
+  {id:'w10',    e:'📗', n:'10 woorden',      how:'Leer 10 woorden',                 test:p=>learned(p).length>=10},
+  {id:'w25',    e:'📘', n:'25 woorden',      how:'Leer 25 woorden',                 test:p=>learned(p).length>=25},
+  {id:'w50',    e:'📙', n:'50 woorden',      how:'Leer 50 woorden',                 test:p=>learned(p).length>=50},
+  {id:'w100',   e:'📚', n:'100 woorden',     how:'Leer 100 woorden',                test:p=>learned(p).length>=100},
+  {id:'perfect',e:'💯', n:'Foutloos',        how:'Maak een les zonder één fout',     test:(p,c)=>!!(c&&c.perfect)},
+  {id:'s3',     e:'🔥', n:'3 dagen op rij',  how:'Oefen 3 dagen achter elkaar',      test:p=>(p.streak||0)>=3},
+  {id:'s7',     e:'🌟', n:'Een hele week',   how:'Oefen 7 dagen achter elkaar',      test:p=>(p.streak||0)>=7},
+  {id:'d10',    e:'📅', n:'10 oefendagen',   how:'Oefen op 10 verschillende dagen',  test:p=>(p.days||[]).length>=10},
+  {id:'star30', e:'⭐', n:'30 sterren',      how:'Verdien 30 sterren',              test:p=>totalStars(p)>=30},
+  {id:'star100',e:'🌠', n:'100 sterren',     how:'Verdien 100 sterren',             test:p=>totalStars(p)>=100},
+  {id:'review', e:'🔁', n:'Herhaalheld',     how:'Doe 3 keer Herhalen',             test:p=>(p.reviews||0)>=3},
+  {id:'chat',   e:'💬', n:'Kletskous',       how:'Voer een gesprekje met Mishmish',  test:(p,c)=>!!(c&&c.chat)},
+  {id:'pen5',   e:'⚽', n:'Alle 5 raak',     how:"Scoor 5 van de 5 penalty's",       test:(p,c)=>!!(c&&c.pen5)},
+  {id:'duel',   e:'🏆', n:'Duelwinnaar',     how:'Win een penalty-duel',            test:(p,c)=>!!(c&&c.duelWin)},
+  {id:'goal',   e:'🎁', n:'Weekdoel gehaald',how:'Haal je weekdoel',                test:(p,c)=>!!(c&&c.goalHit)},
+  ...WORLDS.map(w=>({id:'world'+w.id, e:w.emoji, n:w.name, how:'Maak alle lessen van '+w.name+' af', world:true, test:p=>w.lessons.every(l=>(p.lessons||{})[l.id])})),
+];
+function checkBadges(p, ctx){
+  p.badges = p.badges || []; const got = [];
+  BADGES.forEach(b=>{ if(!p.badges.includes(b.id) && b.test(p, ctx)){ p.badges.push(b.id); got.push(b); } });
+  return got;
+}
+function addTime(p, t0){
+  if(!p || !t0) return 0;
+  const sec = Math.max(0, Math.min(900, Math.round((Date.now()-t0)/1000)));
+  p.time = p.time || {}; const k = today(); p.time[k] = (p.time[k]||0) + sec;
+  const keys = Object.keys(p.time).sort(); while(keys.length > 90) delete p.time[keys.shift()];
+  return sec;
+}
+
 /* ---------- les afronden & beloningen ---------- */
 let LAST = null;
 function finishLesson(){
-  const p = me(); const lid = L.lesson.id;
+  const p = me(); const srs = !!L.lesson.srs; const lid0 = L.lesson.id;
   const stars = L.mistakes<=1 ? 3 : L.mistakes<=3 ? 2 : 1;
-  const firstTime = !p.lessons[lid];
-  let xp = 10 + stars*2 + L.xp;
-  p.lessons[lid] = Math.max(p.lessons[lid]||0, stars);
-  if(!p.best[lid] || L.mistakes < p.best[lid].mistakes) p.best[lid] = {stars, mistakes:L.mistakes, date:today()};
+  const firstTime = !srs && !p.lessons[lid0];
+  let xp = (srs ? 8 : 10) + stars*2 + L.xp;
+  if(!srs){
+    p.lessons[lid0] = Math.max(p.lessons[lid0]||0, stars);
+    if(!p.best[lid0] || L.mistakes < p.best[lid0].mistakes) p.best[lid0] = {stars, mistakes:L.mistakes, date:today()};
+  } else p.reviews = (p.reviews||0) + 1;
   // streak (nooit straf: een gemiste dag begint gewoon opnieuw bij 1)
   const t = today();
   if(p.last !== t){ p.streak = (p.last===yesterday()) ? (p.streak||0)+1 : 1; p.last = t; if(!p.days.includes(t)) p.days.push(t); }
   // sticker
   let sticker = null;
-  const idx = ALL_LESSONS.findIndex(l=>l.id===lid);
+  const idx = srs ? -1 : ALL_LESSONS.findIndex(l=>l.id===lid0);
   if(firstTime && STICKERS[idx] && !p.stickers.includes(idx)){ p.stickers.push(idx); sticker = STICKERS[idx]; }
+  // wereld klaar?
+  const w = srs ? null : WORLDS[L.wi];
+  const worldDone = !!(w && firstTime && w.lessons.every(l=>p.lessons[l.id]));
+  const nxt = w ? WORLDS.findIndex((x,i)=>!x.bonus && prevWorld(p,i)===L.wi) : -1;
+  const unlockedNext = !!(w && firstTime && nxt>=0 && w.lessons.filter(l=>p.lessons[l.id]).length===3);
+  if(worldDone) xp += 50;
   // dagelijkse uitdaging
-  const d = daily(p); p.today.lessons++; p.today.xp += xp;
+  daily(p); p.today.lessons++; p.today.xp += xp;
   let dailyBonus = false;
   const d2 = daily(p);
   if(!p.today.claimed && p.today[d2.k] >= d2.n){ p.today.claimed = true; xp += 20; p.today.xp += 20; dailyBonus = true; }
@@ -1536,30 +2218,29 @@ function finishLesson(){
   { const w7 = wk(p); w7.stars += stars; w7.lessons++; }
   const gAfter = goalState(p), fAfter = familyState();
   const goalHit = !!(gAfter && gAfter.done && !(gBefore && gBefore.done)), famHit = !!(fAfter && fAfter.done && !(fBefore && fBefore.done));
-  // wereld klaar?
-  const w = WORLDS[L.wi];
-  const worldDone = firstTime && w.lessons.every(l=>p.lessons[l.id]);
-  const nxt = WORLDS.findIndex((x,i)=>!x.bonus && prevWorld(p,i)===L.wi);
-  const unlockedNext = firstTime && nxt>=0 && w.lessons.filter(l=>p.lessons[l.id]).length===3;
+  const sec = addTime(p, L.t0);
+  p.hist = (p.hist||[]).concat({d:today(), t:L.lesson.title, w: srs ? 'Herhalen' : w.name, ok:L.correct||0, n:L.answered||0, st:stars, s:sec}).slice(-40);
+  const badges = checkBadges(p, {perfect: L.mistakes===0 && (L.answered||0)>=4, chat: L.steps.some(x=>x.type==='chat'), goalHit});
   save();
-  LAST = {stars, xp, mistakes:L.mistakes, goalHit, famHit, goal:gAfter && gAfter.g, fam:fAfter && fAfter.g, sticker, dailyBonus, worldDone, unlockedNext, nextName: WORLDS[nxt]?.name, worldName:w.name};
-  L = null; S.screen='done'; render(); confetti(stars===3||worldDone?90:50); sfx('goal');
-  if(goalHit || famHit) setTimeout(()=>confetti(120), 700);
-  if(voiceOn()) setTimeout(()=>speakNL(goalHit ? 'Hoera! Je hebt je weekdoel gehaald! Laat het aan papa of mama zien!' : famHit ? 'Hoera! Samen hebben jullie het gezinsdoel gehaald!' : sticker ? 'Hoera! De les is klaar. Je krijgt een nieuwe sticker!' : 'Hoera! De les is klaar!'), 500);
+  LAST = {srs, stars, xp, mistakes:L.mistakes, goalHit, famHit, goal:gAfter && gAfter.g, fam:fAfter && fAfter.g, sticker, dailyBonus, worldDone, world:w, unlockedNext, next: WORLDS[nxt], badges};
+  L = null; S.screen='done'; window.scrollTo(0,0); render(); confetti(stars===3||worldDone?90:50); sfx('goal');
+  if(goalHit || famHit || worldDone) setTimeout(()=>confetti(120), 700);
+  if(voiceOn()) setTimeout(()=>speakNL(goalHit ? 'Hoera! Je hebt je weekdoel gehaald! Laat het aan papa of mama zien!' : famHit ? 'Hoera! Samen hebben jullie het gezinsdoel gehaald!' : worldDone ? 'Wauw! Je hebt een hele wereld af!' : sticker ? 'Hoera! De les is klaar. Je krijgt een nieuwe sticker!' : 'Hoera! Goed gedaan!'), 500);
 }
 function doneHTML(){
   const r = LAST;
   return `<div class="done-scr">
     ${mascot(140,'cheer','m-dance')}
-    <h1>${r.worldDone ? 'Wereld voltooid!' : 'Les klaar!'}</h1>
+    <h1>${r.worldDone ? 'Wereld voltooid!' : r.srs ? 'Goed herhaald!' : 'Les klaar!'}</h1>
     <div class="bigstars">${[1,2,3].map(n=>`<span class="s">${STAR(n<=r.stars,80)}</span>`).join('')}</div>
     ${r.goalHit?`<div class="goal-hit"><span class="ge">${r.goal.emoji||'🎁'}</span><b>Weekdoel gehaald!</b><span>Je hebt ${esc(r.goal.reward||'je beloning')} verdiend. Laat dit aan papa of mama zien!</span></div>`:''}
     ${r.famHit?`<div class="goal-hit fam"><span class="ge">${r.fam.emoji||'🎁'}</span><b>Gezinsdoel gehaald!</b><span>Samen hebben jullie ${esc(r.fam.reward||'de beloning')} verdiend!</span></div>`:''}
+    ${r.worldDone?`<div class="world-done" style="--wc:${r.world.color}"><span class="wde">${r.world.emoji}</span><div><b>${esc(r.world.name)} voltooid!</b><span>+50 XP bonus en een wereldbadge</span></div></div>`:''}
     <div class="rewards"><div class="rw rw-xp"><span class="rwh">XP verdiend</span><b>⚡ ${r.xp}</b></div><div class="rw rw-star"><span class="rwh">Sterren</span><b>⭐ ${r.stars}/3</b></div><div class="rw rw-ok"><span class="rwh">Foutjes</span><b>🎯 ${r.mistakes}</b></div></div>
+    ${r.badges && r.badges.length ? `<div class="new-badges"><span class="k">Nieuwe ${r.badges.length===1?'badge':'badges'}!</span><div class="nb-row">${r.badges.map(b=>`<div class="badge-big"><span>${b.e}</span><b>${esc(b.n)}</b></div>`).join('')}</div></div>` : ''}
     ${r.sticker?`<div class="sticker-reveal"><span class="k">Nieuwe sticker!</span><div class="stk">${stickerFace(r.sticker)}</div><b>${esc(r.sticker.n)}</b></div>`:''}
     ${r.dailyBonus?`<p class="extra-msg">⭐ Dagelijkse uitdaging gehaald! +20 XP</p>`:''}
-    ${r.worldDone?`<p class="extra-msg">Mishmish danst! Je hebt alle lessen van ${esc(r.worldName)} gedaan.</p>`:''}
-    ${r.unlockedNext?`<p class="extra-msg">🔓 Nieuwe wereld open: ${esc(r.nextName)}!</p>`:''}
+    ${r.unlockedNext?`<div class="unlock">${mascot(60,'wow','')}<div><span class="k">Nieuwe wereld open!</span><b>${r.next.emoji} ${esc(r.next.name)}</b></div></div>`:''}
     <button class="btn wide" data-act="go:home">Verder</button>
   </div>`;
 }
@@ -1593,7 +2274,7 @@ function startPenalty(opp){
   const players = [p.id]; if(opp && opp!==p.id && byId(opp)) players.push(opp);
   const qs = {}; players.forEach(id=>{ qs[id] = sample(penPool(byId(id)), 5); });
   const order = []; for(let k=0;k<5;k++) players.forEach(id=>order.push(id));
-  PEN = { players, order, qs, i:0, res:[], state: players.length>1 ? 'turn' : 'q', sel:null, opts:null, xp:{}, home:p.id };
+  PEN = { players, order, qs, i:0, res:[], state: players.length>1 ? 'turn' : 'q', sel:null, opts:null, xp:{}, home:p.id, t0:Date.now() };
   players.forEach(id=>PEN.xp[id]=0);
   DB.activeId = order[0];
   S.screen = 'penalty'; render();
@@ -1707,7 +2388,10 @@ function penNext(){
       if(!pl.today.claimed && pl.today[d.k] >= d.n){ pl.today.claimed = true; pl.xp += 20; pl.today.xp += 20; }
       const w = wk(pl), g = penGoals(id); w.goals += g; w.best = Math.max(w.best, g);
       if(id===winner) w.duelsWon++;
+      const got = checkBadges(pl, {pen5: g===5, duelWin: id===winner});
+      if(got.length) setTimeout(()=>toast(pl.name+': nieuwe badge '+got.map(b=>b.e+' '+b.n).join(', ')), 900);
     });
+    addTime(byId(PEN.home), PEN.t0);
     penEndRestore();
     save(); render(); sfx('goal');
     if(isDuel() || penGoals(PEN.players[0])>=4) confetti(70);
@@ -1867,7 +2551,7 @@ async function onSession(session){
   loadedFor = u.id;
   const wasSplash = S.screen==='splash';
   if(!wasSplash) { S.screen = 'loading'; render(); }
-  await Promise.all([loadFamily(), loadMedia(), checkAdmin()]);
+  await Promise.all([loadFamily(), loadMedia(), checkAdmin(), loadContent()]);
   if(S.auth.mode==='newpass'){ S.screen = 'auth'; }
   else if(!wasSplash) S.screen = me() ? 'home' : 'profiles';
   render();
@@ -1917,6 +2601,16 @@ function topbarHTML(p){
     <div class="stats"><span class="stat st-fire ${curStreak(p)?'':'off'}" title="Dagen op rij">🔥 ${curStreak(p)}</span><span class="stat st-star" title="Sterren">⭐ ${totalStars(p)}</span><span class="stat st-xp" title="XP">⚡ ${p.xp}</span></div>
   </div>`;
 }
+function greetHTML(p, missed){
+  const hr = new Date().getHours();
+  const g = hr<12 ? ['sabah','Sabaah el-cheer'] : hr<18 ? ['ahlan','Ahlan'] : ['masa','Masa el-cheer'];
+  const due = dueWords(p, p.level).length;
+  const msg = due>=3 ? `Je hebt ${due} woordjes om te herhalen. Dan vergeet je ze niet!`
+    : missed ? 'Fijn dat je er weer bent! Zullen we verder spelen?'
+    : Object.keys(p.lessons||{}).length ? 'Klaar voor je volgende les?' : 'Welkom! Tik op START om te beginnen.';
+  return `<div class="greet">${mascot(76, due>=3?'think':'happy','bob')}<div class="bubble"><b>${g[1]}, ${esc(p.name)}!</b>${hasAudio(g[0])?playBtn(g[0],'sm',false):''}<br>${msg}</div></div>`
+    + (due>=3 ? `<button class="review-card" data-act="review"><span class="ic">🔁</span><span><b>Herhalen</b><span>${due} woordjes · ongeveer 2 minuten</span></span><span class="go">›</span></button>` : '');
+}
 function homeHTML(){
   const p = me();
   const d = daily(p);
@@ -1924,7 +2618,7 @@ function homeHTML(){
   let firstOpen = null;
   for(const wi of worldOrder(p)){ for(const l of WORLDS[wi].lessons.map((l,li)=>({...l,wi,li}))){ if(!firstOpen && lessonUnlocked(p,l.wi,l.li) && !p.lessons[l.id]) firstOpen=l.id; } }
   let h = topbarHTML(p);
-  if(missed) h += `<div class="welcome">${mascot(54,'happy','')}<span>Ahlan! Fijn dat je er weer bent. Zullen we verder spelen?</span></div>`;
+  h += greetHTML(p, missed);
   h += `<div class="daily"><span class="ic">${p.today.claimed?'✅':d.e}</span><div class="tx"><div class="k">Uitdaging van vandaag</div><div class="t">${d.t}</div>
         <div class="bar"><i style="width:${Math.round(d.have/d.n*100)}%"></i></div></div><span style="font-weight:900;font-variant-numeric:tabular-nums">${p.today.claimed?'+20 XP':d.have+'/'+d.n}</span></div>`;
   h += rewardCards(p);
@@ -1951,16 +2645,28 @@ function homeHTML(){
   return h;
 }
 function stickersHTML(){
-  const p = me();
-  return topbarHTML(p) + `<h1 class="page-h">Stickerboek</h1><p class="page-sub">${p.stickers.length} van ${STICKERS.length} stickers. Elke nieuwe les geeft een sticker uit Egypte.</p>
-  <div class="stk-grid">${STICKERS.map((s,i)=>p.stickers.includes(i)
-    ? `<div class="stk-item"><div class="stk">${stickerFace(s)}</div><span>${esc(s.n)}</span></div>`
-    : `<div class="stk-item locked"><div class="stk">?</div><span>Les ${(i%5)+1} · ${esc(WORLDS[Math.floor(i/5)].name)}</span></div>`).join('')}</div>`;
+  const p = me(), got = new Set(p.badges||[]);
+  const open = worldOrder(p).filter(i=>worldUnlocked(p,i)).map(i=>WORLDS[i]);
+  return topbarHTML(p) + `<h1 class="page-h">Mijn prijzen</h1>
+  <div class="greet">${mascot(64,'cheer','')}<div class="bubble">Kijk eens wat je allemaal al kunt, ${esc(p.name)}!</div></div>
+  <div class="panel"><h3>Mijn voortgang</h3><div class="tiles">
+    <div class="tile-n"><b>${learned(p).length}</b><span>woorden geleerd</span></div>
+    <div class="tile-n"><b>${Object.keys(p.lessons||{}).length}</b><span>lessen af</span></div>
+    <div class="tile-n"><b>${totalStars(p)}</b><span>sterren</span></div>
+    <div class="tile-n"><b>${fmtMin(weekTime(p))}</b><span>minuten deze week</span></div></div>
+    <div style="margin-top:14px">${open.map(w=>{ const d = w.lessons.filter(l=>p.lessons[l.id]).length; return `<div class="prog-row"><span>${w.emoji} ${esc(w.name)}</span><span class="pb"><i style="width:${d/w.lessons.length*100}%;background:${w.color}"></i></span><span>${d}/${w.lessons.length}</span></div>`; }).join('')}</div>
+  </div>
+  <div class="panel"><h3>Badges <span class="muted">${got.size} van ${BADGES.length}</span></h3>
+    <div class="badge-grid">${BADGES.map(b=>`<div class="bdg ${got.has(b.id)?'':'locked'}"><span class="be">${b.e}</span><b>${esc(b.n)}</b><small>${got.has(b.id)?'Gehaald!':esc(b.how)}</small></div>`).join('')}</div></div>
+  <div class="panel"><h3>Stickerboek <span class="muted">${p.stickers.length} van ${STICKERS.length}</span></h3>
+  <div class="stk-grid">${STICKERS.map((st,i)=>p.stickers.includes(i)
+    ? `<div class="stk-item"><div class="stk">${stickerFace(st)}</div><span>${esc(st.n)}</span></div>`
+    : `<div class="stk-item locked"><div class="stk">?</div><span>Les ${(i%5)+1} · ${esc(WORLDS[Math.floor(i/5)].name)}</span></div>`).join('')}</div></div>`;
 }
 function wordsHTML(){
   const p = me();
   return topbarHTML(p) + `<h1 class="page-h">Mijn woordjes</h1><p class="page-sub">${learned(p).length} geleerd · tik op de luidspreker om te luisteren</p>
-  ${WORLDS.map(w=>`<div class="wgroup"><h2>${w.emoji} ${w.name}</h2><div class="wlist">${wordsOfWorld(w.id).map(x=>{
+  ${worldOrder(p).filter(i=>worldUnlocked(p,i)).map(i=>WORLDS[i]).map(w=>`<div class="wgroup"><h2>${w.emoji} ${w.name}</h2><div class="wlist">${wordsOfWorld(w.id).map(x=>{
       const s = p.words[x.id]; const l = (s?.c||0)>=2;
       return `<div class="wrow ${s?'':'unseen'}"><span class="pic">${picOf(x.id)}</span><div class="mid"><div class="ph">${esc(x.ph)}</div><div class="nl">${esc(x.nl)}</div></div><span class="ar" lang="ar">${x.ar}</span>${l?'<span class="badge">✓</span>':''}${playBtn(x.id,'sm')}</div>`;
     }).join('')}</div></div>`).join('')}`;
@@ -1978,20 +2684,70 @@ function gateHTML(){
   </div>`;
 }
 function parentHTML(){
-  const tabs = [['overview','Voortgang'],['rewards','Beloningen'],['settings','Instellingen'],['audio',"Geluid & foto's"]];
+  const tabs = [['overview','Voortgang'],['rewards','Beloningen'],['content','Woorden'],['audio',"Geluid & foto's"],['settings','Instellingen']];
   let h = `<h1 class="page-h">Ouderdashboard</h1><p class="page-sub">☁️ Alles wordt bewaard in je account${AUTH.user?` (${esc(AUTH.user.email||'')})`:''}${AUTH.admin?' · beheerder':''}</p>
     <div class="ptabs">${tabs.map(([k,t])=>`<button class="${S.ptab===k?'on':''}" data-act="ptab:${k}">${t}</button>`).join('')}</div>`;
   if(S.ptab==='audio') return h + audioPanel();
   if(S.ptab==='rewards') return h + rewardsPanel();
+  if(S.ptab==='content') return h + contentPanel();
   if(!DB.profiles.length) return h + `<div class="panel"><h3>Nog geen kinderen</h3><p class="muted">Maak eerst een profiel aan.</p><p style="margin-top:12px"><button class="btn" data-act="go:profiles">Profiel maken</button></p></div>`;
   if(!S.pkid || !DB.profiles.find(p=>p.id===S.pkid)) S.pkid = DB.activeId || DB.profiles[0].id;
   h += `<div class="ptabs">${DB.profiles.map(p=>`<button class="${S.pkid===p.id?'on':''}" data-act="pkid:${p.id}">${p.avatar} ${esc(p.name)}</button>`).join('')}</div>`;
   const p = DB.profiles.find(x=>x.id===S.pkid);
   return h + (S.ptab==='overview' ? overviewPanel(p) : settingsPanel(p));
 }
+function levelAdvice(p){
+  const a = accuracy(p), n = (p.recent||[]).length;
+  if(a===null) return '<p class="hint" style="margin-top:10px">Na een paar lessen zie je hier hoe goed het gaat. De app past de moeilijkheid zelf aan: minder keuzes als het lastig is, meer uitdaging als het goed gaat.</p>';
+  if(p.level===1 && a>=0.9 && n>=20) return `<p class="status on" style="margin-top:12px">💡 ${esc(p.name)} doet het heel goed. Misschien klaar voor niveau 2? Dat zet je bij Instellingen.</p>`;
+  if(p.level===2 && a<0.5 && n>=20) return `<p class="status" style="margin-top:12px">💡 Het is nu wat lastig voor ${esc(p.name)}. Niveau 1 met meer plaatjes en geluid kan prettiger zijn.</p>`;
+  return '<p class="hint" style="margin-top:10px">De app past de moeilijkheid zelf aan op de resultaten.</p>';
+}
+function contentPanel(){
+  const all = allItems(), f = S.cf || 'check', q = (S.cq||'').trim().toLowerCase();
+  const nCheck = all.filter(x=>!isVerified(x.id)).length, nNote = all.filter(x=>checkNote(x.id)).length;
+  let list = all.filter(x=> f==='all' || (f==='check' && !isVerified(x.id)) || (f==='note' && checkNote(x.id)) || (f.startsWith('w') && String(worldOfItem(x))===f.slice(1)));
+  if(q) list = all.filter(x=>[x.ph, x.nl, x.ar, x.id].join(' ').toLowerCase().includes(q));
+  const lim = S.climit || 40;
+  const wsel = (val, idp) => `<select class="inp sel" id="${idp}">${WORLDS.map(w=>`<option value="${w.id}" ${+val===w.id?'selected':''}>${esc(w.name)}</option>`).join('')}</select>`;
+  const N = S.cnew;
+  return `<div class="panel"><h3>📚 Woordenlijst</h3>
+    <div class="tiles" style="margin-bottom:12px"><div class="tile-n"><b>${all.length}</b><span>woorden en zinnen</span></div><div class="tile-n"><b>${all.length-nCheck}</b><span>gecontroleerd</span></div><div class="tile-n"><b>${nCheck}</b><span>nog controleren</span></div><div class="tile-n"><b>${nNote}</b><span>met twijfel</span></div></div>
+    <p class="status ${AUTH.admin?'on':''}">${AUTH.admin ? '⭐ Je bent beheerder: wat je hier aanpast, geldt meteen voor alle gezinnen.' : 'Alleen de beheerder kan woorden aanpassen. Je kunt ze hier wel bekijken.'}</p>
+    <p class="hint">Alles wat ik heb toegevoegd staat op <b>nog controleren</b> tot jij het afvinkt. Bij woorden waar ik twijfel staat een ⚠️ met de reden. Ik heb geen vertalingen verzonnen waar ik niet zeker van was.</p>
+    ${AUTH.admin && !N ? `<button class="btn ghost wide" style="margin-top:12px" data-act="cnew">+ Nieuw woord toevoegen</button>` : ''}
+  </div>
+  ${N ? `<div class="panel cedit"><h3>Nieuw woord</h3>
+    <div class="setrow"><label for="cn-ar">Arabisch schrift</label><input class="inp ar-in" id="cn-ar" dir="rtl" lang="ar" value="${esc(N.ar||'')}"></div>
+    <div class="setrow"><label for="cn-ph">Uitspraak (Nederlandse spelling)</label><input class="inp" id="cn-ph" value="${esc(N.ph||'')}"></div>
+    <div class="setrow"><label for="cn-nl">Nederlands</label><input class="inp" id="cn-nl" value="${esc(N.nl||'')}"></div>
+    <div class="setrow"><label for="cn-pic">Plaatje (emoji)</label><input class="inp" id="cn-pic" maxlength="8" placeholder="🍉" value="${esc(N.pic||'')}"></div>
+    <div class="setrow"><label for="cn-w">Wereld</label>${wsel(N.w, 'cn-w')}</div>
+    <div class="setrow"><label for="cn-l">Les</label><select class="inp sel" id="cn-l">${(WORLDS.find(w=>w.id===+N.w)||WORLDS[0]).lessons.filter(l=>l.words && !l.review && !l.sentencesOnly).map(l=>`<option value="${l.id}">${esc(l.title)}</option>`).join('')}</select></div>
+    <label class="switch"><input type="checkbox" id="cn-con" checked> Je kunt het aanwijzen of tekenen (komt in plaatjesspelletjes)</label>
+    <div class="brow-actions"><button class="btn wide" data-act="cnew-save">Toevoegen</button><button class="btn ghost wide" data-act="cnew-cancel">Annuleren</button></div></div>` : ''}
+  <div class="panel">
+    <input class="inp" id="cq" type="search" placeholder="Zoek op uitspraak, Nederlands of Arabisch" value="${esc(S.cq||'')}" data-cq="1">
+    <div class="ptabs" style="margin-top:10px"><button class="${f==='check'?'on':''}" data-act="cf:check">Nog controleren (${nCheck})</button><button class="${f==='note'?'on':''}" data-act="cf:note">⚠️ Twijfel (${nNote})</button><button class="${f==='all'?'on':''}" data-act="cf:all">Alles</button>${WORLDS.map(w=>`<button class="${f==='w'+w.id?'on':''}" data-act="cf:w${w.id}">${w.emoji} ${esc(w.name)}</button>`).join('')}</div>
+    ${list.slice(0, lim).map(x=>{ const ed = S.cedit===x.id, note = checkNote(x.id), v = isVerified(x.id), changed = CONTENT[x.id] && EDIT_KEYS.some(k=>CONTENT[x.id][k]!==undefined);
+      if(ed) return `<div class="crow cedit"><div class="setrow"><label for="ce-ar">Arabisch schrift</label><input class="inp ar-in" id="ce-ar" dir="rtl" lang="ar" value="${esc(x.ar)}"></div>
+        <div class="setrow"><label for="ce-ph">Uitspraak</label><input class="inp" id="ce-ph" value="${esc(x.ph)}"></div>
+        <div class="setrow"><label for="ce-nl">Nederlands</label><input class="inp" id="ce-nl" value="${esc(x.nl)}"></div>
+        <div class="setrow"><label for="ce-pic">Plaatje (emoji)</label><input class="inp" id="ce-pic" maxlength="8" value="${esc(x.pic||'')}"></div>
+        <div class="setrow"><label for="ce-tip">Uitspraaktip (optioneel)</label><input class="inp" id="ce-tip" value="${esc(x.tip||'')}"></div>
+        <div class="setrow"><label for="ce-note">Opmerking / twijfel (optioneel)</label><input class="inp" id="ce-note" value="${esc((CONTENT[x.id]&&CONTENT[x.id].note)||'')}"></div>
+        <label class="switch"><input type="checkbox" id="ce-ok" ${v?'checked':''}> Gecontroleerd: dit is correct Egyptisch</label>
+        <p class="hint">Het id <b>${esc(x.id)}</b> verandert niet, dus de opname blijft gekoppeld.</p>
+        <div class="brow-actions"><button class="btn wide" data-act="csave:${x.id}">Opslaan</button>${changed?`<button class="btn ghost wide" data-act="creset:${x.id}">Origineel terugzetten</button>`:''}<button class="btn ghost wide" data-act="cedit-cancel">Annuleren</button></div></div>`;
+      return `<div class="crow"><span class="ar" lang="ar">${x.ar}</span><div class="mid"><div class="ph">${esc(x.ph)}</div><div class="nl">${esc(x.nl)}</div>${note?`<div class="cnote">⚠️ ${esc(note)}</div>`:''}</div>
+        <div class="acts">${playBtn(x.id,'sm',false)}<span class="badge ${v?'':'warn'}">${v?'✓ gecontroleerd':'controleren'}</span>${AUTH.admin?`<button class="mini" data-act="cedit:${x.id}">Bewerk</button>${v?'':`<button class="mini on" data-act="cok:${x.id}">✓ Klopt</button>`}`:''}</div></div>`;
+    }).join('') || '<p class="muted" style="margin-top:12px">Niets gevonden.</p>'}
+    ${list.length>lim?`<button class="btn ghost wide" style="margin-top:12px" data-act="cmore">Toon meer (${list.length-lim})</button>`:''}
+  </div>`;
+}
 function overviewPanel(p){
   const lw = learned(p);
-  const hard = WORDS.concat(SENTENCES).map(x=>({x, s:p.words[x.id]})).filter(o=>o.s && o.s.w>0).sort((a,b)=>(b.s.w-b.s.c*.5)-(a.s.w-a.s.c*.5)).slice(0,6);
+  const hard = WORDS.concat(SENTENCES, DLINES).map(x=>({x, s:p.words[x.id]})).filter(o=>o.s && o.s.w>0).sort((a,b)=>(b.s.w-b.s.c*.5)-(a.s.w-a.s.c*.5)).slice(0,6);
   const best = ALL_LESSONS.filter(l=>p.best[l.id]).sort((a,b)=>p.best[a.id].mistakes-p.best[b.id].mistakes).slice(0,5);
   return `<div class="panel"><h3>Samenvatting</h3><div class="tiles">
       <div class="tile-n"><b>${p.xp}</b><span>XP</span></div>
@@ -2008,6 +2764,14 @@ function overviewPanel(p){
       return `<div class="prog-row"><span>${w.emoji} ${w.name}</span><span class="pb"><i style="width:${d/5*100}%"></i></span><span>${d}/5</span></div>`;}).join('')}</div>
   <div class="panel"><h3>Geleerde woorden</h3>${lw.length?`<div class="chips">${lw.map(w=>`<span class="chip">${w.pic} ${esc(w.ph)} <span class="muted">${esc(w.nl)}</span></span>`).join('')}</div>`:'<p class="muted">Een woord telt als geleerd als het twee keer goed is gegaan.</p>'}</div>
   <div class="panel"><h3>Hier kan je kind hulp bij gebruiken</h3>${hard.length?`<div class="wlist">${hard.map(o=>`<div class="wrow"><span class="pic">${picOf(o.x.id)}</span><div class="mid"><div class="ph">${esc(o.x.ph)}</div><div class="nl">${esc(o.x.nl)}</div></div><span class="badge warn">${o.s.w}× lastig</span><span class="badge">${o.s.c}× goed</span>${playBtn(o.x.id,'sm')}</div>`).join('')}</div>`:'<p class="muted">Nog niets opvallends. Fijn!</p>'}</div>
+  <div class="panel"><h3>⏱️ Leertijd</h3><div class="tiles">
+      <div class="tile-n"><b>${fmtMin((p.time||{})[today()]||0)}</b><span>min. vandaag</span></div>
+      <div class="tile-n"><b>${fmtMin(weekTime(p))}</b><span>min. deze week</span></div>
+      <div class="tile-n"><b>${fmtMin(totalTime(p))}</b><span>min. totaal</span></div>
+      <div class="tile-n"><b>${accuracy(p)===null?'–':Math.round(accuracy(p)*100)+'%'}</b><span>goed (laatste 30)</span></div></div>
+    ${levelAdvice(p)}</div>
+  <div class="panel"><h3>🔁 Te herhalen</h3>${(()=>{ const due = dueWords(p, 0); return due.length ? `<p class="muted" style="margin-bottom:10px">Deze woorden komen terug in de volgende lessen en bij <b>Herhalen</b>. Woorden die vaak fout gaan komen vaker terug.</p><div class="chips">${due.slice(0,20).map(id=>`<span class="chip">${picOf(id)} ${esc(ITEM[id].ph)} <span class="muted">${esc(ITEM[id].nl)}</span></span>`).join('')}</div>${due.length>20?`<p class="hint">en nog ${due.length-20} andere</p>`:''}` : '<p class="muted">Niets om te herhalen vandaag.</p>'; })()}</div>
+  <div class="panel"><h3>📝 Resultaten van lessen en quizzen</h3>${(p.hist||[]).length ? `<div class="hist">${(p.hist||[]).slice(-10).reverse().map(h=>`<div class="hrow"><span class="hd">${h.d.slice(8,10)}-${h.d.slice(5,7)}</span><div class="mid"><b>${esc(h.t)}</b><span>${esc(h.w)} · ${h.s?fmtMin(h.s)+' min':''}</span></div><span class="hs">${h.n?Math.round(h.ok/h.n*100)+'%':'–'}</span><span class="nstars">${[1,2,3].map(n=>STAR(n<=h.st,14)).join('')}</span></div>`).join('')}</div>` : '<p class="muted">Nog geen resultaten. Na de volgende les zie je hier hoe het ging.</p>'}</div>
   <div class="panel"><h3>Beste resultaten</h3>${best.length?`<div class="wlist">${best.map(l=>`<div class="wrow"><span class="pic">${l.icon}</span><div class="mid"><div class="ph">${esc(l.title)}</div><div class="nl">${esc(WORLDS[l.wi].name)} · ${p.best[l.id].mistakes} foutjes</div></div><span class="nstars">${[1,2,3].map(n=>STAR(n<=p.lessons[l.id],16)).join('')}</span></div>`).join('')}</div>`:'<p class="muted">Nog geen lessen gespeeld.</p>'}</div>`;
 }
 function settingsPanel(p){
@@ -2088,16 +2852,16 @@ function recSessionPanel(){
   </div>`;
 }
 function audioPanel(){
-  const items = WORDS.filter(w=>w.w===S.filterW).concat(SENTENCES.filter(s=>s.w===S.filterW));
-  const every = [...WORDS,...SENTENCES];
+  const items = allItems().filter(x=>worldOfItem(x)===S.filterW);
+  const every = allItems();
   const rec = every.filter(x=>hasAudio(x.id)).length;
-  const ver = every.filter(x=>DB.verified[x.id]).length;
-  const missing = every.filter(x=>!hasAudio(x.id)).length;
+  const ver = every.filter(x=>isVerified(x.id)).length;
+  const missingL = every.filter(x=>!hasAudio(x.id));
+  const missing = missingL.length;
   return `<div class="panel"><h3>Uitspraak</h3>
     <div class="tiles" style="margin-bottom:12px"><div class="tile-n"><b>${rec}/${every.length}</b><span>met opname</span></div><div class="tile-n"><b>${ver}/${every.length}</b><span>gecontroleerd</span></div></div>
     <p class="status on">${AUTH.admin?'⭐ Je bent beheerder: jouw opnames zijn te horen voor alle gezinnen die de app gebruiken.':'☁️ Je opnames worden in je account bewaard en zijn te horen op al je apparaten.'}</p>
-    <label class="switch"><input type="checkbox" id="set-tts" data-sets="tts" ${DB.settings.tts?'checked':''}> Computerstem gebruiken als er nog geen opname is</label>
-    <p class="hint">De computerstem is geen native Egyptische uitspraak en klinkt vaak als standaard-Arabisch. Knoppen met de computerstem zijn paars en hebben het label "computerstem".</p>
+    <p class="hint">Egyptische woorden worden alleen met jouw eigen opnames afgespeeld, nooit met een computerstem. Een woord zonder opname krijgt het label "nog geen opname".</p>
     <label class="switch" style="margin-top:14px"><input type="checkbox" id="set-nlvoice" data-sets="nlVoice" ${DB.settings.nlVoice!==false?'checked':''}> Voorleesstem voor de opdrachten (niveau 1)</label>
     <p class="hint">Een Nederlandse computerstem leest de opdrachten voor ("Luister. Welk plaatje hoort erbij?") en zegt "Goed zo!". Egyptische woorden spreekt hij nooit uit; die komen alleen van jouw opnames.</p>
   </div>
@@ -2106,6 +2870,12 @@ function audioPanel(){
     <p class="muted" style="margin-bottom:12px">De app laat je de woorden één voor één zien. Tik op de microfoon, zeg het woord, tik op stop. Hij slaat het op en gaat door naar het volgende woord.</p>
     <button class="btn sun wide" data-act="rec-start" ${missing?'':'disabled'}>${missing?`Start opnamesessie (${missing} zonder opname)`:'Alles heeft al een opname 🎉'}</button>
     <p class="hint">Je kunt ook per woord opnemen met de 🎙️-knop in de lijst hieronder. De eerste keer vraagt je telefoon om toegang tot de microfoon.</p>
+  </div>`}
+  ${S.recS||!missing?'':`<div class="panel"><h3>🎙️ Nog in te spreken (${missing})</h3>
+    <p class="muted" style="margin-bottom:10px">Per wereld. Start een sessie voor één wereld, of open een wereld en tik op een woord om het meteen in te spreken.</p>
+    ${WORLDS.map(w=>{ const m = missingL.filter(x=>worldOfItem(x)===w.id); if(!m.length) return ''; const open = S.filterW===w.id;
+      return `<div class="miss-w"><div class="mw-head"><button class="mw-name" data-act="fw:${w.id}" aria-expanded="${open}">${open?'▾':'▸'} ${w.emoji} ${esc(w.name)} <span class="muted">(${m.length})</span></button>${recSupported()?`<button class="mini" data-act="rec-start:${w.id}">🎙️ Sessie</button>`:''}</div>
+      ${open?`<div class="chips">${m.map(x=>`<button class="chip mchip ${REC.id===x.id?'rec-on':''}" data-act="rec:${x.id}" ${REC.busy||(REC.mr&&REC.id!==x.id)?'disabled':''}>${REC.id===x.id?'■':'🎙️'} ${esc(x.ph)}</button>`).join('')}</div>`:''}</div>`; }).join('')}
   </div>`}
   ${bulkPanel()}
   ${S.bulk||S.recS?'':`<div class="panel"><h3>Of: opnames uploaden</h3>
@@ -2126,20 +2896,21 @@ function audioPanel(){
     ${items.map((x,n)=>{ const where = MEDIA.audio[x.id] ? '☁️ eigen opname' : MEDIA.shared[x.id] ? '☁️ gedeelde opname' : AUDIO_FILES[x.id] ? '✓ ingebouwd' : '';
       const canDel = !!MEDIA.audio[x.id] || (AUTH.admin && !!MEDIA.shared[x.id]);
       const live = REC.id===x.id;
-      return `<div class="arow"><span class="ar" lang="ar">${x.ar}</span><div style="min-width:0"><div class="ph">${n+1}. ${esc(x.ph)}</div><div class="nl">${esc(x.nl)}${where?` · <b style="color:var(--ok-d)">${where}</b>`:''}</div></div>
+      const kindL = x.kind==='line' ? '💬 gesprekje · ' : x.kind==='variant' ? '♀ meisjesvorm · ' : '';
+      return `<div class="arow"><span class="ar" lang="ar">${x.ar}</span><div style="min-width:0"><div class="ph">${n+1}. ${esc(x.ph)}</div><div class="nl">${kindL}${esc(x.nl)}${where?` · <b style="color:var(--ok-d)">${where}</b>`:''}</div></div>
       <div class="acts">${playBtn(x.id,'sm')}
-        ${recSupported()?`<button class="mini ${live?'rec-on':''}" data-act="rec:${x.id}" ${REC.busy||(REC.mr&&!live)?'disabled':''}>${live?'■ Stop':'🎙️ Opnemen'}</button>`:''}
+        ${recSupported()?`<button class="mini ${live?'rec-on':''}" data-act="rec:${x.id}" ${REC.busy||(REC.mr&&!live)?'disabled':''}>${live?'■ Stop':hasAudio(x.id)?(S.confirmRec===x.id?'Zeker? Tik nog eens':'🎙️ Opnieuw'):'🎙️ Opnemen'}</button>`:''}
         <label class="mini">⬆ ${where?'Vervang':'Upload'}<input type="file" accept="audio/*,.m4a" data-upload="${x.id}" id="up-${x.id}"></label>
         ${canDel?`<button class="mini danger" data-act="delaudio:${x.id}">Wis</button>`:''}
         ${ITEM[x.id].kind==='word'?`${PICS[x.id]?`<img class="thumb" src="${PICS[x.id]}" alt="Foto bij ${esc(x.ph)}">`:''}<label class="mini">📷 ${PICS[x.id]?'Andere foto':'Foto'}<input type="file" accept="image/*" data-pic="${x.id}" id="pic-${x.id}"></label>${PICS[x.id]?`<button class="mini danger" data-act="delpic:${x.id}">Wis foto</button>`:''}`:''}
-        <button class="mini ${DB.verified[x.id]?'on':''}" data-act="verify:${x.id}" aria-pressed="${!!DB.verified[x.id]}">${DB.verified[x.id]?'✓ Gecontroleerd':'Controleer'}</button>
+        <button class="mini ${isVerified(x.id)?'on':''}" data-act="verify:${x.id}" aria-pressed="${isVerified(x.id)}">${isVerified(x.id)?'✓ Gecontroleerd':'Controleer'}</button>
       </div></div>`;}).join('')}
   </div>`;
 }
 
 /* ---------- render ---------- */
 function navHTML(){
-  const items = [['home','🗺️','Leren'],['words','📖','Woorden'],['scores','🏆','Scores'],['stickers','🌟','Stickers'],['gate','🔒','Ouders']];
+  const items = [['home','🗺️','Leren'],['words','📖','Woorden'],['scores','🏆','Scores'],['stickers','🏅','Prijzen'],['gate','🔒','Ouders']];
   const cur = S.screen==='parent' ? 'gate' : S.screen;
   return `<nav class="nav" aria-label="Menu"><div class="nav-in">${items.map(([k,e,t])=>`<button class="${cur===k?'on':''}" data-act="go:${k}"><span class="e">${e}</span>${t}</button>`).join('')}</div></nav>`;
 }
@@ -2176,6 +2947,8 @@ function createProfile(){
 document.addEventListener('click', e=>{
   const bp = e.target.closest('[data-bplay]');
   if(bp && S.bulk){ e.preventDefault(); try{ if(curAudio) curAudio.pause(); }catch(x){} curAudio = new Audio(S.bulk.urls[+bp.dataset.bplay]); curAudio.play().catch(()=>toast('Deze opname kon niet worden afgespeeld.')); return; }
+  const ps = e.target.closest('[data-play-slow]');
+  if(ps){ e.preventDefault(); play(ps.dataset.playSlow, false, 0.65); return; }
   const pb = e.target.closest('[data-play]');
   if(pb){ e.preventDefault(); play(pb.dataset.play); return; }
   const el = e.target.closest('[data-act]'); if(!el) return;
@@ -2190,11 +2963,28 @@ document.addEventListener('click', e=>{
       S.screen=a; S.confirmDel=false; window.scrollTo(0,0); break;
     case 'duel': startPenalty(a); return;
     case 'pen-ready': if(PEN){ PEN.state='q'; render(); penAuto(); } return;
-    case 'rec': recToggle(a); return;
-    case 'rec-start': { const q = [...WORDS,...SENTENCES].filter(x=>!hasAudio(x.id)).map(x=>x.id); if(!q.length) return; S.recS = {queue:q, i:0}; window.scrollTo(0,0); break; }
+    case 'rec': if(hasAudio(a) && !REC.mr && S.confirmRec!==a){ S.confirmRec = a; toast('Er is al een opname. Tik nog een keer om hem te vervangen.'); break; } S.confirmRec = null; recToggle(a); return;
+    case 'rec-start': { const q = WORLDS.filter(w=>!a || w.id===+a).flatMap(w=>allItems().filter(x=>worldOfItem(x)===w.id && !hasAudio(x.id))).map(x=>x.id); if(!q.length) return; S.recS = {queue:q, i:0}; window.scrollTo(0,0); break; }
+    case 'cf': S.cf = a; S.cq = ''; S.climit = 40; S.cedit = null; break;
+    case 'cmore': S.climit = (S.climit||40) + 40; break;
+    case 'cedit': S.cedit = a; S.cnew = null; break;
+    case 'cedit-cancel': S.cedit = null; break;
+    case 'cok': saveContent(a, {verified:true}).then(ok=>{ if(ok){ toast('Gemarkeerd als gecontroleerd'); render(); } }); return;
+    case 'csave': { const g = k => ($('#ce-'+k) ? $('#ce-'+k).value.trim() : '');
+      const patch = {ar:g('ar'), ph:g('ph'), nl:g('nl'), pic:g('pic'), tip:g('tip'), note:g('note'), verified:!!($('#ce-ok') && $('#ce-ok').checked)};
+      if(!patch.ar || !patch.ph || !patch.nl){ toast('Vul Arabisch, uitspraak en Nederlands in.'); return; }
+      saveContent(a, patch).then(ok=>{ if(ok){ S.cedit = null; toast('Opgeslagen voor alle gezinnen'); render(); } }); return; }
+    case 'creset': resetContent(a).then(()=>{ S.cedit = null; toast('Origineel teruggezet'); render(); }); return;
+    case 'cnew': S.cnew = {w: WORLDS[0].id}; S.cedit = null; window.scrollTo(0,0); break;
+    case 'cnew-cancel': S.cnew = null; break;
+    case 'cnew-save': { const g = k => ($('#cn-'+k) ? $('#cn-'+k).value.trim() : '');
+      const d = {new:true, ar:g('ar'), ph:g('ph'), nl:g('nl'), pic:g('pic')||'🆕', w:+g('w'), lesson:g('l'), concrete:!!($('#cn-con') && $('#cn-con').checked), verified:true};
+      if(!d.ar || !d.ph || !d.nl || !d.lesson){ toast('Vul Arabisch, uitspraak, Nederlands en les in.'); return; }
+      const id = 'u_' + uid() + uid();
+      saveContent(id, d).then(ok=>{ if(ok){ S.cnew = null; toast('Nieuw woord toegevoegd: ' + d.ph); render(); } }); return; }
     case 'rec-skip': recNext(); break;
     case 'rec-end': S.recS = null; recRelease(); break;
-    case 'pick': DB.activeId=a; save(); S.screen='home'; break;
+    case 'pick': { DB.activeId=a; save(); S.screen='home'; const pl = me(); if(pl && voiceOn()){ const hr = new Date().getHours(); setTimeout(()=>speakNL((hr<12?'Goedemorgen ':hr<18?'Hoi ':'Goedenavond ')+pl.name+'! Klaar om te spelen?'), 250); } break; }
     case 'newp': S.newP={name:'',age:null,gender:null,avatar:pick(AVATARS)}; break;
     case 'np-age': S.newP.age=+a; break;
     case 'np-g': S.newP.gender=a; break;
@@ -2206,7 +2996,17 @@ document.addEventListener('click', e=>{
     case 'pen-next': penNext(); return;
     case 'pen-again': { const opp = PEN && PEN.players.length>1 ? PEN.players.find(x=>x!==PEN.home) : null; penEndRestore(); startPenalty(opp); return; }
     case 'locked': toast('Speel eerst de les ervoor!'); return;
-    case 'opt': if(L.state!=='answer') return; L.sel=a; if(L.steps[L.i].type==='translate') play(a,true);
+    case 'aopt': if(L.state!=='answer') return; L.sel=a; play(a); break;
+    case 'fopt': if(L.state!=='answer') return; L.sel=+a; break;
+    case 'ml': matchTap('l', a); return;
+    case 'mr': matchTap('r', a); return;
+    case 'review': startReview(); return;
+    case 'hint': { const st=L.steps[L.i]; if(st.hintUsed||L.state!=='answer') return; st.hintUsed=true;
+      if(st.type==='fill'){ const wrong = st.choices.map((c,k)=>k).filter(k=>st.choices[k]!==st.answer && k!==L.sel); if(wrong.length) st.hiddenK=[pick(wrong)]; }
+      else { const wrong = (st.opts||[]).filter(o=>o!==st.id && o!==L.sel); if(wrong.length>1) st.hidden=[pick(wrong)]; }
+      if(['listen','meaning','listen-nl'].includes(st.type) && hasAudio(st.id)) setTimeout(()=>play(st.id,true),200);
+      if(voiceOn()) speakNL('Eentje kan weg! Kijk nog eens goed.'); break; }
+    case 'opt': if(L.state!=='answer') return; L.sel=a; if(['translate','picword','chat'].includes(L.steps[L.i].type)) play(a,true);
       if(isKid() && L.steps[L.i].type==='listen'){ check(); return; } break;
     case 'helpme': if(S.screen==='lesson') autoPlay(); else penAuto(true); return;
     case 'tile': { const st=L.steps[L.i]; if(L.state!=='answer'||st.ans.includes(+a)) return; st.ans.push(+a); break; }
@@ -2217,7 +3017,7 @@ document.addEventListener('click', e=>{
     case 'next': next(); return;
     case 'quit': S.sheet='quit'; break;
     case 'quit-no': S.sheet=null; break;
-    case 'quit-yes': S.sheet=null; L=null; S.screen='home'; break;
+    case 'quit-yes': S.sheet=null; addTime(me(), L && L.t0); save(); L=null; S.screen='home'; break;
     case 'gate': if(+a===S.gate.a+S.gate.b){ S.screen='parent'; S.ptab='overview'; } else { toast('Dat klopt niet. Probeer het nog eens.'); S.gate=null; } break;
     case 'ptab': S.ptab=a; S.confirmDel=false; if(a!=='audio' && S.recS){ S.recS=null; recRelease(); } break;
     case 'pkid': S.pkid=a; S.confirmDel=false; break;
@@ -2237,7 +3037,7 @@ document.addEventListener('click', e=>{
     case 'del-ask': S.confirmDel=true; break;
     case 'del-no': S.confirmDel=false; break;
     case 'del-yes': if(sb && AUTH.user) sb.from('players').delete().eq('id', S.pkid).then(({error})=>{ if(error) toast('Verwijderen lukte niet online.'); }); DB.profiles=DB.profiles.filter(x=>x.id!==S.pkid); if(DB.activeId===S.pkid) DB.activeId=DB.profiles[0]?.id||null; S.pkid=null; S.confirmDel=false; save(); toast('Profiel verwijderd'); break;
-    case 'verify': if(DB.verified[a]) delete DB.verified[a]; else DB.verified[a]=true; save(); break;
+    case 'verify': if(AUTH.admin){ saveContent(a, {verified:!isVerified(a)}).then(()=>render()); return; } if(DB.verified[a]) delete DB.verified[a]; else DB.verified[a]=true; save(); break;
     case 'delaudio': removeAudio(a).then(()=>{ toast('Opname gewist'); render(); }); return;
     case 'bulk-save': bulkSave(); return;
     case 'delpic': removePic(a).then(()=>{ toast('Foto gewist'); render(); }); return;
@@ -2274,6 +3074,8 @@ document.addEventListener('change', async e=>{
   }
   if(t.dataset.bassign!==undefined && S.bulk){ S.bulk.assign[+t.dataset.bassign] = t.value; S.bulk.status=[]; render(); return; }
   if(t.dataset.sets){ DB.settings[t.dataset.sets] = t.checked; save(); render(); return; }
+  if(t.id==='cn-w' && S.cnew){ ['ar','ph','nl','pic'].forEach(k=>{ const el = $('#cn-'+k); if(el) S.cnew[k] = el.value; }); S.cnew.w = +t.value; render(); return; }
+  if(t.dataset.cq){ S.cq = t.value; S.climit = 40; render(); const el = $('#cq'); if(el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); } return; }
   if(t.dataset.greward){ const k = byId(t.dataset.greward); if(!k) return; k.goal = k.goal||{}; k.goal.reward = t.value.trim().slice(0,40); if(!k.goal.emoji) k.goal.emoji='🎁'; save(); render(); return; }
   if(t.dataset.freward){ const g = DB.settings.familyGoal = DB.settings.familyGoal||{}; g.reward = t.value.trim().slice(0,40); if(!g.emoji) g.emoji='🎁'; save(); render(); return; }
   if(t.dataset.setp){
@@ -2295,7 +3097,7 @@ if(sb){
 document.addEventListener('visibilitychange', ()=>{
   if(document.visibilityState==='hidden'){ if(SYNC.t) flush(); return; }
   if(AUTH.user && !SYNC.t && !busyScreen() && !S.newP && S.screen!=='auth'){
-    Promise.all([loadFamily(), loadMedia()]).then(()=>{ if(!busyScreen() && !S.newP) render(); });
+    Promise.all([loadFamily(), loadMedia(), loadContent()]).then(()=>{ if(!busyScreen() && !S.newP && !S.cedit && !S.cnew) render(); });
   }
 });
 window.addEventListener('pagehide', ()=>{ if(SYNC.t) flush(); });
