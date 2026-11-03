@@ -13,6 +13,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Masri Kids">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://udiqtseewsifcmxsrwtu.supabase.co" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;600;700;800&family=Nunito:wght@500;700;800;900&display=swap">
@@ -952,6 +954,9 @@ button,.opt,.mitem,.tile,.node{touch-action:manipulation;-webkit-user-select:non
 .scene-who{font-size:84px;line-height:1}
 .a-wel{gap:8px}.a-wel h2{font-size:26px}.a-wel p{font-size:17px;font-weight:700;color:var(--duo-mute)}
 .cav.who{font-size:30px}
+/* snelheid: secties buiten beeld niet tekenen */
+.world,.mod,.drow2,.scn-grid,.panel{content-visibility:auto;contain-intrinsic-size:auto 420px}
+.drow2{contain-intrinsic-size:auto 72px}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 
@@ -1750,12 +1755,13 @@ const me = () => DB.profiles.find(p=>p.id===DB.activeId);
 
 /* ---------- opnames en foto's (Supabase Storage) ---------- */
 // Volgorde bij afspelen: opname van je eigen gezin > gedeelde opname van de beheerder > ingebouwde opname.
-const MEDIA = { audio:{}, shared:{} };
+const MEDIA = { audio:{}, shared:{}, ver:{audio:{}, shared:{}} };
 const WEEK = 60*60*24*7;
-async function signFolder(prefix){
+async function signFolder(prefix, ver){
   const {data, error} = await sb.storage.from('media').list(prefix, {limit:1000});
   if(error || !data) return {};
   const files = data.filter(f=>f && f.id);
+  if(ver) files.forEach(f=>{ ver[f.name] = f.updated_at || f.created_at || ''; });
   if(!files.length) return {};
   const {data:signed} = await sb.storage.from('media').createSignedUrls(files.map(f=>prefix+'/'+f.name), WEEK);
   const out = {};
@@ -1765,9 +1771,46 @@ async function signFolder(prefix){
 async function loadMedia(){
   if(!sb || !AUTH.user) return;
   const u = AUTH.user.id;
-  const [a, sh, p] = await Promise.all([signFolder(u+'/audio'), signFolder('shared/audio'), signFolder(u+'/pics')]);
-  MEDIA.audio = a; MEDIA.shared = sh;
+  const va = {}, vs = {};
+  const [a, sh, p] = await Promise.all([signFolder(u+'/audio', va), signFolder('shared/audio', vs), signFolder(u+'/pics')]);
+  MEDIA.audio = a; MEDIA.shared = sh; MEDIA.ver = {audio:va, shared:vs};
   Object.keys(PICS).forEach(k=>delete PICS[k]); Object.assign(PICS, p);
+  persistMedia(Date.now());
+}
+function persistMedia(ts){ try{ const old = JSON.parse(localStorage.getItem(LSM)||'null'); localStorage.setItem(LSM, JSON.stringify({uid:AUTH.user.id, ts:ts || (old && old.ts) || Date.now(), audio:MEDIA.audio, shared:MEDIA.shared, ver:MEDIA.ver, pics:{...PICS}})); }catch(e){} }
+// Opnamelinks van de vorige keer meteen gebruiken (ze zijn een week geldig), op de achtergrond verversen.
+const LSM = 'masrikids_media';
+function restoreMedia(u){
+  try{ const v = JSON.parse(localStorage.getItem(LSM)); if(!v || v.uid!==u || Date.now()-v.ts > 5*864e5) return false;
+    MEDIA.audio = v.audio||{}; MEDIA.shared = v.shared||{}; MEDIA.ver = v.ver||{audio:{},shared:{}}; Object.keys(PICS).forEach(k=>delete PICS[k]); Object.assign(PICS, v.pics||{}); return true; }catch(e){ return false; }
+}
+/* ---------- opnames vooraf laden en bewaren op het apparaat ---------- */
+// Elke opname wordt één keer gedownload en in de browser bewaard. Daarna speelt hij direct af, ook na herstarten.
+// Een nieuwe opname heeft een nieuwe versie, dus de oude wordt dan vanzelf vervangen.
+const ABLOB = {}, AQ = []; let AQrun = 0, ACACHE;
+async function acache(){ if(ACACHE===undefined){ try{ ACACHE = 'caches' in window ? await caches.open('masri-audio-v1') : null; }catch(e){ ACACHE = null; } } return ACACHE; }
+function akey(id){ const fam = !!MEDIA.audio[id], v = (fam ? MEDIA.ver.audio : MEDIA.ver.shared)[id] || ''; return {base:`https://audio.local/${fam?'f':'s'}/${id}`, v}; }
+function dropAudio(id){ if(ABLOB[id]){ try{ URL.revokeObjectURL(ABLOB[id].url); }catch(e){} delete ABLOB[id]; } }
+async function warm(id){
+  const src = MEDIA.audio[id] || MEDIA.shared[id]; if(!src) return;
+  const k = akey(id); if(ABLOB[id] && ABLOB[id].v===k.v) return;
+  const c = await acache(), key = k.base + '?v=' + encodeURIComponent(k.v);
+  let blob = null;
+  try{ if(c){ const r = await c.match(key); if(r) blob = await r.blob(); } }catch(e){}
+  if(!blob){
+    try{ const r = await fetch(src); if(!r.ok) return; blob = await r.blob();
+      if(c && k.v){ try{ await c.delete(k.base, {ignoreSearch:true}); await c.put(key, new Response(blob, {headers:{'content-type':blob.type||'audio/mp4'}})); }catch(e){} } }catch(e){ return; }
+  }
+  dropAudio(id); ABLOB[id] = {url:URL.createObjectURL(blob), v:k.v};
+}
+function warmMany(ids, first){
+  const list = [...new Set(ids.filter(id=>id && (MEDIA.audio[id]||MEDIA.shared[id]) && !(ABLOB[id] && ABLOB[id].v===akey(id).v)))];
+  if(first) AQ.unshift(...list); else AQ.push(...list);
+  while(AQrun < 4 && AQ.length){ AQrun++; (async()=>{ while(AQ.length){ const id = AQ.shift(); await warm(id); } AQrun--; })(); }
+}
+const warmAll = () => warmMany([...Object.keys(MEDIA.shared), ...Object.keys(MEDIA.audio)]);
+function lessonAudioIds(L0){
+  return L0.steps.flatMap(st=>[st.id, ...(st.ids||[]), ...(st.turns ? st.turns.flatMap(t=>[res(t.q), res(t.a), ...t.d.map(res)]) : []), ...(st.cards||[]).map(c=>c.k||c.id)]).filter(Boolean);
 }
 let LAST_ERR = '';
 const cleanType = t => String(t||'').split(';')[0].trim().toLowerCase();
@@ -1790,6 +1833,7 @@ async function saveAudio(id, file){
   const url = await uploadMedia((shared ? 'shared' : AUTH.user.id) + '/audio/' + id, file, audioType(file));
   if(!url) return 'fail';
   (shared ? MEDIA.shared : MEDIA.audio)[id] = url;
+  (shared ? MEDIA.ver.shared : MEDIA.ver.audio)[id] = 'n' + Date.now(); dropAudio(id); persistMedia();
   return 'cloud';
 }
 async function removeAudio(id){
@@ -1800,7 +1844,7 @@ async function removeAudio(id){
   if(!paths.length) return;
   const {error} = await sb.storage.from('media').remove(paths);
   if(error){ toast('Wissen lukte niet. Probeer het later nog eens.'); return; }
-  delete MEDIA.audio[id]; if(AUTH.admin) delete MEDIA.shared[id];
+  delete MEDIA.audio[id]; if(AUTH.admin) delete MEDIA.shared[id]; dropAudio(id); persistMedia();
 }
 async function shrinkImage(file, max=480){
   const url = URL.createObjectURL(file);
@@ -2055,7 +2099,9 @@ async function play(id, quiet=false, rate=1){
   try{ if(curAudio){curAudio.pause();curAudio=null;} if('speechSynthesis' in window) speechSynthesis.cancel(); }catch(e){}
   const btn = document.querySelector(`[data-play="${id}"]`);
   if(btn){ btn.classList.remove('playing'); void btn.offsetWidth; btn.classList.add('playing'); }
-  const src = audioSrc(id);
+  const k = (MEDIA.audio[id]||MEDIA.shared[id]) ? akey(id).v : null;
+  const src = (ABLOB[id] && ABLOB[id].v===k) ? ABLOB[id].url : audioSrc(id);
+  if(src && !(ABLOB[id] && ABLOB[id].v===k)) warmMany([id], true);
   if(src){
     curAudio = new Audio(src);
     try{ curAudio.playbackRate = rate; curAudio.preservesPitch = true; curAudio.webkitPreservesPitch = true; }catch(e){}
@@ -3055,7 +3101,7 @@ async function onSession(session){
   const u = session && session.user || null;
   AUTH.user = u; AUTH.ready = true;
   if(!u){
-    loadedFor = null; DB = EMPTY_DB(); MEDIA.audio = {}; MEDIA.shared = {}; Object.keys(PICS).forEach(k=>delete PICS[k]); AUTH.admin = false;
+    loadedFor = null; DB = EMPTY_DB(); MEDIA.audio = {}; MEDIA.shared = {}; try{ localStorage.removeItem(LSM); }catch(e){} Object.keys(PICS).forEach(k=>delete PICS[k]); AUTH.admin = false;
     if(S.screen!=='splash') S.screen = 'auth';
     render(); return;
   }
@@ -3063,7 +3109,10 @@ async function onSession(session){
   loadedFor = u.id;
   const wasSplash = S.screen==='splash';
   if(!wasSplash) { S.screen = 'loading'; render(); }
-  await Promise.all([loadFamily(), loadMedia(), checkAdmin(), loadContent()]);
+  const had = restoreMedia(u.id);
+  const media = loadMedia().then(()=>{ if(had && !busyScreen() && S.screen!=='loading') render(); warmAll(); }).catch(()=>{});
+  if(had) warmAll();
+  await Promise.all([loadFamily(), checkAdmin(), loadContent(), had ? null : media]);
   if(S.auth.mode==='newpass'){ S.screen = 'auth'; }
   else if(!wasSplash) S.screen = me() ? 'home' : 'profiles';
   render();
@@ -3437,6 +3486,7 @@ function genderLabels(){ const ad = isAdult(); if(GLBL===ad) return; GLBL = ad;
     it.nl = ad ? it.nl.replace(' (tegen een meisje)',' (tegen een vrouw)').replace(' (meisje)',' (vrouw)') : it.nl.replace(' (tegen een vrouw)',' (tegen een meisje)').replace(' (vrouw)',' (meisje)'); }); }
 function render(){
   genderLabels();
+  if(L && !L._w && S.screen==='lesson'){ L._w = 1; try{ warmMany(lessonAudioIds(L), true); }catch(e){} }
   const app = $('#app');
   const scr = S.screen;
   if(scr!=='splash' && scr!=='auth' && scr!=='loading' && AUTH.ready && !AUTH.user){ S.screen='auth'; return render(); }
