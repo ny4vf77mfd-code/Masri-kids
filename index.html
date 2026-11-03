@@ -1,0 +1,2010 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Masri Kids</title>
+<meta name="description" content="Leer Egyptisch Arabisch met Mishmish de kat. Voor kinderen van 4 tot 9 jaar (en hun ouders).">
+<meta name="theme-color" content="#14A99F">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Masri Kids">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;600;700;800&family=Nunito:wght@500;700;800;900&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0} [hidden]{display:none!important} img{max-width:100%}
+/* Layout: één telefoonkolom; het leerpad slingert als de Nijl langs ronde lesknoppen.
+   Bewust één lichte, zonnige look (kinderapp), daarom geen donkere variant. */
+:root{
+  --sand:#FFF5E1;      /* woestijnzand, achtergrond */
+  --sand-2:#F7E3BC;
+  --nile:#14A99F;      /* Nijl / faience-turquoise */
+  --nile-d:#0B7D76;
+  --lapis:#28367C;     /* lapis lazuli, tekst */
+  --sun:#FFC43D;
+  --sun-d:#DB9300;
+  --coral:#FF6F59;
+  --coral-d:#D24A35;
+  --ok:#3DBB5C; --ok-d:#2A9246; --ok-bg:#E3F8E8;
+  --try:#FF9F1C; --try-d:#D97E00; --try-bg:#FFF0D9;
+  --card:#FFFFFF;
+  --line:#EBDDC0;
+  --muted:#6E6A86;
+  --grey:#D9D3C4; --grey-d:#B8B0A0;
+  --f-display:"Baloo Bhaijaan 2","Nunito",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-ar:"Baloo Bhaijaan 2","Geeza Pro","Noto Naskh Arabic",Tahoma,sans-serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--sand);color:var(--lapis);font-family:var(--f-body);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent;}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:50;background:var(--sand)}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--sun);outline-offset:3px}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.1;text-wrap:balance}
+p{margin:0}
+.ar{font-family:var(--f-ar);direction:rtl;unicode-bidi:isolate}
+
+#app{max-width:560px;margin:0 auto;min-height:100%;position:relative;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 110px}
+#app.full{padding-bottom:16px}
+
+/* ---------- knoppen ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:56px;padding:0 26px;border-radius:999px;
+  font-family:var(--f-display);font-weight:800;font-size:20px;letter-spacing:.02em;color:#fff;background:var(--nile);
+  box-shadow:0 5px 0 var(--nile-d);transition:transform .08s, box-shadow .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--nile-d)}
+.btn.sun{background:var(--sun);color:var(--lapis);box-shadow:0 5px 0 var(--sun-d)}
+.btn.coral{background:var(--coral);box-shadow:0 5px 0 var(--coral-d)}
+.btn.ok{background:var(--ok);box-shadow:0 5px 0 var(--ok-d)}
+.btn.try{background:var(--try);box-shadow:0 5px 0 var(--try-d)}
+.btn.ghost{background:var(--card);color:var(--lapis);box-shadow:0 5px 0 var(--line);border:2px solid var(--line)}
+.btn[disabled]{background:var(--grey);color:#fff;box-shadow:0 5px 0 var(--grey-d);cursor:default}
+.btn.wide{width:100%}
+.link{font-weight:800;color:var(--nile-d);text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- mascotte ---------- */
+.mascot{display:block}
+.bob{animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px)}}
+
+/* ---------- splash ---------- */
+.splash{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;padding-top:28px}
+.splash h1{font-size:52px;font-weight:800;color:var(--lapis);letter-spacing:-.01em}
+.splash h1 span{color:var(--nile)}
+.splash .ar-title{font-size:34px;color:var(--coral);font-weight:800;margin-top:-10px}
+.splash .lead{font-size:18px;max-width:30ch;color:var(--muted);font-weight:700}
+.sun-disc{position:relative;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle at 50% 45%,#FFE08A 0 55%,var(--sun) 56% 100%);display:grid;place-items:center}
+.sun-disc::after{content:"";position:absolute;left:-30px;right:-30px;bottom:-6px;height:60px;
+  background:linear-gradient(var(--sand-2),var(--sand-2)) bottom/100% 22px no-repeat,
+  conic-gradient(from 135deg at 30% 100%, transparent 0 90deg, transparent 90deg) ;}
+.pyr{position:absolute;bottom:0;width:100%;height:70px;pointer-events:none}
+.splash .feat{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--card);border:2px solid var(--line);font-weight:800;font-size:14px}
+
+/* ---------- profielen ---------- */
+.ptitle{text-align:center;font-size:32px;margin:12px 0 4px}
+.psub{text-align:center;color:var(--muted);font-weight:700;margin-bottom:20px}
+.profiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:14px}
+.pcard{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px 14px;border-radius:24px;background:var(--card);border:2px solid var(--line);box-shadow:0 5px 0 var(--line);transition:transform .08s}
+.pcard:active{transform:translateY(4px);box-shadow:0 1px 0 var(--line)}
+.pav{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;font-size:44px;background:var(--sand)}
+.pname{font-family:var(--f-display);font-weight:800;font-size:22px;max-width:100%;overflow-wrap:anywhere}
+.plvl{font-size:13px;font-weight:800;color:var(--muted)}
+.pcard.add{border-style:dashed;color:var(--nile-d)}
+.pcard.add .pav{background:#E2F6F4;font-size:40px;font-weight:800}
+.empty-note{grid-column:1/-1;text-align:center;padding:12px;color:var(--muted);font-weight:700}
+
+.form{display:flex;flex-direction:column;gap:18px;background:var(--card);border:2px solid var(--line);border-radius:28px;padding:20px}
+.form label.lb{font-weight:900;font-size:15px;display:block;margin-bottom:8px}
+.inp{width:100%;min-height:52px;border-radius:16px;border:2px solid var(--line);padding:0 16px;font:inherit;font-size:20px;font-weight:800;color:var(--lapis);background:var(--sand)}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg button{min-width:52px;min-height:52px;padding:0 14px;border-radius:16px;border:2px solid var(--line);background:var(--sand);font-weight:900;font-size:18px}
+.seg button.on{background:var(--nile);border-color:var(--nile-d);color:#fff}
+.seg.av button{font-size:30px;padding:0 8px}
+.hint{font-size:13px;color:var(--muted);font-weight:700;margin-top:6px}
+
+/* ---------- topbalk ---------- */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--sand);display:flex;align-items:center;gap:10px;padding:6px 0 10px}
+.topbar .me{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:800;font-size:18px;min-width:0}
+.topbar .me .pav{width:44px;height:44px;font-size:26px;background:var(--card);border:2px solid var(--line)}
+.topbar .me span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stats{margin-left:auto;display:flex;gap:6px}
+.stat{display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:999px;background:var(--card);border:2px solid var(--line);font-weight:900;font-size:15px;font-variant-numeric:tabular-nums}
+
+/* ---------- dagelijkse uitdaging ---------- */
+.daily{display:flex;gap:14px;align-items:center;padding:14px 16px;border-radius:24px;background:var(--lapis);color:#fff;margin-bottom:18px}
+.daily .ic{flex:none;width:52px;height:52px;border-radius:16px;background:var(--sun);display:grid;place-items:center;font-size:28px}
+.daily .tx{flex:1;min-width:0}
+.daily .k{font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--sun)}
+.daily .t{font-weight:900;font-size:17px}
+.bar{height:12px;border-radius:999px;background:rgba(255,255,255,.2);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;border-radius:999px;background:var(--sun);transition:width .4s}
+.welcome{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:12px 16px;margin-bottom:14px;font-weight:800;display:flex;gap:12px;align-items:center}
+
+/* ---------- werelden & leerpad ---------- */
+.world{margin-bottom:26px}
+.wband{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 18px;border-radius:24px;background:var(--wc);color:#fff;box-shadow:0 5px 0 var(--wcd)}
+.wband .wnum{font-size:12px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;opacity:.9}
+.wband h2{font-size:28px;font-weight:800}
+.wband p{font-weight:700;font-size:14px;opacity:.95}
+.wband .wemoji{font-size:44px;flex:none}
+.wband .wprog{font-size:13px;font-weight:900;margin-top:4px;opacity:.95}
+.path{position:relative;display:flex;flex-direction:column;align-items:center;gap:18px;padding:22px 0 6px}
+.path::before{content:"";position:absolute;top:10px;bottom:10px;left:50%;width:0;border-left:6px dotted color-mix(in srgb,var(--wc) 35%,transparent);transform:translateX(-50%)}
+.node-row{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;transform:translateX(var(--x));z-index:1}
+.node{width:78px;height:74px;border-radius:50%;display:grid;place-items:center;font-size:34px;background:var(--wc);box-shadow:0 7px 0 var(--wcd);transition:transform .08s}
+.node:active{transform:translateY(5px);box-shadow:0 2px 0 var(--wcd)}
+.node.locked{background:var(--grey);box-shadow:0 7px 0 var(--grey-d);cursor:default;filter:saturate(.2)}
+.node.locked:active{transform:none;box-shadow:0 7px 0 var(--grey-d)}
+.node.cur{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{outline:0 solid color-mix(in srgb,var(--wc) 40%,transparent)}50%{outline:10px solid color-mix(in srgb,var(--wc) 25%,transparent)}}
+.nlabel{font-weight:900;font-size:14px;background:var(--sand);padding:0 6px;border-radius:8px;text-align:center;max-width:150px}
+.nstars{display:flex;gap:2px}
+.startbub{position:absolute;top:-30px;background:var(--card);color:var(--wcd);border:2px solid var(--line);font-weight:900;font-size:13px;letter-spacing:.08em;padding:2px 12px;border-radius:12px;animation:bob 1.6s ease-in-out infinite;white-space:nowrap}
+.wlock{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:8px;padding:10px 14px;border-radius:16px;background:var(--card);border:2px dashed var(--line);font-weight:800;font-size:14px;color:var(--muted);text-align:center}
+.soon h3{font-size:22px;margin:6px 0 10px}
+.soon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.soon-card{display:flex;gap:10px;align-items:center;padding:12px;border-radius:18px;background:var(--card);border:2px solid var(--line);font-weight:800;font-size:14px;opacity:.85}
+.soon-card .e{font-size:28px;filter:grayscale(.3)}
+.soon-card small{display:block;color:var(--muted);font-size:12px}
+
+/* ---------- onderbalk ---------- */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--card);border-top:2px solid var(--line);
+  padding:6px max(10px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
+.nav-in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.nav button{display:flex;flex-direction:column;align-items:center;gap:0;padding:6px 0;border-radius:16px;font-weight:900;font-size:12px;color:var(--muted)}
+.nav button .e{font-size:26px;line-height:1.1}
+.nav button.on{background:#E2F6F4;color:var(--nile-d);outline:2px solid #BFEAE6}
+
+/* ---------- les ---------- */
+.lesson{display:flex;flex-direction:column;min-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 28px)}
+.lbar{display:flex;align-items:center;gap:12px;padding:4px 0 14px}
+.xbtn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:28px;font-weight:900;color:var(--muted)}
+.pbar{flex:1;height:18px;border-radius:999px;background:var(--sand-2);overflow:hidden}
+.pbar i{display:block;height:100%;border-radius:999px;background:linear-gradient(var(--ok),var(--ok)) ;box-shadow:inset 0 -5px 0 rgba(0,0,0,.08), inset 0 4px 0 rgba(255,255,255,.35);transition:width .35s}
+.lxp{font-weight:900;font-variant-numeric:tabular-nums;color:var(--sun-d)}
+.ex{flex:1;display:flex;flex-direction:column;gap:16px}
+.ex-k{font-family:var(--f-display);font-size:26px;font-weight:800}
+.ex-k small{display:block;font-family:var(--f-body);font-size:14px;color:var(--muted);font-weight:800}
+.bubble-row{display:flex;align-items:flex-end;gap:10px}
+.bubble{position:relative;background:var(--card);border:2px solid var(--line);border-radius:20px;padding:12px 16px;font-weight:800;flex:1;min-width:0}
+.bubble::before{content:"";position:absolute;left:-10px;bottom:16px;width:16px;height:16px;background:var(--card);border-left:2px solid var(--line);border-bottom:2px solid var(--line);transform:rotate(45deg)}
+
+.wordcard{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:22px 16px;border-radius:28px;background:var(--card);border:2px solid var(--line);box-shadow:0 5px 0 var(--line)}
+.wordcard .pic{font-size:80px;line-height:1}
+.wordcard .ar{font-size:44px;font-weight:800;line-height:1.3}
+.wordcard .ph{font-size:24px;font-weight:900;color:var(--nile-d)}
+.wordcard .nl{font-size:18px;font-weight:800;color:var(--muted)}
+.tip{font-size:14px;font-weight:700;color:var(--muted);background:var(--sand);border-radius:12px;padding:6px 10px}
+
+.prompt{display:flex;align-items:center;gap:16px;padding:14px 16px;border-radius:24px;background:var(--card);border:2px solid var(--line)}
+.prompt .ar{font-size:32px;font-weight:800;line-height:1.3}
+.prompt .ph{font-size:20px;font-weight:900;color:var(--nile-d)}
+.prompt .pic{font-size:54px;line-height:1}
+.prompt .nl{font-size:24px;font-weight:900}
+.prompt .meta{min-width:0}
+
+.play{flex:none;width:64px;height:64px;border-radius:20px;display:grid;place-items:center;background:var(--nile);color:#fff;box-shadow:0 5px 0 var(--nile-d);transition:transform .08s}
+.play:active{transform:translateY(4px);box-shadow:0 1px 0 var(--nile-d)}
+.play.big{width:84px;height:84px;border-radius:26px}
+.play.sm{width:42px;height:42px;border-radius:14px;box-shadow:0 3px 0 var(--nile-d)}
+.play.noaudio{background:var(--card);color:var(--muted);border:3px dashed var(--grey-d);box-shadow:none}
+.play.tts{background:#E9E6F6;color:var(--lapis);box-shadow:0 5px 0 #C9C3E6}
+.play svg{width:55%;height:55%}
+.play.playing{animation:wob .5s ease-in-out 2}
+@keyframes wob{50%{transform:scale(1.1)}}
+.playwrap{display:flex;flex-direction:column;align-items:center;gap:4px}
+.atag{font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.list1{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:14px 10px;border-radius:22px;background:var(--card);border:3px solid var(--line);box-shadow:0 5px 0 var(--line);min-height:120px;transition:transform .08s}
+.opt:active{transform:translateY(3px);box-shadow:0 2px 0 var(--line)}
+.opt .pic{font-size:56px;line-height:1}
+.opt .lbl{font-weight:900;font-size:16px}
+.opt.row{flex-direction:row;justify-content:space-between;min-height:68px;padding:10px 18px}
+.opt.row .ph{font-size:20px;font-weight:900}
+.opt.row .ar{font-size:26px;font-weight:800}
+.opt.sel{border-color:var(--nile);background:#E2F6F4;box-shadow:0 5px 0 var(--nile)}
+.opt.right{border-color:var(--ok);background:var(--ok-bg);box-shadow:0 5px 0 var(--ok)}
+.opt.wrong{border-color:var(--try);background:var(--try-bg);box-shadow:0 5px 0 var(--try)}
+
+.answer-line{min-height:76px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;padding:10px 0;border-bottom:3px solid var(--line);border-top:3px solid var(--line)}
+.bank{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding-top:6px}
+.tile{display:flex;flex-direction:column;align-items:center;padding:8px 14px;border-radius:16px;background:var(--card);border:2px solid var(--line);box-shadow:0 4px 0 var(--line);font-weight:900;font-size:18px}
+.tile .ar{font-size:16px;font-weight:700;color:var(--muted)}
+.tile.used{visibility:hidden}
+
+.memgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:420px){.memgrid{grid-template-columns:repeat(3,1fr)}}
+.mcard{display:block;position:relative;width:100%;height:0;padding:0 0 130% 0;border-radius:18px;-webkit-perspective:600px;perspective:600px}
+.mcard .in{display:block;position:absolute;inset:0;transition:transform .35s;-webkit-transform-style:preserve-3d;transform-style:preserve-3d}
+.mcard.open .in,.mcard.matched .in{-webkit-transform:rotateY(180deg);transform:rotateY(180deg)}
+.mcard .f,.mcard .b{position:absolute;inset:0;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;-webkit-backface-visibility:hidden;backface-visibility:hidden;padding:4px;text-align:center;transform:rotateY(0deg)}
+.mcard .f{background:var(--coral);box-shadow:0 5px 0 var(--coral-d);color:#fff;font-size:30px}
+.mcard .f::after{content:"";position:absolute;inset:8px;border:2px dashed rgba(255,255,255,.55);border-radius:12px}
+.mcard .b{background:var(--card);border:3px solid var(--line);-webkit-transform:rotateY(180deg);transform:rotateY(180deg)}
+.mcard .b .pic{font-size:40px;line-height:1}
+.mcard .b .ph{font-weight:900;font-size:15px;line-height:1.15;overflow-wrap:anywhere}
+.mcard .b .ar{font-size:16px;color:var(--muted)}
+.mcard.matched .b{border-color:var(--ok);background:var(--ok-bg)}
+
+.saycard .say-ic{font-size:40px}
+
+.lfoot{margin:16px calc(-1 * max(16px,env(safe-area-inset-left,0px))) 0;padding:16px max(16px,env(safe-area-inset-left,0px)) calc(16px + env(safe-area-inset-bottom,0px));border-top:2px solid var(--line);display:flex;flex-direction:column;gap:12px;position:sticky;bottom:0;background:var(--sand)}
+.lfoot.ok{background:var(--ok-bg);border-color:#BFE8C9}
+.lfoot.bad{background:var(--try-bg);border-color:#FFD9A3}
+.fb{display:flex;align-items:center;gap:12px}
+.fb .big{font-family:var(--f-display);font-size:26px;font-weight:800}
+.lfoot.ok .big{color:var(--ok-d)} .lfoot.bad .big{color:var(--try-d)}
+.fb .sm{font-weight:800;font-size:15px}
+.fb-ic{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:28px;background:#fff}
+.pop{animation:pop .35s ease-out}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+
+/* ---------- les klaar ---------- */
+.done-scr{display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;padding-top:20px}
+.done-scr h1{font-size:40px}
+.bigstars{display:flex;gap:8px;align-items:flex-end}
+.bigstars svg{width:70px;height:70px}
+.bigstars svg:nth-child(2){width:88px;height:88px}
+.bigstars .s{animation:pop .45s ease-out both}
+.bigstars .s:nth-child(2){animation-delay:.2s}.bigstars .s:nth-child(3){animation-delay:.4s}
+.rewards{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.rw{min-width:120px;padding:10px 14px;border-radius:18px;background:var(--card);border:2px solid var(--line);font-weight:900}
+.rw b{display:block;font-family:var(--f-display);font-size:28px;color:var(--sun-d)}
+.sticker-reveal{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 22px;border-radius:26px;background:var(--lapis);color:#fff;animation:pop .5s .6s both}
+.sticker-reveal .k{font-size:12px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--sun)}
+.stk{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;font-size:52px;background:var(--sun);border:5px solid #fff;box-shadow:0 4px 0 rgba(0,0,0,.15)}
+.stk svg{width:60%;height:60%}
+.extra-msg{font-weight:900;padding:10px 14px;border-radius:16px;background:var(--try-bg);color:var(--lapis)}
+
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:100;overflow:hidden}
+#confetti i{position:absolute;top:-20px;width:10px;height:16px;border-radius:3px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+
+/* ---------- stickers & woorden ---------- */
+.page-h{font-size:32px;margin:6px 0 4px}
+.page-sub{color:var(--muted);font-weight:700;margin-bottom:16px}
+.stk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:14px}
+.stk-item{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-weight:900;font-size:13px}
+.stk-item .stk{width:84px;height:84px;font-size:44px}
+.stk-item.locked .stk{background:var(--sand-2);border-color:var(--card);color:var(--grey-d);font-family:var(--f-display);font-size:36px}
+.stk-item.locked span{color:var(--muted)}
+.wgroup h2{font-size:22px;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+.wlist{display:flex;flex-direction:column;gap:8px}
+.wrow{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:18px;background:var(--card);border:2px solid var(--line)}
+.wrow .pic{font-size:32px;width:40px;text-align:center;flex:none}
+.wrow .mid{flex:1;min-width:0}
+.wrow .ph{font-weight:900;font-size:17px}
+.wrow .nl{font-size:14px;font-weight:700;color:var(--muted)}
+.wrow .ar{font-size:22px;font-weight:700}
+.wrow.unseen{opacity:.5}
+.badge{font-size:11px;font-weight:900;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok-d);white-space:nowrap}
+.badge.new{background:var(--sand-2);color:var(--muted)}
+.badge.warn{background:var(--try-bg);color:var(--try-d)}
+
+/* ---------- ouders ---------- */
+.gate{display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;padding-top:30px}
+.gate .q{font-family:var(--f-display);font-size:40px;font-weight:800}
+.gate .seg button{min-width:72px;min-height:64px;font-size:24px}
+.ptabs{display:flex;gap:8px;margin:6px 0 16px;overflow-x:auto}
+.ptabs button{padding:10px 16px;border-radius:999px;font-weight:900;background:var(--card);border:2px solid var(--line);white-space:nowrap}
+.ptabs button.on{background:var(--lapis);border-color:var(--lapis);color:#fff}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:24px;padding:16px;margin-bottom:14px}
+.panel h3{font-size:20px;margin-bottom:10px}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:460px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile-n{padding:10px;border-radius:16px;background:var(--sand)}
+.tile-n b{display:block;font-family:var(--f-display);font-size:28px;font-variant-numeric:tabular-nums;line-height:1.1}
+.tile-n span{font-size:12px;font-weight:800;color:var(--muted)}
+.prog-row{display:grid;grid-template-columns:minmax(0,1fr) 2fr auto;gap:10px;align-items:center;font-weight:800;font-size:14px;margin-bottom:8px}
+.prog-row .pb{height:12px;border-radius:999px;background:var(--sand-2);overflow:hidden}
+.prog-row .pb i{display:block;height:100%;background:var(--nile);border-radius:999px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.muted{color:var(--muted);font-weight:700;font-size:14px}
+.setrow{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.setrow > label{font-weight:900;font-size:14px}
+.switch{display:flex;align-items:center;gap:12px;font-weight:800;cursor:pointer}
+.switch input{width:52px;height:30px;appearance:none;border-radius:999px;background:var(--grey);position:relative;cursor:pointer;flex:none;transition:background .2s}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .2s}
+.switch input:checked{background:var(--nile)}
+.switch input:checked::after{left:25px}
+.arow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.arow:last-child{border-bottom:0}
+.arow .ar{font-size:22px;font-weight:700}
+.arow .ph{font-weight:900}
+.arow .nl{font-size:13px;color:var(--muted);font-weight:700}
+.arow .acts{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.mini{display:inline-flex;align-items:center;gap:4px;padding:6px 10px;border-radius:12px;border:2px solid var(--line);background:var(--sand);font-weight:900;font-size:13px;cursor:pointer;white-space:nowrap}
+.mini.danger{color:var(--coral-d)}
+.mini input{display:none}
+.mini.on{background:var(--ok-bg);border-color:#BFE8C9;color:var(--ok-d)}
+.key{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px;font-weight:700}
+.key b{font-family:var(--f-display);font-size:18px;color:var(--nile-d)}
+.danger-zone{border-color:#FFD0C7}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:90;background:var(--lapis);color:#fff;font-weight:800;padding:10px 18px;border-radius:16px;max-width:min(90vw,440px);text-align:center;animation:pop .25s ease-out}
+.sheet-bg{position:fixed;inset:0;z-index:80;background:rgba(40,54,124,.45);display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:560px;background:var(--sand);border-radius:28px 28px 0 0;padding:22px max(16px,env(safe-area-inset-left,0px)) calc(22px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:12px;text-align:center;animation:pop .25s}
+.sheet h3{font-size:26px}
+
+.status{font-weight:800;font-size:14px;padding:10px 12px;border-radius:14px;background:var(--sand);margin-bottom:12px}
+.status.on{background:#E2F6F4;color:var(--nile-d)}
+.steps{margin:0 0 14px;padding-left:22px;display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:15px}
+.brow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.bmid{min-width:0;display:flex;flex-direction:column;gap:4px}
+.fname{font-size:13px;font-weight:800;color:var(--muted);overflow-wrap:anywhere}
+.inp.sel{min-height:44px;font-size:15px;padding:0 10px}
+.brow-actions{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.pen-card{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px;border-radius:24px;margin-bottom:18px;color:#fff;
+  background:repeating-linear-gradient(90deg,#3DBB5C 0 28px,#35AB52 28px 56px);box-shadow:0 5px 0 #1C7537}
+.pen-card:active{transform:translateY(4px);box-shadow:0 1px 0 #1C7537}
+.pen-card .ic{flex:none;width:56px;height:56px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:34px}
+.pen-card b{display:block;font-family:var(--f-display);font-size:22px;line-height:1.1}
+.pen-card span{font-weight:800;font-size:14px}
+.pitch{position:relative;width:100%;max-width:100%;aspect-ratio:16/11;border-radius:24px;overflow:hidden;
+  background:repeating-linear-gradient(90deg,#3DBB5C 0 12.5%,#35AB52 12.5% 25%)}
+.stands{position:absolute;left:0;right:0;top:0;height:20%;background:
+  radial-gradient(circle,#FFC43D 2.5px,transparent 3.5px) 0 0/16px 13px,
+  radial-gradient(circle,#FF6F59 2.5px,transparent 3.5px) 8px 6px/16px 13px,#28367C}
+.stands::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:#fff;opacity:.6}
+.goal{position:absolute;left:14%;right:14%;top:22%;height:44%;border:6px solid #fff;border-bottom:0;border-radius:6px 6px 0 0;
+  background:repeating-linear-gradient(45deg,rgba(255,255,255,.35) 0 2px,transparent 2px 12px),repeating-linear-gradient(-45deg,rgba(255,255,255,.35) 0 2px,transparent 2px 12px),rgba(0,0,0,.1)}
+.boxline{position:absolute;left:4%;right:4%;top:66%;height:3px;background:rgba(255,255,255,.75)}
+.spot{position:absolute;left:50%;top:86%;width:10px;height:10px;border-radius:50%;background:#fff;transform:translate(-50%,-50%)}
+.keeper{position:absolute;left:50%;top:33%;width:20%;height:34%;transform:translateX(-50%);transition:left .45s cubic-bezier(.3,.7,.4,1),transform .45s}
+.keeper svg{width:100%;height:100%;display:block}
+.ball{position:absolute;left:50%;top:84%;font-size:clamp(28px,8vw,42px);line-height:1;transform:translate(-50%,-50%);transition:left .5s cubic-bezier(.2,.8,.3,1),top .5s cubic-bezier(.2,.8,.3,1),transform .5s;z-index:2}
+.callout{position:absolute;left:0;right:0;top:4%;text-align:center;font-family:var(--f-display);font-weight:800;font-size:clamp(30px,9vw,46px);color:#fff;
+  text-shadow:0 3px 0 rgba(0,0,0,.3);opacity:0;transform:scale(.5);transition:opacity .25s,transform .3s;z-index:3}
+.callout.show{opacity:1;transform:scale(1)}
+.callout small{display:block;font-family:var(--f-body);font-size:15px;font-weight:900}
+.shots{display:flex;gap:6px;flex:1;justify-content:center}
+.shots i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:16px;background:var(--sand-2);border:2px solid var(--line)}
+.shots i.g{background:var(--ok-bg);border-color:var(--ok)} .shots i.s{background:var(--try-bg);border-color:var(--try)}
+.pen-q{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.pen-fb{display:none}
+.pen-fb.show{display:flex;flex-direction:column;gap:10px}
+/* ================= moderne look (overschrijft de basis hierboven) ================= */
+:root{
+  --sand:#F3F5FA; --sand-2:#E7EBF4; --line:#E4E8F1; --grey:#D5DAE5; --grey-d:#B4BCCC; --muted:#6A6F8C;
+  --shadow:0 10px 30px rgba(40,54,124,.10), 0 2px 6px rgba(40,54,124,.06);
+  --shadow-sm:0 4px 14px rgba(40,54,124,.08);
+}
+body{background:
+  radial-gradient(120% 60% at 0% 0%, rgba(20,169,159,.14), transparent 60%),
+  radial-gradient(90% 50% at 100% 10%, rgba(255,196,61,.16), transparent 60%),
+  var(--sand);background-attachment:fixed}
+body::before{background:rgba(243,245,250,.9)}
+/* knoppen: zachter, met kleurverloop */
+.btn{border-radius:20px;box-shadow:0 4px 0 var(--nile-d),0 10px 22px rgba(11,125,118,.25);background:linear-gradient(180deg,#1DBDB2,var(--nile))}
+.btn.sun{background:linear-gradient(180deg,#FFD15C,var(--sun));box-shadow:0 4px 0 var(--sun-d),0 10px 22px rgba(219,147,0,.25)}
+.btn.ok{background:linear-gradient(180deg,#4FCB6C,var(--ok));box-shadow:0 4px 0 var(--ok-d),0 10px 22px rgba(42,146,70,.25)}
+.btn.try{background:linear-gradient(180deg,#FFB03F,var(--try));box-shadow:0 4px 0 var(--try-d),0 10px 22px rgba(217,126,0,.22)}
+.btn.ghost{background:#fff;border:0;box-shadow:var(--shadow-sm)}
+.btn[disabled]{background:var(--grey);box-shadow:none}
+/* kaarten: wit, geen harde randen, zachte schaduw */
+.pcard,.form,.prompt,.wordcard,.opt,.tile,.wrow,.panel,.soon-card,.welcome,.bubble,.rw,.stat{border-color:transparent;box-shadow:var(--shadow-sm);background:#fff}
+.pcard:active{box-shadow:var(--shadow-sm)}
+.wordcard,.prompt,.panel,.form{box-shadow:var(--shadow);border-radius:28px}
+.bubble::before{border-color:transparent;box-shadow:-2px 2px 4px rgba(40,54,124,.05)}
+.inp,.seg button{background:var(--sand);border-color:transparent}
+.seg button.on{background:linear-gradient(180deg,#1DBDB2,var(--nile));border-color:transparent;box-shadow:0 6px 14px rgba(11,125,118,.25)}
+/* topbalk: glas */
+.topbar{background:rgba(243,245,250,.82);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:8px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px))}
+.topbar .me .pav{border:0;box-shadow:var(--shadow-sm)}
+.stat{border:0;padding:6px 12px}
+/* dagelijkse uitdaging */
+.daily{border-radius:28px;padding:16px 18px;background:
+  radial-gradient(circle at 92% 20%, rgba(255,196,61,.35) 0 40px, transparent 41px),
+  linear-gradient(135deg,#2E3E8F,#1F2A63);box-shadow:0 14px 30px rgba(31,42,99,.28)}
+.daily .ic{border-radius:18px;box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.pen-card{border-radius:28px;box-shadow:0 14px 28px rgba(28,117,55,.28)}
+/* werelden */
+.wband{position:relative;overflow:hidden;border-radius:30px;padding:20px 20px;box-shadow:0 14px 30px color-mix(in srgb,var(--wcd) 40%,transparent);
+  background:radial-gradient(circle at 100% 0%, rgba(255,255,255,.22) 0 70px, transparent 71px),
+             radial-gradient(circle at 85% 120%, rgba(255,255,255,.14) 0 60px, transparent 61px),
+             linear-gradient(135deg,var(--wc),var(--wcd))}
+.wband .wemoji{width:72px;height:72px;border-radius:24px;display:grid;place-items:center;background:rgba(255,255,255,.22);font-size:42px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.wband h2{font-size:30px}
+.wband .wprog{display:inline-block;margin-top:8px;padding:2px 10px;border-radius:999px;background:rgba(255,255,255,.22)}
+.path::before{border-left:5px dashed color-mix(in srgb,var(--wc) 30%,transparent)}
+.node{width:84px;height:84px;font-size:36px;background:radial-gradient(circle at 35% 28%, rgba(255,255,255,.45), transparent 45%),linear-gradient(160deg,var(--wc),var(--wcd));
+  box-shadow:0 6px 0 var(--wcd),0 14px 26px color-mix(in srgb,var(--wcd) 35%,transparent);border:4px solid #fff}
+.node.locked{background:var(--grey);box-shadow:0 6px 0 var(--grey-d);filter:none;opacity:.8}
+.nlabel{background:#fff;padding:2px 10px;border-radius:999px;box-shadow:var(--shadow-sm)}
+.startbub{border:0;box-shadow:var(--shadow-sm);color:var(--wcd)}
+.wlock{border:0;background:#fff;box-shadow:var(--shadow-sm)}
+/* zwevende menubalk */
+.nav{background:transparent;border:0;padding:0 max(14px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px))}
+.nav-in{max-width:520px;background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:26px;padding:6px;box-shadow:0 12px 32px rgba(40,54,124,.18)}
+.nav button{border-radius:20px}
+.nav button.on{background:linear-gradient(180deg,#E3F7F5,#D2F1EE);outline:0}
+/* les */
+.pbar{height:16px;background:var(--sand-2)}
+.pbar i{background:linear-gradient(90deg,#4FCB6C,#2BB673)}
+.opt{border:3px solid transparent;border-radius:24px}
+.opt.sel{border-color:var(--nile);background:#F0FBFA;box-shadow:0 8px 20px rgba(20,169,159,.18)}
+.opt.right{border-color:var(--ok);background:var(--ok-bg);box-shadow:0 8px 20px rgba(61,187,92,.18)}
+.opt.wrong{border-color:var(--try);background:var(--try-bg);box-shadow:0 8px 20px rgba(255,159,28,.18)}
+.play{border-radius:22px;background:linear-gradient(180deg,#1DBDB2,var(--nile));box-shadow:0 4px 0 var(--nile-d),0 8px 18px rgba(11,125,118,.25)}
+.play.noaudio{background:#fff;border:2px dashed var(--grey-d)}
+.answer-line{border-color:var(--line);border-width:2px}
+.mcard .f{background:linear-gradient(160deg,#FF8A6E,var(--coral));box-shadow:0 4px 0 var(--coral-d),0 8px 18px rgba(210,74,53,.25)}
+.mcard .b{border:0;box-shadow:var(--shadow-sm)}
+.mcard.matched .b{box-shadow:0 0 0 3px var(--ok) inset}
+.lfoot{background:rgba(243,245,250,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:0;box-shadow:0 -8px 24px rgba(40,54,124,.06);border-radius:26px 26px 0 0}
+.lfoot.ok{background:#E6F8EA}.lfoot.bad{background:#FFF2DE}
+.pitch{box-shadow:var(--shadow)}
+/* overig */
+.sticker-reveal{border-radius:30px;background:linear-gradient(135deg,#2E3E8F,#1F2A63);box-shadow:0 14px 30px rgba(31,42,99,.28)}
+.stk{box-shadow:0 8px 18px rgba(219,147,0,.3)}
+.ptabs button{border:0;box-shadow:var(--shadow-sm);background:#fff}
+.ptabs button.on{background:var(--lapis)}
+.tile-n{background:var(--sand);border-radius:18px}
+.chip{border:0;box-shadow:var(--shadow-sm)}
+.sun-disc{box-shadow:0 20px 50px rgba(255,196,61,.45)}
+.splash h1{font-size:56px}
+/* ---------- Mishmish beweegt ---------- */
+.mascot .m-all{transform-box:fill-box;transform-origin:50% 100%}
+.mascot .m-tail{transform-box:fill-box;transform-origin:0% 100%;animation:wag 1.1s ease-in-out infinite alternate}
+.mascot .m-eyes{transform-box:fill-box;transform-origin:center;animation:blink 4.2s infinite}
+.mascot .m-ears{transform-box:fill-box;transform-origin:50% 100%}
+.mascot .m-spark{opacity:0;transform-box:fill-box;transform-origin:center}
+@keyframes wag{from{transform:rotate(-10deg)}to{transform:rotate(12deg)}}
+@keyframes blink{0%,45%,49%,100%{transform:scaleY(1)}47%{transform:scaleY(.1)}}
+.mascot.m-cheer .m-all{animation:jump .55s cubic-bezier(.3,.7,.4,1.4) 2}
+.mascot.m-cheer .m-spark,.mascot.m-dance .m-spark{animation:spark 1.1s ease-out infinite}
+.mascot.m-cheer .m-eyes{animation:none}
+.mascot.m-encourage .m-all{animation:nod 1.1s ease-in-out 2}
+.mascot.m-dance .m-all{animation:dance .9s ease-in-out infinite}
+.mascot.m-peek .m-ears{animation:ears 2.2s ease-in-out infinite}
+@keyframes jump{0%,100%{transform:translateY(0) scale(1)}45%{transform:translateY(-16px) scale(1.05,0.97)}}
+@keyframes nod{0%,100%{transform:rotate(0)}30%{transform:rotate(-7deg)}70%{transform:rotate(5deg)}}
+@keyframes dance{0%,100%{transform:rotate(0) translateY(0)}25%{transform:rotate(-9deg) translateY(-6px)}75%{transform:rotate(9deg) translateY(-6px)}}
+@keyframes ears{0%,80%,100%{transform:rotate(0)}88%{transform:rotate(-6deg)}94%{transform:rotate(5deg)}}
+@keyframes spark{0%{opacity:0;transform:scale(.4)}35%{opacity:1}100%{opacity:0;transform:scale(1.25)}}
+.fb .mascot{flex:none;margin:-14px 0 -6px}
+/* ---------- plaatjes in eigen stijl ---------- */
+.opt .pic,.wordcard .pic,.prompt .pic,.wrow .pic,.mcard .b .pic{display:grid;place-items:center;aspect-ratio:1;border-radius:32%;line-height:1;
+  background:radial-gradient(circle at 30% 22%,rgba(255,255,255,.95) 0 14%,transparent 50%),linear-gradient(160deg,#E2F7F4,#C4ECE7);
+  box-shadow:inset 0 -6px 0 rgba(11,125,118,.10)}
+.opt .pic{width:88px;font-size:52px}
+.wordcard .pic{width:140px;font-size:84px;animation:float 3s ease-in-out infinite}
+.prompt .pic{width:78px;font-size:46px;flex:none}
+.wrow .pic{width:48px;font-size:28px;border-radius:30%}
+.mcard .b .pic{width:76%;font-size:34px}
+.grid2 .opt:nth-child(2) .pic{background:radial-gradient(circle at 30% 22%,rgba(255,255,255,.95) 0 14%,transparent 50%),linear-gradient(160deg,#FFF3D1,#FFE09A);box-shadow:inset 0 -6px 0 rgba(219,147,0,.12)}
+.grid2 .opt:nth-child(3) .pic{background:radial-gradient(circle at 30% 22%,rgba(255,255,255,.95) 0 14%,transparent 50%),linear-gradient(160deg,#FFE6E0,#FFC6B9);box-shadow:inset 0 -6px 0 rgba(210,74,53,.12)}
+.grid2 .opt:nth-child(4) .pic{background:radial-gradient(circle at 30% 22%,rgba(255,255,255,.95) 0 14%,transparent 50%),linear-gradient(160deg,#E7EBFA,#C9D1F2);box-shadow:inset 0 -6px 0 rgba(40,54,124,.12)}
+.opt.sel .pic{transform:scale(1.06) rotate(-3deg);transition:transform .2s}
+.opt.right .pic{animation:jump .5s ease-out}
+@keyframes float{50%{transform:translateY(-6px) rotate(2deg)}}
+.lvl1 .opt .lbl{display:none}
+.lvl1 .opt{min-height:140px}
+.lvl1 .opt .pic{width:104px;font-size:62px}
+.lvl1 .ex-k{font-size:20px;opacity:.75}
+.lvl1 .ex-k small{display:none}
+.prompt.kid{justify-content:center;padding:20px}
+.prompt.kid .play.big{width:110px;height:110px;border-radius:34px}
+.parent-hint{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+.big-ic{font-size:34px;line-height:1}
+.helpbtn{flex:none;width:52px;height:52px;border-radius:50%;background:#fff;box-shadow:var(--shadow-sm);display:grid;place-items:center;overflow:visible}
+.helpbtn .mascot{margin-top:-4px}
+.pic img{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}
+.thumb{width:40px;height:40px;border-radius:12px;object-fit:cover;flex:none}
+/* ---------- online versie: inloggen, scorebord, duel, opnemen ---------- */
+.nav-in{grid-template-columns:repeat(5,1fr)}
+.nav button{font-size:11px}
+.status.err{background:#FFE9E4;color:var(--coral-d)}
+.auth{display:flex;flex-direction:column;gap:18px;padding-top:8px;max-width:440px;margin:0 auto}
+.auth-hero{display:flex;flex-direction:column;align-items:center;gap:4px}
+.auth-hero h1{font-size:40px}.auth-hero h1 span{color:var(--nile)}
+.auth-h{font-size:26px}
+.auth-links{display:flex;flex-direction:column;align-items:center;gap:12px}
+.consent{align-items:flex-start;font-size:14px;line-height:1.35}
+.consent input{margin-top:2px}
+.podium{display:flex;justify-content:center;align-items:flex-end;gap:10px;margin:8px 0 16px}
+.pod{flex:1;max-width:130px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;min-width:0}
+.pod .pav{width:58px;height:58px;font-size:34px;background:#fff;box-shadow:var(--shadow-sm)}
+.pod b{font-family:var(--f-display);font-size:17px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pstars{font-weight:900;font-size:14px}
+.pod .block{width:100%;border-radius:18px 18px 8px 8px;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:28px;color:#fff}
+.pod.p1 .block{height:96px;background:linear-gradient(180deg,#FFD15C,var(--sun-d))}
+.pod.p2 .block{height:70px;background:linear-gradient(180deg,#C9D1F2,#8E9AD0)}
+.pod.p3 .block{height:52px;background:linear-gradient(180deg,#FFC6B9,var(--coral))}
+.score-list{display:flex;flex-direction:column;gap:4px}
+.srow{display:grid;grid-template-columns:34px 48px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 6px;border-radius:16px}
+.srow.me{background:#F0FBFA}
+.srow .rank{font-weight:900;font-size:20px;text-align:center}
+.srow .pav{width:46px;height:46px;font-size:28px}
+.sname{display:flex;flex-direction:column;min-width:0}
+.sname b{font-family:var(--f-display);font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sname span{font-size:12px;font-weight:800;color:var(--muted)}
+.you{font-family:var(--f-body);font-size:11px;font-weight:900;background:var(--nile);color:#fff;border-radius:999px;padding:1px 7px;vertical-align:middle}
+.snums{display:flex;gap:8px;font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+@media (max-width:400px){.snums span:nth-child(3){display:none}}
+.opp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.opp-grid .pav{width:56px;height:56px;font-size:32px}
+.opp-grid .pname{font-size:18px}
+.duelbar{flex:1;display:flex;flex-direction:column;gap:4px;min-width:0}
+.drow{display:grid;grid-template-columns:30px minmax(0,70px) 1fr 24px;gap:6px;align-items:center;padding:3px 8px;border-radius:14px;opacity:.65}
+.drow.turn{opacity:1;background:#fff;box-shadow:var(--shadow-sm)}
+.dav{font-size:22px}
+.dname{font-weight:900;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dscore{font-family:var(--f-display);font-size:20px;text-align:right}
+.drow .shots{justify-content:flex-start;gap:3px}
+.drow .shots i{width:20px;height:20px;font-size:11px}
+.shots i.now{border-color:var(--nile);box-shadow:0 0 0 3px rgba(20,169,159,.2)}
+.turn-scr{padding-top:40px}
+.turn-av{width:140px;height:140px;border-radius:50%;display:grid;place-items:center;font-size:84px;background:#fff;box-shadow:var(--shadow);animation:jump .6s ease-out}
+.winner{display:flex;align-items:center;gap:8px;font-size:56px}
+.winner .pav{width:96px;height:96px;font-size:58px;background:#fff;box-shadow:var(--shadow)}
+.rec-panel .wordcard{box-shadow:none;background:var(--sand);margin-bottom:16px}
+.recbig{display:grid;place-items:center;width:104px;height:104px;margin:0 auto 10px;border-radius:50%;font-size:46px;color:#fff;
+  background:linear-gradient(180deg,#FF8A6E,var(--coral));box-shadow:0 6px 0 var(--coral-d),0 14px 28px rgba(210,74,53,.3)}
+.recbig.live{animation:recpulse 1s ease-in-out infinite;font-size:40px}
+.recbig[disabled]{opacity:.6}
+@keyframes recpulse{50%{box-shadow:0 6px 0 var(--coral-d),0 0 0 18px rgba(255,111,89,.25)}}
+.rec-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;align-items:center}
+.mini.rec-on{background:#FFE9E4;border-color:#FFC6B9;color:var(--coral-d);animation:recpulse 1s ease-in-out infinite}
+.mini[disabled]{opacity:.45;cursor:default}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+
+</head>
+<body>
+<div id="app"></div>
+<div id="confetti" aria-hidden="true"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+/* =====================================================================
+   MASRI KIDS – Egyptisch Arabisch voor kinderen (4–9 jaar)
+   ---------------------------------------------------------------------
+   INHOUD AANPASSEN? Alles wat je wilt uitbreiden staat in dit eerste blok:
+   WORDS (woorden), SENTENCES (zinnen), WORLDS (werelden + lessen),
+   STICKERS en AUDIO_FILES.
+
+   Spelling van de uitspraak (ph): Nederlandse klanken
+     ch = als in "lachen" (خ)      gh = Nederlandse g in "gaan" (غ)
+     g  = harde g, als in "goal" (ج) h  = hete h, als op een brilletje blazen (ح)
+     '  = klein stopje of keelklank (ء / ع / ق)
+     sj = als in "sjaal"   j = als in "jas"   oe = als in "boek"
+     aa/ee/ie = lange klinkers (maan / been / fiets)
+   Let op: alle vertalingen zijn een eerste versie. Laat ze controleren door
+   een native Egyptische spreker (in het ouderdashboard kun je ze afvinken).
+   ===================================================================== */
+
+// ---- Woorden. w = wereld (1,2,3). tip = optionele uitspraak-/gebruikstip.
+const WORDS = [
+  // Wereld 1 – Hallo Egypte
+  {id:'ahlan',   w:1, ar:'أهلاً',          ph:'ahlan',              nl:'hallo',            pic:'😊'},
+  {id:'salam',   w:1, ar:'السلام عليكم',  ph:"es-salaamoe 'aleekoem", nl:'hallo (vrede voor jou)', pic:'🤝'},
+  {id:'sabah',   w:1, ar:'صباح الخير',    ph:'sabaah el-cheer',    nl:'goedemorgen',      pic:'🌅', tip:'h = hete h, ch = als in "lachen"'},
+  {id:'masa',    w:1, ar:'مساء الخير',    ph:'masa el-cheer',      nl:'goedenavond',      pic:'🌆'},
+  {id:'tesbah',  w:1, ar:'تصبح على خير',  ph:"tesbah 'ala cheer",  nl:'welterusten',      pic:'🌙', tip:'Tegen een meisje: tesbahi \'ala cheer'},
+  {id:'bye',     w:1, ar:'مع السلامة',    ph:"ma'as-salaama",      nl:'doei!',            pic:'👋'},
+  {id:'shukran', w:1, ar:'شكراً',         ph:'sjoekran',           nl:'dank je wel',      pic:'💝'},
+  {id:'fadlak',  w:1, ar:'من فضلك',       ph:'men fadlak',         nl:'alsjeblieft',      pic:'🙏', tip:'Tegen een meisje: men fadlek'},
+  {id:'aywa',    w:1, ar:'أيوه',          ph:'ajwa',               nl:'ja',               pic:'👍'},
+  {id:'la',      w:1, ar:'لأ',            ph:"la'",                nl:'nee',              pic:'🙅'},
+  {id:'ana',     w:1, ar:'أنا',           ph:'ana',                nl:'ik',               pic:'🙋'},
+  {id:'enta',    w:1, ar:'إنت',           ph:'enta',               nl:'jij',              pic:'👉', tip:'Tegen een meisje: enti'},
+  {id:'ismi',    w:1, ar:'اسمي',          ph:'esmi',               nl:'ik heet',          pic:'📛'},
+  {id:'izzayak', w:1, ar:'إزيك',          ph:'ezzajjak',           nl:'hoe gaat het?',    pic:'🙂', tip:'Tegen een meisje: ezzajjek'},
+  {id:'kwayyes', w:1, ar:'كويس',          ph:'kwajjes',            nl:'goed',             pic:'😀', tip:'Een meisje zegt: kwajjesa'},
+  {id:'hamdu',   w:1, ar:'الحمد لله',     ph:'el-hamdoe lellaah',  nl:'goed, dank God',   pic:'✨'},
+  {id:'holanda', w:1, ar:'هولندا',        ph:'holanda',            nl:'Nederland',        pic:'🌷'},
+  {id:'masr',    w:1, ar:'مصر',           ph:'masr',               nl:'Egypte',           pic:'🏜️'},
+  // Wereld 2 – Mijn familie
+  {id:'mama',    w:2, ar:'ماما',          ph:'mama',               nl:'mama',             pic:'👩'},
+  {id:'baba',    w:2, ar:'بابا',          ph:'baba',               nl:'papa',             pic:'👨'},
+  {id:'akh',     w:2, ar:'أخ',            ph:'ach',                nl:'broer',            pic:'👦'},
+  {id:'ukht',    w:2, ar:'أخت',           ph:'oecht',              nl:'zus',              pic:'👧'},
+  {id:'teeta',   w:2, ar:'تيتة',          ph:'teeta',              nl:'oma',              pic:'👵'},
+  {id:'geddo',   w:2, ar:'جدو',           ph:'geddo',              nl:'opa',              pic:'👴', tip:'g = harde g, als in "goal"'},
+  {id:'beebi',   w:2, ar:'بيبي',          ph:'beebi',              nl:'baby',             pic:'👶'},
+  {id:'eela',    w:2, ar:'عيلة',          ph:"'eela",              nl:'familie',          pic:'🏡'},
+  {id:'walad',   w:2, ar:'ولد',           ph:'walad',              nl:'jongen',           pic:'🧒'},
+  {id:'bent',    w:2, ar:'بنت',           ph:'bent',               nl:'meisje',           pic:'🎀'},
+  {id:'khalo',   w:2, ar:'خالو',          ph:'chaalo',             nl:'oom (broer van mama)',  pic:'🧔'},
+  {id:'ammo',    w:2, ar:'عمو',           ph:"'ammo",              nl:'oom (broer van papa)',  pic:'👨‍🦱'},
+  {id:'khalto',  w:2, ar:'خالتو',         ph:'chaalto',            nl:'tante (zus van mama)',  pic:'👩‍🦰'},
+  {id:'ammeto',  w:2, ar:'عمتو',          ph:"'ammeto",            nl:'tante (zus van papa)',  pic:'👩‍🦱'},
+  {id:'beet',    w:2, ar:'بيت',           ph:'beet',               nl:'huis',             pic:'🏠'},
+  {id:'bahebbak',w:2, ar:'بحبك',          ph:'bahebbak',           nl:'ik hou van jou',   pic:'❤️', tip:'Tegen een meisje of mama: bahebbik'},
+  // Wereld 3 – Dieren
+  {id:'otta',    w:3, ar:'قطة',           ph:'otta',               nl:'kat',              pic:'🐱'},
+  {id:'kalb',    w:3, ar:'كلب',           ph:'kalb',               nl:'hond',             pic:'🐶'},
+  {id:'arnab',   w:3, ar:'أرنب',          ph:'arnab',              nl:'konijn',           pic:'🐰'},
+  {id:'samaka',  w:3, ar:'سمكة',          ph:'samaka',             nl:'vis',              pic:'🐟'},
+  {id:'hosaan',  w:3, ar:'حصان',          ph:'hoesaan',            nl:'paard',            pic:'🐴'},
+  {id:'baara',   w:3, ar:'بقرة',          ph:"ba'ara",             nl:'koe',              pic:'🐮'},
+  {id:'farkha',  w:3, ar:'فرخة',          ph:'farcha',             nl:'kip',              pic:'🐔'},
+  {id:'batta',   w:3, ar:'بطة',           ph:'batta',              nl:'eend',             pic:'🦆'},
+  {id:'kharoof', w:3, ar:'خروف',          ph:'charoef',            nl:'schaap',           pic:'🐑'},
+  {id:'gamal',   w:3, ar:'جمل',           ph:'gamal',              nl:'kameel',           pic:'🐫', tip:'g = harde g, als in "goal"'},
+  {id:'timsah',  w:3, ar:'تمساح',         ph:'temsaah',            nl:'krokodil',         pic:'🐊'},
+  {id:'asad',    w:3, ar:'أسد',           ph:'asad',               nl:'leeuw',            pic:'🦁'},
+  {id:'erd',     w:3, ar:'قرد',           ph:"'erd",               nl:'aap',              pic:'🐵'},
+  {id:'fiil',    w:3, ar:'فيل',           ph:'fiel',               nl:'olifant',          pic:'🐘'},
+  {id:'asfoora', w:3, ar:'عصفورة',        ph:"'asfoera",           nl:'vogeltje',         pic:'🐦'},
+  {id:'farasha', w:3, ar:'فراشة',         ph:'faraasja',           nl:'vlinder',          pic:'🦋'},
+  {id:'selahfa', w:3, ar:'سلحفة',         ph:'selahfa',            nl:'schildpad',        pic:'🐢'},
+  {id:'kebiir',  w:3, ar:'كبير',          ph:'kebier',             nl:'groot',            pic:'⬆️'},
+  {id:'soghayyar',w:3,ar:'صغير',          ph:'soeghajjar',         nl:'klein',            pic:'🐭', tip:'gh = Nederlandse g, als in "gaan"'},
+  // Wereld 4 – Voetbal! (bonuswereld)
+  {id:'kora',     w:4, ar:'كورة',        ph:'kora',              nl:'bal / voetbal',     pic:'⚽'},
+  {id:'goon',     w:4, ar:'جون',         ph:'goon',              nl:'goal!',             pic:'🥅', tip:'g = harde g, als in "goal"'},
+  {id:'shoot',    w:4, ar:'شوت',         ph:'sjoet',             nl:'schiet!',           pic:'🦵'},
+  {id:'yalla',    w:4, ar:'يلا',         ph:'jalla',             nl:'kom op!',           pic:'🏃'},
+  {id:'malab',    w:4, ar:'ملعب',        ph:"mal'ab",            nl:'voetbalveld',       pic:'🏟️'},
+  {id:'laeeb',    w:4, ar:'لعيب',        ph:"la'ieb",            nl:'speler',            pic:'👟'},
+  {id:'goolee',   w:4, ar:'جولي',        ph:'goolie',            nl:'keeper',            pic:'🧤', tip:'g = harde g, als in "goal"'},
+  {id:'hakam',    w:4, ar:'حكم',         ph:'hakam',             nl:'scheidsrechter',    pic:'🟨'},
+  {id:'matsh',    w:4, ar:'ماتش',        ph:'matsj',             nl:'wedstrijd',         pic:'⏱️'},
+  {id:'faree',    w:4, ar:'فريق',        ph:"faree'",            nl:'team',              pic:'👥'},
+  {id:'fanella',  w:4, ar:'فانلة',       ph:'fanella',           nl:'shirt',             pic:'👕'},
+  {id:'gomhoor',  w:4, ar:'جمهور',       ph:'gomhoer',           nl:'publiek',           pic:'📣'},
+  {id:'kesebna',  w:4, ar:'كسبنا',       ph:'kesebna',           nl:'we hebben gewonnen!', pic:'🏆'},
+  {id:'montakhab',w:4, ar:'منتخب مصر',   ph:'montachab masr',    nl:'het Egyptische elftal', pic:'🇪🇬'},
+];
+
+// ---- Zinnen. lesson = bij welke les de zin hoort. Arabisch en uitspraak
+//      moeten evenveel woorden hebben (gescheiden door spaties).
+const SENTENCES = [
+  {id:'s_ahlan_teeta', w:1, lesson:'w1l1', ar:'أهلاً يا تيتة',        ph:'ahlan ja teeta',        nl:'Hallo, oma!'},
+  {id:'s_sabah_mama',  w:1, lesson:'w1l2', ar:'صباح الخير يا ماما',  ph:'sabaah el-cheer ja mama', nl:'Goedemorgen, mama!'},
+  {id:'s_sabah_noor',  w:1, lesson:'w1l2', ar:'صباح النور',          ph:'sabaah en-noer',        nl:'Goedemorgen! (antwoord)'},
+  {id:'s_shukran_baba',w:1, lesson:'w1l2', ar:'شكراً يا بابا',        ph:'sjoekran ja baba',      nl:'Dank je wel, papa!'},
+  {id:'s_esmi',        w:1, lesson:'w1l3', ar:'اسمي سارة',           ph:'esmi Sara',             nl:'Ik heet Sara.'},
+  {id:'s_esmak',       w:1, lesson:'w1l3', ar:'اسمك إيه؟',           ph:'esmak eeh?',            nl:'Hoe heet jij? (tegen een jongen)'},
+  {id:'s_kwayyes',     w:1, lesson:'w1l4', ar:'أنا كويس',            ph:'ana kwajjes',           nl:'Het gaat goed met mij. (jongen)'},
+  {id:'s_kwayyesa',    w:1, lesson:'w1l4', ar:'أنا كويسة',           ph:'ana kwajjesa',          nl:'Het gaat goed met mij. (meisje)'},
+  {id:'s_izzayek',     w:1, lesson:'w1l4', ar:'إزيك يا تيتة؟',       ph:'ezzajjek ja teeta?',    nl:'Hoe gaat het, oma?'},
+  {id:'s_holanda',     w:1, lesson:'w1l4', ar:'أنا من هولندا',       ph:'ana men holanda',       nl:'Ik kom uit Nederland.'},
+  {id:'s_da_baba',     w:2, lesson:'w2l1', ar:'ده بابا',             ph:'da baba',               nl:'Dit is papa.'},
+  {id:'s_di_mama',     w:2, lesson:'w2l1', ar:'دي ماما',             ph:'di mama',               nl:'Dit is mama.'},
+  {id:'s_di_teeta',    w:2, lesson:'w2l2', ar:'دي تيتة',             ph:'di teeta',              nl:'Dit is oma.'},
+  {id:'s_feen_geddo',  w:2, lesson:'w2l2', ar:'فين جدو؟',            ph:'feen geddo?',           nl:'Waar is opa?'},
+  {id:'s_akhuya',      w:2, lesson:'w2l3', ar:'ده أخويا',            ph:'da achoeja',            nl:'Dit is mijn broer.'},
+  {id:'s_ukhti',       w:2, lesson:'w2l3', ar:'دي أختي',             ph:'di oechti',             nl:'Dit is mijn zus.'},
+  {id:'s_bahebbik',    w:2, lesson:'w2l3', ar:'بحبك يا ماما',        ph:'bahebbik ja mama',      nl:'Ik hou van jou, mama.'},
+  {id:'s_da_khalo',    w:2, lesson:'w2l4', ar:'ده خالو',             ph:'da chaalo',             nl:'Dit is mijn oom.'},
+  {id:'s_andi_akh',    w:2, lesson:'w2l4', ar:'عندي أخ',             ph:"'andi ach",             nl:'Ik heb een broer.'},
+  {id:'s_andi_ukht',   w:2, lesson:'w2l4', ar:'عندي أخت',            ph:"'andi oecht",           nl:'Ik heb een zus.'},
+  {id:'s_di_otta',     w:3, lesson:'w3l1', ar:'دي قطة',              ph:'di otta',               nl:'Dit is een kat.'},
+  {id:'s_da_kalb',     w:3, lesson:'w3l1', ar:'ده كلب',              ph:'da kalb',               nl:'Dit is een hond.'},
+  {id:'s_andi_otta',   w:3, lesson:'w3l1', ar:'عندي قطة',            ph:"'andi otta",            nl:'Ik heb een kat.'},
+  {id:'s_feen_otta',   w:3, lesson:'w3l2', ar:'فين القطة؟',          ph:'feen el-otta?',         nl:'Waar is de kat?'},
+  {id:'s_hosaan',      w:3, lesson:'w3l2', ar:'بحب الحصان',          ph:'bahebb el-hoesaan',     nl:'Ik hou van het paard.'},
+  {id:'s_gamal',       w:3, lesson:'w3l3', ar:'الجمل كبير',          ph:'el-gamal kebier',       nl:'De kameel is groot.'},
+  {id:'s_mjau',        w:3, lesson:'w3l3', ar:'القطة بتقول مياو',    ph:"el-otta bet'oel mjau",  nl:'De kat zegt miauw.'},
+  {id:'s_arnab',       w:3, lesson:'w3l4', ar:'الأرنب صغير',         ph:'el-arnab soeghajjar',   nl:'Het konijn is klein.'},
+  {id:'s_yalla_kora',  w:4, lesson:'w4l1', ar:'يلا نلعب كورة',       ph:"jalla nel'ab kora",     nl:'Kom, we gaan voetballen!'},
+  {id:'s_feen_kora',   w:4, lesson:'w4l1', ar:'فين الكورة؟',         ph:'feen el-kora?',         nl:'Waar is de bal?'},
+  {id:'s_ana_laeeb',   w:4, lesson:'w4l2', ar:'أنا لعيب',            ph:"ana la'ieb",            nl:'Ik ben een speler.'},
+  {id:'s_eddini',      w:4, lesson:'w4l2', ar:'إديني الكورة',        ph:'eddini el-kora',        nl:'Geef mij de bal!'},
+  {id:'s_bahebb_kora', w:4, lesson:'w4l3', ar:'أنا بحب الكورة',      ph:'ana bahebb el-kora',    nl:'Ik hou van voetbal.'},
+  {id:'s_kesebna',     w:4, lesson:'w4l4', ar:'كسبنا الماتش',        ph:'kesebna el-matsj',      nl:'We hebben de wedstrijd gewonnen!'},
+  {id:'s_montakhab',   w:4, lesson:'w4l4', ar:'منتخب مصر كسب',       ph:'montachab masr keseb',  nl:'Egypte heeft gewonnen!'},
+];
+
+// ---- Werelden en lessen (5 lessen per wereld; review = herhaling van de hele wereld)
+const WORLDS = [
+  {id:1, name:'Hallo Egypte', desc:'Begroeten en kennismaken', emoji:'👋', color:'#14A99F', dark:'#0B7D76', lessons:[
+    {id:'w1l1', title:'Hallo!',          icon:'😊', words:['ahlan','salam','bye','aywa','la']},
+    {id:'w1l2', title:'Goedemorgen',     icon:'🌅', words:['sabah','masa','tesbah','shukran','fadlak']},
+    {id:'w1l3', title:'Wie ben jij?',    icon:'🙋', words:['ana','enta','ismi','izzayak']},
+    {id:'w1l4', title:'Hoe gaat het?',   icon:'😀', words:['kwayyes','hamdu','holanda','masr']},
+    {id:'w1l5', title:'Gesprekje',       icon:'💬', review:true},
+  ]},
+  {id:2, name:'Mijn familie', desc:'Mama, papa, broer, zus, opa en oma', emoji:'🏡', color:'#FF6F59', dark:'#D24A35', lessons:[
+    {id:'w2l1', title:'Mama en papa',    icon:'👩', words:['mama','baba','akh','ukht']},
+    {id:'w2l2', title:'Opa en oma',      icon:'👵', words:['teeta','geddo','beebi','eela']},
+    {id:'w2l3', title:'Ik hou van jou',  icon:'❤️', words:['walad','bent','beet','bahebbak']},
+    {id:'w2l4', title:'Ooms en tantes',  icon:'🧔', words:['khalo','ammo','khalto','ammeto']},
+    {id:'w2l5', title:'Mijn familie',    icon:'💬', review:true},
+  ]},
+  {id:3, name:'Dieren', desc:'Van kat tot kameel', emoji:'🐫', color:'#E8A317', dark:'#B57A00', lessons:[
+    {id:'w3l1', title:'Huisdieren',      icon:'🐱', words:['otta','kalb','arnab','samaka']},
+    {id:'w3l2', title:'Op de boerderij', icon:'🐮', words:['hosaan','baara','farkha','batta','kharoof']},
+    {id:'w3l3', title:'Dieren van Egypte',icon:'🐊', words:['gamal','timsah','asad','erd']},
+    {id:'w3l4', title:'Groot en klein',  icon:'🐘', words:['fiil','asfoora','farasha','selahfa','kebiir','soghayyar']},
+    {id:'w3l5', title:'De dierentuin',   icon:'💬', review:true},
+  ]},
+  {id:4, name:'Voetbal!', desc:'Bonuswereld: altijd open', emoji:'⚽', color:'#2E9E4F', dark:'#1C7537', bonus:true, lessons:[
+    {id:'w4l1', title:'De bal',          icon:'⚽', words:['kora','goon','shoot','yalla']},
+    {id:'w4l2', title:'Op het veld',     icon:'🏟️', words:['malab','laeeb','goolee','hakam']},
+    {id:'w4l3', title:'De wedstrijd',    icon:'⏱️', words:['matsh','faree','fanella']},
+    {id:'w4l4', title:'Wij winnen!',     icon:'🏆', words:['gomhoor','kesebna','montakhab']},
+    {id:'w4l5', title:'Finale',          icon:'💬', review:true},
+  ]},
+];
+const COMING = [
+  ['🍞','Eten en drinken'],['🎨','Kleuren en cijfers'],['🖐️','Mijn lichaam'],['🛋️','Thuis'],
+  ['🏖️','Op vakantie in Egypte'],['🛝','Spelen met vriendjes'],['🗣️','Kleine gesprekjes'],
+];
+
+// ---- Verzamelstickers: één per les (zelfde volgorde als de lessen)
+const STICKERS = [
+  {e:'PYR',  n:'Piramides van Gizeh'}, {e:'⛵', n:'Feluka op de Nijl'}, {e:'🐫', n:'Kameel'},
+  {e:'🧆', n:"Ta'meya"},              {e:'🌴', n:'Dadelpalm'},          {e:'🌺', n:'Karkadee-bloem'},
+  {e:'🥭', n:'Egyptische mango'},     {e:'🍵', n:'Thee met munt'},      {e:'🍲', n:'Koshari'},
+  {e:'🌅', n:'Zonsondergang'},        {e:'🐠', n:'Vis uit de Rode Zee'},{e:'🐊', n:'Nijlkrokodil'},
+  {e:'🏜️', n:'Woestijn'},             {e:'🍉', n:'Watermeloen'},        {e:'🦅', n:'Valk'},
+  {e:'⚽', n:'Gouden bal'},           {e:'🥅', n:'Doel'},               {e:'🧤', n:'Keepershandschoenen'},
+  {e:'👟', n:'Voetbalschoenen'},      {e:'🏆', n:'Beker'},
+];
+
+// ---- Vaste audiobestanden (optioneel). Zet opnames in een map "audio" naast
+//      deze pagina en koppel ze hier per id, bijvoorbeeld:
+//      'ahlan': 'audio/ahlan.mp3',
+//      Opnames die ouders in het dashboard uploaden gaan altijd voor.
+const AUDIO_FILES = {};
+
+/* ===================================================================== */
+/* ======================  VANAF HIER: DE APP-LOGICA  ==================== */
+/* ===================================================================== */
+
+const ITEM = {};
+WORDS.forEach(w=>ITEM[w.id]={...w,kind:'word'});
+SENTENCES.forEach(s=>ITEM[s.id]={...s,kind:'sentence',pic:'💬'});
+const ALL_LESSONS = WORLDS.flatMap((w,wi)=>w.lessons.map((l,li)=>({...l,wi,li})));
+const OFFS = [0,-60,-30,40,60];
+const AVATARS = ['🐱','🦁','🐫','🐢','🦋','🐬','🦊','🐰','🦉','🐼','🦒','🐊'];
+const DAILY = [
+  {t:'Maak vandaag 1 les af',        k:'lessons', n:1, e:'🎯'},
+  {t:'Verdien vandaag 30 XP',        k:'xp',      n:30, e:'⚡'},
+  {t:'Speel vandaag een memory-spel',k:'memory',  n:1, e:'🃏'},
+  {t:'Maak vandaag 2 lessen af',     k:'lessons', n:2, e:'🏅'},
+];
+
+/* ---------- opslag: Supabase (één account per gezin) ---------- */
+const SB_URL = 'https://udiqtseewsifcmxsrwtu.supabase.co';
+const SB_KEY = 'sb_publishable_XZB277-h8EG1mKOVnylrVw_Di9lukPW';
+const sb = (window.supabase && window.supabase.createClient)
+  ? window.supabase.createClient(SB_URL, SB_KEY, {auth:{persistSession:true, autoRefreshToken:true, detectSessionInUrl:true}})
+  : null;
+const AUTH = { user:null, ready:false, admin:false };
+const LS = 'masrikids_v2';
+const EMPTY_DB = () => ({profiles:[], activeId:null, settings:{tts:false}, verified:{}});
+let DB = EMPTY_DB();
+function loadLocal(){ try{ const v = JSON.parse(localStorage.getItem(LS)); if(v && AUTH.user && v.uid===AUTH.user.id) return v; }catch(e){} return null; }
+function saveLocal(){ try{ localStorage.setItem(LS, JSON.stringify({...DB, uid:AUTH.user ? AUTH.user.id : null})); }catch(e){} }
+const SYNC = { t:null };
+function save(){
+  saveLocal();
+  if(!sb || !AUTH.user) return;
+  clearTimeout(SYNC.t); SYNC.t = setTimeout(flush, 600);
+}
+async function flush(){
+  clearTimeout(SYNC.t); SYNC.t = null;
+  if(!sb || !AUTH.user) return;
+  const now = new Date().toISOString();
+  try{
+    if(DB.profiles.length){
+      const {error} = await sb.from('players').upsert(DB.profiles.map(p=>({id:p.id, family_id:AUTH.user.id, data:p, updated_at:now})));
+      if(error) throw error;
+    }
+    const {error:e2} = await sb.from('family_settings').upsert({family_id:AUTH.user.id, data:{tts:!!DB.settings.tts, nlVoice:DB.settings.nlVoice!==false, verified:DB.verified||{}}, updated_at:now});
+    if(e2) throw e2;
+  }catch(e){ toast('Online opslaan lukte even niet. Controleer je internetverbinding.'); }
+}
+async function loadFamily(){
+  if(!sb || !AUTH.user) return;
+  const local = loadLocal();
+  const keepActive = DB.activeId || (local && local.activeId) || null;
+  const [r1, r2] = await Promise.all([
+    sb.from('players').select('id,data'),
+    sb.from('family_settings').select('data').maybeSingle(),
+  ]);
+  if(r1.error){
+    if(local){ DB = {...EMPTY_DB(), ...local}; }
+    toast('Kon je gegevens niet ophalen. Je speelt nu met wat op dit apparaat staat.');
+    return;
+  }
+  DB.profiles = (r1.data||[]).map(r=>({...r.data, id:r.id})).sort((a,b)=>(a.created||0)-(b.created||0) || String(a.name).localeCompare(String(b.name)));
+  const st = (r2.data && r2.data.data) || {};
+  DB.settings = {tts:!!st.tts, nlVoice: st.nlVoice!==false};
+  DB.verified = st.verified || {};
+  DB.activeId = DB.profiles.find(p=>p.id===keepActive) ? keepActive : null;
+  saveLocal();
+}
+async function checkAdmin(){
+  AUTH.admin = false;
+  if(!sb || !AUTH.user) return;
+  const {data} = await sb.from('admins').select('user_id').eq('user_id', AUTH.user.id).maybeSingle();
+  AUTH.admin = !!data;
+}
+function busyScreen(){ return S.screen==='lesson' || S.screen==='penalty' || !!REC.mr || !!(S.bulk && S.bulk.busy); }
+const me = () => DB.profiles.find(p=>p.id===DB.activeId);
+
+/* ---------- opnames en foto's (Supabase Storage) ---------- */
+// Volgorde bij afspelen: opname van je eigen gezin > gedeelde opname van de beheerder > ingebouwde opname.
+const MEDIA = { audio:{}, shared:{} };
+const WEEK = 60*60*24*7;
+async function signFolder(prefix){
+  const {data, error} = await sb.storage.from('media').list(prefix, {limit:1000});
+  if(error || !data) return {};
+  const files = data.filter(f=>f && f.id);
+  if(!files.length) return {};
+  const {data:signed} = await sb.storage.from('media').createSignedUrls(files.map(f=>prefix+'/'+f.name), WEEK);
+  const out = {};
+  (signed||[]).forEach(x=>{ if(x && x.signedUrl && x.path) out[x.path.split('/').pop()] = x.signedUrl; });
+  return out;
+}
+async function loadMedia(){
+  if(!sb || !AUTH.user) return;
+  const u = AUTH.user.id;
+  const [a, sh, p] = await Promise.all([signFolder(u+'/audio'), signFolder('shared/audio'), signFolder(u+'/pics')]);
+  MEDIA.audio = a; MEDIA.shared = sh;
+  Object.keys(PICS).forEach(k=>delete PICS[k]); Object.assign(PICS, p);
+}
+let LAST_ERR = '';
+const cleanType = t => String(t||'').split(';')[0].trim().toLowerCase();
+function audioType(f){
+  const t = cleanType(f.type), n = (f.name||'').toLowerCase();
+  if(t) return t==='audio/x-m4a' || t==='audio/m4a' ? 'audio/mp4' : t;
+  if(/\.(m4a|mp4)$/.test(n)) return 'audio/mp4'; if(/\.mp3$/.test(n)) return 'audio/mpeg';
+  if(/\.wav$/.test(n)) return 'audio/wav'; if(/\.webm$/.test(n)) return 'audio/webm'; return 'audio/mp4';
+}
+async function uploadMedia(path, blob, type){
+  const {error} = await sb.storage.from('media').upload(path, blob, {upsert:true, contentType:type, cacheControl:'60'});
+  if(error){ LAST_ERR = error.message || 'onbekende fout'; return null; }
+  const {data} = await sb.storage.from('media').createSignedUrl(path, WEEK);
+  return data && data.signedUrl ? data.signedUrl + '&v=' + Date.now() : null;
+}
+async function saveAudio(id, file){
+  LAST_ERR = '';
+  if(!sb || !AUTH.user){ LAST_ERR = 'niet ingelogd'; return 'fail'; }
+  const shared = AUTH.admin;
+  const url = await uploadMedia((shared ? 'shared' : AUTH.user.id) + '/audio/' + id, file, audioType(file));
+  if(!url) return 'fail';
+  (shared ? MEDIA.shared : MEDIA.audio)[id] = url;
+  return 'cloud';
+}
+async function removeAudio(id){
+  if(!sb || !AUTH.user) return;
+  const paths = [];
+  if(MEDIA.audio[id]) paths.push(AUTH.user.id + '/audio/' + id);
+  if(AUTH.admin && MEDIA.shared[id]) paths.push('shared/audio/' + id);
+  if(!paths.length) return;
+  const {error} = await sb.storage.from('media').remove(paths);
+  if(error){ toast('Wissen lukte niet. Probeer het later nog eens.'); return; }
+  delete MEDIA.audio[id]; if(AUTH.admin) delete MEDIA.shared[id];
+}
+async function shrinkImage(file, max=480){
+  const url = URL.createObjectURL(file);
+  try{
+    const img = await new Promise((res,rej)=>{ const i = new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=url; });
+    const side = Math.min(img.naturalWidth, img.naturalHeight), out = Math.min(max, side);
+    const c = document.createElement('canvas'); c.width = c.height = out;
+    c.getContext('2d').drawImage(img, (img.naturalWidth-side)/2, (img.naturalHeight-side)/2, side, side, 0, 0, out, out);
+    return await new Promise(res=>c.toBlob(b=>res(b), 'image/jpeg', .82));
+  } finally { URL.revokeObjectURL(url); }
+}
+async function savePic(id, file){
+  LAST_ERR = '';
+  if(!sb || !AUTH.user){ LAST_ERR = 'niet ingelogd'; return 'fail'; }
+  let blob; try{ blob = await shrinkImage(file); }catch(e){ blob = null; }
+  if(!blob){ LAST_ERR = 'deze foto kon niet gelezen worden'; return 'fail'; }
+  const url = await uploadMedia(AUTH.user.id + '/pics/' + id, blob, 'image/jpeg');
+  if(!url) return 'fail';
+  PICS[id] = url; return 'ok';
+}
+async function removePic(id){
+  if(!sb || !AUTH.user) return;
+  const {error} = await sb.storage.from('media').remove([AUTH.user.id + '/pics/' + id]);
+  if(error){ toast('Wissen lukte niet. Probeer het later nog eens.'); return; }
+  delete PICS[id];
+}
+
+/* ---------- inspreken in de app (microfoon) ---------- */
+const REC = { stream:null, mr:null, chunks:[], id:null, t:null, busy:false };
+const recSupported = () => !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+async function recToggle(id){
+  if(REC.mr){ recStop(); return; }
+  if(REC.busy) return;
+  try{
+    try{ if(curAudio){ curAudio.pause(); curAudio=null; } }catch(e){}
+    if(!REC.stream) REC.stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true, noiseSuppression:true}});
+  }catch(e){ toast('Geen toegang tot de microfoon. Sta de microfoon toe voor deze website.'); return; }
+  const type = ['audio/mp4','audio/webm;codecs=opus','audio/webm'].find(t=>MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || '';
+  REC.chunks = []; REC.id = id;
+  try{ REC.mr = new MediaRecorder(REC.stream, type ? {mimeType:type} : undefined); }
+  catch(e){ REC.mr = null; REC.id = null; toast('Opnemen wordt niet ondersteund in deze browser.'); return; }
+  const mr = REC.mr;
+  mr.ondataavailable = e=>{ if(e.data && e.data.size) REC.chunks.push(e.data); };
+  mr.onstop = async ()=>{
+    clearTimeout(REC.t);
+    const mt = cleanType(mr.mimeType || type) || 'audio/mp4';
+    const blob = new Blob(REC.chunks, {type:mt});
+    const rid = REC.id; REC.mr = null; REC.id = null;
+    if(blob.size < 1500){ toast('De opname was te kort. Probeer het nog eens.'); render(); return; }
+    REC.busy = true; render();
+    const r = await saveAudio(rid, blob);
+    REC.busy = false;
+    if(r==='cloud'){ play(rid, true); toast('Opgeslagen: "' + ITEM[rid].ph + '"'); if(S.recS) setTimeout(()=>{ recNext(); render(); }, 1400); }
+    else toast('Opslaan lukte niet (' + LAST_ERR + ')');
+    render();
+  };
+  mr.start(); REC.t = setTimeout(recStop, 8000); sfx('flip'); render();
+}
+function recStop(){ try{ if(REC.mr && REC.mr.state!=='inactive') REC.mr.stop(); }catch(e){} }
+function recRelease(){ recStop(); try{ if(REC.stream) REC.stream.getTracks().forEach(t=>t.stop()); }catch(e){} REC.stream = null; }
+function recNext(){ if(!S.recS) return; S.recS.i++; if(S.recS.i >= S.recS.queue.length){ S.recS = null; recRelease(); toast('Klaar! Alles uit deze sessie is ingesproken.'); confetti(60); } }
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const sample = (a,n) => shuffle(a).slice(0,n);
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const uid = () => Math.random().toString(36).slice(2,9);
+function today(d=new Date()){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function yesterday(){ const d=new Date(); d.setDate(d.getDate()-1); return today(d); }
+function dayIndex(){ const d=new Date(); return Math.floor((d - new Date(d.getFullYear(),0,0))/864e5); }
+const wordsOfWorld = wid => WORDS.filter(w=>w.w===wid);
+const totalStars = p => Object.values(p.lessons).reduce((a,b)=>a+b,0);
+const learned = p => WORDS.filter(w=>(p.words[w.id]?.c||0)>=2);
+function curStreak(p){ return (p.last===today()||p.last===yesterday()) ? p.streak : 0; }
+function weekKey(d=new Date()){
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day);
+  const y = t.getUTCFullYear(), w = Math.ceil(((t - Date.UTC(y,0,1)) / 864e5 + 1) / 7);
+  return y + '-W' + String(w).padStart(2,'0');
+}
+function wk(p){ const k = weekKey(); if(!p.week || p.week.k!==k) p.week = {k, stars:0, lessons:0, goals:0, best:0, duelsWon:0}; return p.week; }
+const ageLabel = a => a>=18 ? 'volwassene' : a + ' jaar';
+function daily(p){
+  const d = DAILY[dayIndex()%DAILY.length];
+  if(!p.today || p.today.date!==today()) p.today = {date:today(), xp:0, lessons:0, memory:0, claimed:false};
+  return {...d, have:Math.min(p.today[d.k], d.n)};
+}
+
+// Woorden die je kunt aanwijzen of tekenen. Alleen deze komen in plaatjesspelletjes voor niveau 1.
+// Een woord met een eigen foto telt ook mee (bijv. een foto van jullie oom bij khalo).
+const CONCRETE = new Set(['mama','baba','akh','ukht','teeta','geddo','beebi','walad','bent','beet',
+  'otta','kalb','arnab','samaka','hosaan','baara','farkha','batta','kharoof','gamal','timsah','asad','erd','fiil','asfoora','farasha','selahfa',
+  'kora','goolee','fanella','malab','laeeb']);
+const PICS = {}, PICMETA = {};
+const isConcrete = id => CONCRETE.has(id) || !!PICS[id];
+function picOf(id){ return PICS[id] ? `<img src="${PICS[id]}" alt="" loading="lazy">` : (ITEM[id] ? ITEM[id].pic : ''); }
+// Niveau 1 begint met wat je kunt aanwijzen: dieren en familie eerst, begroetingen als laatste.
+function worldOrder(p){ return p && p.level===1 ? [2,1,3,0] : WORLDS.map((_,i)=>i); }
+function prevWorld(p,wi){ const o = worldOrder(p).filter(i=>!WORLDS[i].bonus); const k = o.indexOf(wi); return k>0 ? o[k-1] : -1; }
+function worldUnlocked(p,wi){ if(p.unlockAll||WORLDS[wi].bonus) return true; const pv = prevWorld(p,wi); if(pv<0) return true; return WORLDS[pv].lessons.filter(l=>p.lessons[l.id]).length>=3; }
+function lessonUnlocked(p,wi,li){ if(!worldUnlocked(p,wi)) return false; if(p.unlockAll||li===0) return true; return !!p.lessons[WORLDS[wi].lessons[li-1].id]; }
+
+/* ---------- iconen ---------- */
+const ICON_SPK = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 9.5v5c0 .6.4 1 1 1h3.3l4.4 3.7c.6.5 1.6.1 1.6-.8V5.6c0-.9-1-1.3-1.6-.8L7.3 8.5H4c-.6 0-1 .4-1 1z"/><path d="M16 8.2a5 5 0 0 1 0 7.6" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M18.6 5.6a8.6 8.6 0 0 1 0 12.8" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>';
+const ICON_LOCK = '<svg viewBox="0 0 24 24" width="30" height="30" fill="#fff" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" stroke="#fff" stroke-width="2.6" fill="none"/></svg>';
+const STAR = (on,size=16) => `<svg viewBox="0 0 24 24" width="${size}" height="${size}" aria-hidden="true"><path d="M12 2.6l2.9 6 6.5.8-4.8 4.5 1.2 6.5L12 17.3 6.2 20.4l1.2-6.5L2.6 9.4l6.5-.8z" fill="${on?'#FFC43D':'#E3D9C4'}" stroke="${on?'#DB9300':'#CFC3A8'}" stroke-width="1.4" stroke-linejoin="round"/></svg>`;
+const PYR = '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 8 60 54H4z" fill="#C9822B"/><path d="M32 8 60 54H32z" fill="#A86418"/><path d="M14 54l8-13 8 13z" fill="#E0A04A"/><path d="M22 41l8 13h-8z" fill="#B97526"/></svg>';
+function stickerFace(s){ return s.e==='PYR' ? PYR : s.e; }
+
+function mascot(size=120, mood='happy', cls='bob'){
+  const mouths = {
+    wow:'<ellipse cx="60" cy="63" rx="5" ry="6" fill="#7A2E1E"/>',
+    cheer:'<path d="M48 58 Q60 76 72 58 Z" fill="#7A2E1E"/><path d="M53 66 Q60 72 67 66 Q60 63 53 66Z" fill="#FF8C8C"/>',
+    encourage:'<path d="M52 61 Q60 67 68 61" stroke="#7A2E1E" stroke-width="3" fill="none" stroke-linecap="round"/>',
+    happy:'<path d="M50 59 Q60 71 70 59" fill="#7A2E1E"/><path d="M54 63 Q60 67 66 63" fill="#FF8C8C"/>',
+  };
+  const mouth = mouths[mood] || mouths.happy;
+  const eyes = mood==='cheer'
+    ? '<path d="M37 47 Q45 38 53 47" stroke="#28367C" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M67 47 Q75 38 83 47" stroke="#28367C" stroke-width="4" fill="none" stroke-linecap="round"/>'
+    : `<ellipse cx="45" cy="46" rx="9.5" ry="11" fill="#fff"/><ellipse cx="75" cy="46" rx="9.5" ry="11" fill="#fff"/>
+       <circle cx="46.5" cy="48" r="6" fill="#28367C"/><circle cx="76.5" cy="48" r="6" fill="#28367C"/>
+       <circle cx="48.5" cy="45.5" r="2.2" fill="#fff"/><circle cx="78.5" cy="45.5" r="2.2" fill="#fff"/>`;
+  return `<svg class="mascot m-${mood} ${cls}" width="${size}" height="${size}" viewBox="0 0 120 120" role="img" aria-label="Mishmish de kat" style="overflow:visible">
+    <ellipse cx="60" cy="114" rx="30" ry="4" fill="rgba(40,54,124,.12)" class="m-shadow"/>
+    <g class="m-all">
+      <path class="m-tail" d="M86 98 Q108 94 102 72" stroke="#E8862E" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <path d="M30 112 Q28 74 60 74 Q92 74 90 112 Z" fill="#F59A3C"/>
+      <path d="M48 112 Q60 96 72 112 Z" fill="#FFE2B8"/>
+      <g class="m-ears">
+        <path d="M28 32 L33 6 L54 22 Z" fill="#F59A3C"/><path d="M33 26 L35 13 L46 22 Z" fill="#FFB3A7"/>
+        <path d="M92 32 L87 6 L66 22 Z" fill="#F59A3C"/><path d="M87 26 L85 13 L74 22 Z" fill="#FFB3A7"/>
+      </g>
+      <ellipse cx="60" cy="48" rx="37" ry="32" fill="#F7A64B"/>
+      <path d="M52 18 Q54 26 52 30 M60 16 Q61 25 60 30 M68 18 Q66 26 68 30" stroke="#E07F23" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <g class="m-eyes">${eyes}</g>
+      <circle cx="33" cy="60" r="5" fill="#FF8C8C" opacity=".6"/><circle cx="87" cy="60" r="5" fill="#FF8C8C" opacity=".6"/>
+      <path d="M56 56 L64 56 L60 61 Z" fill="#E0567A"/>
+      ${mouth}
+      <path d="M30 56 L14 53 M30 61 L15 63 M90 56 L106 53 M90 61 L105 63" stroke="#B9661F" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M34 76 Q60 92 86 76 L84 84 Q60 100 36 84 Z" fill="#14A99F"/>
+      <circle cx="60" cy="92" r="6" fill="#FFC43D" stroke="#DB9300" stroke-width="1.5"/>
+      <path d="M57 92 h6 M60 89 v6" stroke="#28367C" stroke-width="1.4"/>
+    </g>
+    <g class="m-spark" fill="#FFC43D">
+      <path d="M12 20 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z"/><path d="M106 14 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z"/><path d="M108 52 l2 4 4 2 -4 2 -2 4 -2 -4 -4 -2 4 -2z" fill="#14A99F"/>
+    </g>
+  </svg>`;
+}
+
+/* ---------- audio ---------- */
+let curAudio = null;
+const audioSrc = id => MEDIA.audio[id] || MEDIA.shared[id] || AUDIO_FILES[id] || null;
+const hasAudio = id => !!audioSrc(id);
+function audioMode(id){ return hasAudio(id) ? 'real' : (DB.settings.tts && 'speechSynthesis' in window ? 'tts' : 'none'); }
+function playBtn(id, size=''){
+  const m = audioMode(id);
+  const tag = m==='none' ? '<span class="atag">nog geen opname</span>' : m==='tts' ? '<span class="atag">computerstem</span>' : '';
+  return `<span class="playwrap"><button class="play ${size} ${m==='none'?'noaudio':m==='tts'?'tts':''}" data-play="${id}" aria-label="Luister naar ${esc(ITEM[id]?.ph||'')}">${ICON_SPK}</button>${tag}</span>`;
+}
+async function play(id, quiet=false){
+  try{ if(curAudio){curAudio.pause();curAudio=null;} if('speechSynthesis' in window) speechSynthesis.cancel(); }catch(e){}
+  const btn = document.querySelector(`[data-play="${id}"]`);
+  if(btn){ btn.classList.remove('playing'); void btn.offsetWidth; btn.classList.add('playing'); }
+  const src = audioSrc(id);
+  if(src){ curAudio = new Audio(src); curAudio.play().catch(()=>{ if(!quiet) toast('Deze opname kon niet worden afgespeeld.'); }); return; }
+  if(DB.settings.tts && 'speechSynthesis' in window){
+    const u = new SpeechSynthesisUtterance(ITEM[id].ar);
+    const vs = speechSynthesis.getVoices();
+    const v = vs.find(v=>/^ar[-_]EG/i.test(v.lang)) || vs.find(v=>/^ar/i.test(v.lang));
+    if(v){ u.voice=v; u.lang=v.lang; } else u.lang='ar-EG';
+    u.rate=.8; speechSynthesis.speak(u);
+    if(!quiet) toast('Computerstem: geen echte Egyptische uitspraak');
+    return;
+  }
+  if(!quiet) toast('Nog geen opname. Lees de uitspraak samen hardop!');
+}
+
+/* ---------- voorleesstem (Nederlands, alleen instructies) en geluidjes ---------- */
+let nlVoice = null;
+function pickNL(){ try{ const vs = speechSynthesis.getVoices(); nlVoice = vs.find(v=>/^nl[-_]NL/i.test(v.lang)) || vs.find(v=>/^nl/i.test(v.lang)) || null; }catch(e){} }
+function voiceOn(){ const p = me(); return !!p && p.level===1 && DB.settings.nlVoice!==false && 'speechSynthesis' in window; }
+function speakNL(text, then){
+  if(!voiceOn() || !text){ if(then) then(); return; }
+  try{
+    try{ if(curAudio){ curAudio.pause(); curAudio=null; } }catch(e){}
+    speechSynthesis.cancel(); if(!nlVoice) pickNL();
+    const u = new SpeechSynthesisUtterance(text); u.lang='nl-NL'; if(nlVoice) u.voice=nlVoice; u.rate=.95; u.pitch=1.15;
+    let done=false; const fin=()=>{ if(done) return; done=true; if(then) then(); };
+    u.onend=fin; u.onerror=fin; setTimeout(fin, 600 + text.length*95);
+    speechSynthesis.speak(u);
+  }catch(e){ if(then) then(); }
+}
+let AC = null;
+function sfx(kind){
+  try{
+    AC = AC || new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume();
+    const t = AC.currentTime;
+    const notes = {ok:[660,880,1320], bad:[392,330], flip:[740], goal:[523,659,784,1047,1319], match:[880,1175]}[kind] || [];
+    notes.forEach((f,i)=>{ const o=AC.createOscillator(), g=AC.createGain(); o.type = kind==='bad'?'sine':'triangle'; o.frequency.value=f;
+      const st = t + i*.09; g.gain.setValueAtTime(.0001,st); g.gain.exponentialRampToValueAtTime(kind==='flip'?.08:.16,st+.02); g.gain.exponentialRampToValueAtTime(.0001,st+.28);
+      o.connect(g); g.connect(AC.destination); o.start(st); o.stop(st+.32); });
+  }catch(e){}
+}
+const INSTR = {intro:'Luister goed, en zeg het na!', listen:'Luister. Welk plaatje hoort erbij?', memory:'Zoek twee kaartjes die bij elkaar horen.', say:'Luister, en zeg het dan hard op!'};
+const PRAISE_NL = ['Goed zo!','Super!','Knap hoor!','Wauw, goed gedaan!'];
+const isKid = () => { const p = me(); return !!p && p.level===1; };
+
+/* ---------- UI-status ---------- */
+let S = { auth:{mode:'login'}, recS:null, screen: 'splash', newP:null, ptab:'overview', pkid:null, gate:null, filterW:1, confirmDel:false };
+let L = null; // lopende les
+
+/* ---------- lessen bouwen ---------- */
+function buildSteps(wi, li, p){
+  const world = WORLDS[wi], lesson = world.lessons[li], lvl = p.level;
+  const ws = lesson.review ? sample(wordsOfWorld(world.id), lvl===1?5:6) : lesson.words.map(id=>ITEM[id]);
+  const sents = SENTENCES.filter(s=> lesson.review ? s.w===world.id : s.lesson===lesson.id);
+  const intro = lesson.review ? [] : ws.filter(w=>!p.words[w.id]).map(w=>({type:'intro', id:w.id}));
+  const body = [];
+  if(lvl===1){
+    const con = ws.filter(w=>isConcrete(w.id)), abs = ws.filter(w=>!isConcrete(w.id));
+    con.forEach(w=>body.push({type:'listen', id:w.id}));
+    abs.forEach(w=>body.push({type:'say', id:w.id}));
+    if(con.length) body.push({type:'say', id:pick(con).id});
+    if(sents.length) body.push({type:'say', id:pick(sents).id});
+  } else {
+    ws.forEach((w,i)=>body.push({type: i%2 ? 'meaning' : 'translate', id:w.id}));
+    sample(sents, lesson.review?3:2).forEach(s=>body.push({type:'build', id:s.id}));
+    body.push({type:'say', id:(sents.length?pick(sents):pick(ws)).id});
+  }
+  const mixed = shuffle(body);
+  const memPool = lvl===1 ? ws.filter(w=>isConcrete(w.id)) : ws;
+  if(memPool.length>=2) mixed.splice(Math.ceil(mixed.length/2), 0, {type:'memory', ids: sample(memPool, Math.min(4, memPool.length)).map(w=>w.id)});
+  return intro.concat(mixed);
+}
+function optsFor(id, n=4){
+  const it = ITEM[id];
+  const kid = isKid();
+  let pool = WORDS.filter(w=>w.w===it.w && w.id!==id && w.pic!==it.pic && w.nl!==it.nl && (!kid || isConcrete(w.id)));
+  if(kid && pool.length < n-1) pool = WORDS.filter(w=>w.id!==id && w.pic!==it.pic && isConcrete(w.id));
+  return shuffle([id, ...sample(pool, n-1).map(w=>w.id)]);
+}
+function startLesson(wi, li){
+  const p = me();
+  L = { wi, li, lesson: WORLDS[wi].lessons[li], steps: buildSteps(wi,li,p), i:0, mistakes:0, xp:0, state:'answer', sel:null, ok:null, retried:new Set() };
+  S.screen='lesson'; render(); autoPlay();
+}
+function autoPlay(){
+  const st = L && L.steps[L.i]; if(!st) return;
+  const word = ['intro','listen','meaning','say'].includes(st.type) && hasAudio(st.id);
+  if(voiceOn() && INSTR[st.type]) setTimeout(()=>speakNL(INSTR[st.type], ()=>{ if(word) play(st.id,true); }), 300);
+  else if(word) setTimeout(()=>play(st.id,true), 350);
+}
+
+/* ---------- oefeningen tekenen ---------- */
+function exHTML(st){
+  const it = ITEM[st.id];
+  switch(st.type){
+    case 'intro': return `
+      <div class="bubble-row">${mascot(70,'wow','m-peek')}<div class="bubble">Nieuw woord! Luister en zeg het na.</div></div>
+      <div class="wordcard pop">
+        <div class="pic">${picOf(it.id)}</div>
+        <div class="ar" lang="ar">${it.ar}</div>
+        <div class="ph">${esc(it.ph)}</div>
+        <div class="nl">${esc(it.nl)}</div>
+        ${playBtn(st.id,'big')}
+        ${it.tip?`<p class="tip">💡 ${esc(it.tip)}</p>`:''}
+      </div>`;
+    case 'listen': {
+      st.opts = st.opts || optsFor(st.id);
+      const kidOnly = isKid() && hasAudio(st.id);
+      return `<p class="ex-k">Luister en kies het plaatje</p>
+      <div class="prompt ${kidOnly?'kid':''}">${playBtn(st.id,'big')}<div class="meta">${kidOnly?'':`<div class="ar" lang="ar">${it.ar}</div><div class="ph">${esc(it.ph)}</div>${isKid()?'<div class="parent-hint">Voor papa of mama om voor te lezen</div>':''}`}</div></div>
+      <div class="grid2">${st.opts.map(o=>`<button class="opt ${optCls(st,o)}" data-act="opt:${o}"><span class="pic">${picOf(o)}</span><span class="lbl">${esc(ITEM[o].nl)}</span></button>`).join('')}</div>`;
+    }
+    case 'meaning': {
+      st.opts = st.opts || optsFor(st.id);
+      return `<p class="ex-k">Wat betekent dit?</p>
+      <div class="prompt">${playBtn(st.id,'big')}<div class="meta"><div class="ar" lang="ar">${it.ar}</div><div class="ph">${esc(it.ph)}</div></div></div>
+      <div class="grid2">${st.opts.map(o=>`<button class="opt ${optCls(st,o)}" data-act="opt:${o}"><span class="pic">${picOf(o)}</span><span class="lbl">${esc(ITEM[o].nl)}</span></button>`).join('')}</div>`;
+    }
+    case 'translate': {
+      st.opts = st.opts || optsFor(st.id, 3);
+      return `<p class="ex-k">Hoe zeg je dit in het Egyptisch?</p>
+      <div class="prompt"><span class="pic">${picOf(it.id)}</span><div class="meta"><div class="nl">${esc(it.nl)}</div></div></div>
+      <div class="list1">${st.opts.map(o=>`<button class="opt row ${optCls(st,o)}" data-act="opt:${o}"><span class="ph">${esc(ITEM[o].ph)}</span><span class="ar" lang="ar">${ITEM[o].ar}</span></button>`).join('')}</div>`;
+    }
+    case 'build': {
+      if(!st.tiles){
+        const ars = it.ar.split(' '), phs = it.ph.split(' ');
+        const own = phs.map((ph,k)=>({ph, ar:ars[k]||''}));
+        const others = SENTENCES.filter(s=>s.w===it.w && s.id!==it.id).flatMap(s=>{const a=s.ar.split(' '); return s.ph.split(' ').map((ph,k)=>({ph,ar:a[k]||''}));})
+          .filter(t=>!phs.includes(t.ph));
+        const uniq = []; others.forEach(t=>{ if(!uniq.find(u=>u.ph===t.ph)) uniq.push(t); });
+        st.tiles = shuffle([...own, ...sample(uniq,2)]);
+        st.ans = [];
+      }
+      return `<p class="ex-k">Maak de zin<small>Tik de woorden in de goede volgorde.</small></p>
+      <div class="bubble-row">${mascot(72,'happy','')}<div class="bubble">${esc(it.nl)}</div></div>
+      <div class="answer-line" aria-label="Jouw zin">${st.ans.map((ti,pos)=>`<button class="tile" data-act="untile:${pos}"><span>${esc(st.tiles[ti].ph)}</span><span class="ar" lang="ar">${st.tiles[ti].ar}</span></button>`).join('')}</div>
+      <div class="bank">${st.tiles.map((t,ti)=>`<button class="tile ${st.ans.includes(ti)?'used':''}" data-act="tile:${ti}" ${st.ans.includes(ti)||L.state!=='answer'?'disabled':''}><span>${esc(t.ph)}</span><span class="ar" lang="ar">${t.ar}</span></button>`).join('')}</div>`;
+    }
+    case 'memory': {
+      if(!st.cards){ st.cards = shuffle(st.ids.flatMap(id=>[{k:id,t:'pic'},{k:id,t:'txt'}])); st.open=[]; st.matched=[]; }
+      return `<p class="ex-k">Memory!<small>Zoek het plaatje bij het Egyptische woord.</small></p>
+      <div class="memgrid">${st.cards.map((c,i)=>{
+        const w = ITEM[c.k]; const cls = st.matched.includes(i)?'matched':st.open.includes(i)?'open':'';
+        const back = c.t==='pic' ? `<span class="pic">${picOf(w.id)}</span>` : `<span class="ph">${esc(w.ph)}</span><span class="ar" lang="ar">${w.ar}</span>`;
+        return `<button class="mcard ${cls}" data-act="mem:${i}" aria-label="Kaart ${i+1}"><span class="in"><span class="f">?</span><span class="b">${back}</span></span></button>`;
+      }).join('')}</div>`;
+    }
+    case 'say': return `
+      <p class="ex-k">Zeg het hardop!<small>Luister eerst, en zeg het dan zelf na.</small></p>
+      <div class="wordcard saycard pop">
+        <div class="pic">${picOf(it.id)}</div>
+        <div class="ar" lang="ar">${it.ar}</div>
+        <div class="ph">${esc(it.ph)}</div>
+        <div class="nl">${esc(it.nl)}</div>
+        ${playBtn(st.id,'big')}
+      </div>
+      <div class="bubble-row">${mascot(64,'wow','')}<div class="bubble">Ik luister mee! Zeg het lekker hard 🎤</div></div>`;
+  }
+}
+function optCls(st,o){
+  if(L.state==='feedback'){ if(o===st.id) return 'right'; if(o===L.sel) return 'wrong'; return ''; }
+  return L.sel===o ? 'sel' : '';
+}
+function praise(){
+  const p = me();
+  const opts = [['Brafo!','Goed zo!'],['Goed zo!','Super!'],['Mabrook!','Gefeliciteerd!']];
+  if(p.gender==='m') opts.push(['Sjaater!','Knap gedaan!']);
+  if(p.gender==='f') opts.push(['Sjaatra!','Knap gedaan!']);
+  return pick(opts);
+}
+function footHTML(st){
+  const kid = isKid();
+  const nextLbl = kid ? '<span class="big-ic" aria-hidden="true">➜</span>' : 'Verder';
+  if(st.type==='intro') return `<button class="btn wide" data-act="next" aria-label="Verder">${nextLbl}</button>`;
+  if(L.state==='feedback'){
+    if(L.ok){ const [a,b] = L.praise; return `<div class="fb pop">${mascot(70,'cheer','')}<div><div class="big">${a}</div><div class="sm">${b}</div></div></div><button class="btn ok wide" data-act="next" aria-label="Verder">${nextLbl}</button>`; }
+    const it = ITEM[st.id];
+    return `<div class="fb pop">${mascot(70,'encourage','')}<div><div class="big">Bijna!</div><div class="sm">Het goede antwoord: <b>${esc(it.ph)}</b> = ${esc(it.nl)}. We oefenen 'm straks nog een keer.</div></div></div><button class="btn try wide" data-act="next" aria-label="Verder">${nextLbl}</button>`;
+  }
+  if(st.type==='memory') return `<p class="muted" style="text-align:center">Draai twee kaarten om.</p>`;
+  if(st.type==='say') return kid ? `<button class="btn sun wide" data-act="said" aria-label="Ik heb het gezegd"><span class="big-ic" aria-hidden="true">🎤 ✓</span></button>` : `<button class="btn sun wide" data-act="said">Ik heb het gezegd! 🎤</button>`;
+  if(kid && st.type==='listen') return `<p class="muted" style="text-align:center">Tik op het goede plaatje.</p>`;
+  const ready = st.type==='build' ? st.ans.length>0 : L.sel!==null;
+  return `<button class="btn wide" data-act="check" ${ready?'':'disabled'}>Controleer</button>`;
+}
+function lessonHTML(){
+  const st = L.steps[L.i];
+  const pct = Math.round(L.i / L.steps.length * 100);
+  const cls = L.state==='feedback' ? (L.ok?'ok':'bad') : '';
+  return `<div class="lesson">
+    <div class="lbar"><button class="xbtn" data-act="quit" aria-label="Stoppen">×</button><div class="pbar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${Math.max(4,pct)}%"></i></div>${isKid()?`<button class="helpbtn" data-act="helpme" aria-label="Wat moet ik doen?">${mascot(48,'happy','')}</button>`:`<span class="lxp">${L.xp} XP</span>`}</div>
+    <div class="ex">${exHTML(st)}</div>
+    <div class="lfoot ${cls}">${footHTML(st)}</div>
+  </div>${S.sheet==='quit'?`<div class="sheet-bg"><div class="sheet">${mascot(90,'wow','')}<h3>Even stoppen?</h3><p class="muted">Deze les telt dan nog niet mee. Je kunt hem later opnieuw doen.</p><button class="btn wide" data-act="quit-no">Verder spelen</button><button class="btn ghost wide" data-act="quit-yes">Stoppen</button></div></div>`:''}`;
+}
+
+/* ---------- antwoorden ---------- */
+function record(id, ok){
+  const p = me(); const w = p.words[id] || (p.words[id]={c:0,w:0});
+  ok ? w.c++ : w.w++;
+}
+function answer(ok){
+  const st = L.steps[L.i];
+  L.ok = ok; L.state='feedback';
+  sfx(ok?'ok':'bad');
+  if(voiceOn()) setTimeout(()=>speakNL(ok ? pick(PRAISE_NL) : 'Bijna! Luister nog eens.', ()=>{ if(hasAudio(st.id)) play(st.id,true); }), 350);
+  if(ok){ L.xp += 2; L.praise = praise(); if(st.id) record(st.id,true); }
+  else {
+    L.mistakes++; if(st.id) record(st.id,false);
+    if(!L.retried.has(L.i)){ L.retried.add(L.i); const copy = {type:st.type, id:st.id}; L.steps.push(copy); }
+  }
+  render();
+}
+function check(){
+  const st = L.steps[L.i];
+  if(st.type==='build'){
+    const said = st.ans.map(ti=>st.tiles[ti].ph).join(' ');
+    answer(said === ITEM[st.id].ph);
+  } else answer(L.sel===st.id);
+  if(L.ok && hasAudio(st.id) && !voiceOn()) play(st.id,true);
+}
+function next(){
+  const st = L.steps[L.i];
+  if(st.type==='intro'){ const p=me(); if(!p.words[st.id]) p.words[st.id]={c:0,w:0}; }
+  L.i++; L.sel=null; L.state='answer'; L.ok=null;
+  if(L.i >= L.steps.length) return finishLesson();
+  render(); autoPlay();
+}
+function memTap(i){
+  const st = L.steps[L.i];
+  if(st.matched.includes(i) || st.open.includes(i) || st.open.length===2) return;
+  st.open.push(i); const c = st.cards[i]; sfx('flip');
+  if(c.t==='txt') play(c.k,true);
+  render();
+  if(st.open.length===2){
+    const [a,b] = st.open.map(k=>st.cards[k]);
+    if(a.k===b.k && a.t!==b.t){
+      st.matched.push(...st.open); st.open=[]; record(a.k,true); setTimeout(()=>sfx('match'),150);
+      setTimeout(()=>{ if(st.matched.length===st.cards.length){ const p=me(); daily(p); p.today.memory++; L.xp+=4; L.ok=true; L.state='feedback'; L.praise=praise(); } render(); }, 350);
+    } else setTimeout(()=>{ st.open=[]; render(); }, 900);
+  }
+}
+
+/* ---------- les afronden & beloningen ---------- */
+let LAST = null;
+function finishLesson(){
+  const p = me(); const lid = L.lesson.id;
+  const stars = L.mistakes<=1 ? 3 : L.mistakes<=3 ? 2 : 1;
+  const firstTime = !p.lessons[lid];
+  let xp = 10 + stars*2 + L.xp;
+  p.lessons[lid] = Math.max(p.lessons[lid]||0, stars);
+  if(!p.best[lid] || L.mistakes < p.best[lid].mistakes) p.best[lid] = {stars, mistakes:L.mistakes, date:today()};
+  // streak (nooit straf: een gemiste dag begint gewoon opnieuw bij 1)
+  const t = today();
+  if(p.last !== t){ p.streak = (p.last===yesterday()) ? (p.streak||0)+1 : 1; p.last = t; if(!p.days.includes(t)) p.days.push(t); }
+  // sticker
+  let sticker = null;
+  const idx = ALL_LESSONS.findIndex(l=>l.id===lid);
+  if(firstTime && STICKERS[idx] && !p.stickers.includes(idx)){ p.stickers.push(idx); sticker = STICKERS[idx]; }
+  // dagelijkse uitdaging
+  const d = daily(p); p.today.lessons++; p.today.xp += xp;
+  let dailyBonus = false;
+  const d2 = daily(p);
+  if(!p.today.claimed && p.today[d2.k] >= d2.n){ p.today.claimed = true; xp += 20; p.today.xp += 20; dailyBonus = true; }
+  p.xp += xp;
+  { const w7 = wk(p); w7.stars += stars; w7.lessons++; }
+  // wereld klaar?
+  const w = WORLDS[L.wi];
+  const worldDone = firstTime && w.lessons.every(l=>p.lessons[l.id]);
+  const nxt = WORLDS.findIndex((x,i)=>!x.bonus && prevWorld(p,i)===L.wi);
+  const unlockedNext = firstTime && nxt>=0 && w.lessons.filter(l=>p.lessons[l.id]).length===3;
+  save();
+  LAST = {stars, xp, sticker, dailyBonus, worldDone, unlockedNext, nextName: WORLDS[nxt]?.name, worldName:w.name};
+  L = null; S.screen='done'; render(); confetti(stars===3||worldDone?90:50); sfx('goal');
+  if(voiceOn()) setTimeout(()=>speakNL(sticker ? 'Hoera! De les is klaar. Je krijgt een nieuwe sticker!' : 'Hoera! De les is klaar!'), 500);
+}
+function doneHTML(){
+  const r = LAST;
+  return `<div class="done-scr">
+    ${mascot(140,'cheer','m-dance')}
+    <h1>${r.worldDone ? 'Wereld voltooid!' : 'Les klaar!'}</h1>
+    <div class="bigstars">${[1,2,3].map(n=>`<span class="s">${STAR(n<=r.stars,80)}</span>`).join('')}</div>
+    <div class="rewards"><div class="rw"><b>+${r.xp}</b>XP verdiend</div><div class="rw"><b>${r.stars}/3</b>sterren</div></div>
+    ${r.sticker?`<div class="sticker-reveal"><span class="k">Nieuwe sticker!</span><div class="stk">${stickerFace(r.sticker)}</div><b>${esc(r.sticker.n)}</b></div>`:''}
+    ${r.dailyBonus?`<p class="extra-msg">⭐ Dagelijkse uitdaging gehaald! +20 XP</p>`:''}
+    ${r.worldDone?`<p class="extra-msg">Mishmish danst! Je hebt alle lessen van ${esc(r.worldName)} gedaan.</p>`:''}
+    ${r.unlockedNext?`<p class="extra-msg">🔓 Nieuwe wereld open: ${esc(r.nextName)}!</p>`:''}
+    <button class="btn wide" data-act="go:home">Verder</button>
+  </div>`;
+}
+function confetti(n){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const box = $('#confetti'); const cols=['#14A99F','#FFC43D','#FF6F59','#28367C','#3DBB5C'];
+  for(let i=0;i<n;i++){ const e=document.createElement('i');
+    e.style.left=Math.random()*100+'vw'; e.style.background=pick(cols);
+    e.style.animationDuration=(1.6+Math.random()*1.6)+'s'; e.style.animationDelay=(Math.random()*.6)+'s';
+    box.appendChild(e); setTimeout(()=>e.remove(),4000); }
+}
+
+/* ---------- penaltyschieten ---------- */
+let PEN = null;
+const KEEPER = `<svg viewBox="0 0 60 80" aria-hidden="true">
+  <path d="M14 30 L4 8" stroke="#FF6F59" stroke-width="7" stroke-linecap="round"/><path d="M46 30 L56 8" stroke="#FF6F59" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="4" cy="7" r="6" fill="#FFC43D"/><circle cx="56" cy="7" r="6" fill="#FFC43D"/>
+  <rect x="17" y="54" width="10" height="22" rx="4" fill="#28367C"/><rect x="33" y="54" width="10" height="22" rx="4" fill="#28367C"/>
+  <rect x="14" y="24" width="32" height="34" rx="9" fill="#FF6F59"/>
+  <circle cx="30" cy="14" r="10" fill="#B7794F"/><path d="M20 12 Q30 0 40 12 Q30 7 20 12Z" fill="#2B1B12"/>
+  <circle cx="26" cy="15" r="1.6" fill="#2B1B12"/><circle cx="34" cy="15" r="1.6" fill="#2B1B12"/><path d="M26 19 Q30 22 34 19" stroke="#2B1B12" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+</svg>`;
+function penPool(p){
+  let pool = Object.keys(p.words||{}).filter(id=>ITEM[id] && ITEM[id].kind==='word' && (p.level!==1 || isConcrete(id)));
+  if(pool.length < 6) pool = pool.concat(p.level===1 ? [...WORLDS[2].lessons[0].words, ...WORLDS[1].lessons[0].words] : [...WORLDS[0].lessons[0].words, ...WORLDS[3].lessons[0].words]);
+  return [...new Set(pool)];
+}
+const byId = id => DB.profiles.find(x=>x.id===id);
+function startPenalty(opp){
+  const p = me(); if(!p) return;
+  const players = [p.id]; if(opp && opp!==p.id && byId(opp)) players.push(opp);
+  const qs = {}; players.forEach(id=>{ qs[id] = sample(penPool(byId(id)), 5); });
+  const order = []; for(let k=0;k<5;k++) players.forEach(id=>order.push(id));
+  PEN = { players, order, qs, i:0, res:[], state: players.length>1 ? 'turn' : 'q', sel:null, opts:null, xp:{}, home:p.id };
+  players.forEach(id=>PEN.xp[id]=0);
+  DB.activeId = order[0];
+  S.screen = 'penalty'; render();
+  if(PEN.state==='q') penAuto(); else penTurnVoice();
+}
+const isDuel = () => PEN && PEN.players.length > 1;
+function penShotNo(i){ const who = PEN.order[i]; return PEN.order.slice(0,i).filter(x=>x===who).length; }
+function penCur(){ return PEN.qs[PEN.order[PEN.i]][penShotNo(PEN.i)]; }
+function penGoals(id){ return PEN.order.reduce((n,who,i)=> n + (who===id && PEN.res[i]===true ? 1 : 0), 0); }
+function penTurnVoice(){ const p = me(); if(p && 'speechSynthesis' in window && DB.settings.nlVoice!==false){ try{ speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance('Beurt van ' + p.name + '!'); u.lang='nl-NL'; if(nlVoice) u.voice=nlVoice; speechSynthesis.speak(u); }catch(e){} } }
+function penAuto(){ if(!PEN || PEN.state!=='q') return; const id = penCur(); if(!id || !isKid()) return;
+  if(voiceOn()) setTimeout(()=>speakNL('Luister. Welk plaatje is het? Schiet!', ()=>{ if(hasAudio(id)) play(id,true); }), 300);
+  else if(hasAudio(id)) setTimeout(()=>play(id,true), 350); }
+function penEndRestore(){ if(PEN && PEN.home && byId(PEN.home)) DB.activeId = PEN.home; }
+function penDots(id){
+  return PEN.order.map((who,i)=>who===id ? i : -1).filter(i=>i>=0).map(i=>{ const r = PEN.res[i];
+    return `<i class="${r===true?'g':r===false?'s':''} ${i===PEN.i&&PEN.state!=='end'?'now':''}">${r===true?'⚽':r===false?'✋':''}</i>`; }).join('');
+}
+function penHead(){
+  const right = isKid() ? `<button class="helpbtn" data-act="helpme" aria-label="Wat moet ik doen?">${mascot(48,'happy','')}</button>` : `<span class="lxp">${PEN.xp[DB.activeId]||0} XP</span>`;
+  if(!isDuel()) return `<div class="lbar"><button class="xbtn" data-act="go:home" aria-label="Stoppen">×</button><div class="shots" aria-label="Penalty's">${penDots(PEN.players[0])}</div>${right}</div>`;
+  return `<div class="lbar"><button class="xbtn" data-act="go:scores" aria-label="Stoppen">×</button>
+    <div class="duelbar">${PEN.players.map(id=>{ const pl = byId(id); return `<div class="drow ${id===DB.activeId&&PEN.state!=='end'?'turn':''}"><span class="dav">${pl.avatar}</span><span class="dname">${esc(pl.name)}</span><span class="shots">${penDots(id)}</span><b class="dscore">${penGoals(id)}</b></div>`; }).join('')}</div></div>`;
+}
+function penHTML(){
+  const p = me(), lvl = p.level;
+  const head = penHead();
+  if(PEN.state==='end'){
+    if(isDuel()){
+      const [a,b] = PEN.players, ga = penGoals(a), gb = penGoals(b);
+      const win = ga===gb ? null : (ga>gb ? a : b), wp = win && byId(win);
+      return `<div class="lesson">${head}<div class="done-scr">${mascot(130,'cheer','m-dance')}
+        <h1>${wp ? esc(wp.name) + ' wint!' : 'Gelijkspel!'}</h1>
+        ${wp?`<div class="winner"><span class="pav">${wp.avatar}</span><span>🏆</span></div>`:''}
+        <p class="muted" style="font-size:18px"><b>${esc(byId(a).name)} ${ga}</b> – <b>${gb} ${esc(byId(b).name)}</b></p>
+        <p class="extra-msg">${wp ? 'Goed gespeeld allebei! Elk doelpunt telt mee voor jullie XP.' : 'Allebei even sterk. Nog een keer?'}</p>
+        <button class="btn ok wide" data-act="pen-again">Revanche!</button><button class="btn ghost wide" data-act="go:scores">Naar de scores</button>
+      </div></div>`;
+    }
+    const g = penGoals(PEN.players[0]);
+    return `<div class="lesson">${head}<div class="done-scr">${mascot(130,'cheer','m-dance')}
+      <h1>${g>=4?'Kampioen!':g>=2?'Mooi gespeeld!':'Goed geprobeerd!'}</h1>
+      <p class="muted" style="font-size:18px">Je scoorde <b>${g} van de 5</b> penalty's.</p>
+      <div class="rewards"><div class="rw"><b>+${PEN.xp[PEN.players[0]]}</b>XP verdiend</div><div class="rw"><b>${g}</b>doelpunten</div></div>
+      <p class="extra-msg">Wist je dat? In het Egyptisch roep je bij een doelpunt: <b>goooon!</b></p>
+      <button class="btn ok wide" data-act="pen-again">Nog een keer!</button><button class="btn ghost wide" data-act="go:home">Klaar</button>
+    </div></div>`;
+  }
+  if(PEN.state==='turn'){
+    return `<div class="lesson">${head}<div class="done-scr turn-scr">
+      <div class="turn-av">${p.avatar}</div>
+      <h1>Beurt van ${esc(p.name)}!</h1>
+      <p class="muted" style="font-size:17px">Penalty ${penShotNo(PEN.i)+1} van 5 · ${lvl===1?'luister en kies het plaatje':'kies het goede woord'}</p>
+      <button class="btn sun wide" data-act="pen-ready" aria-label="Ik ben er klaar voor">${isKid()?'<span class="big-ic" aria-hidden="true">⚽ ➜</span>':'Ik ben er klaar voor'}</button>
+    </div></div>`;
+  }
+  const id = penCur(), it = ITEM[id];
+  PEN.opts = PEN.opts || (lvl===1 ? optsFor(id) : optsFor(id,3));
+  const answered = PEN.state==='shot';
+  const cls = o => answered ? (o===id?'right':o===PEN.sel?'wrong':'') : '';
+  const n = penShotNo(PEN.i)+1;
+  const q = lvl===1
+    ? `<p class="ex-k">Penalty ${n}: wat hoor je?</p>
+       <div class="prompt ${hasAudio(id)?'kid':''}">${playBtn(id,'big')}<div class="meta">${hasAudio(id)?'':`<div class="ar" lang="ar">${it.ar}</div><div class="ph">${esc(it.ph)}</div><div class="parent-hint">Voor papa of mama om voor te lezen</div>`}</div></div>
+       <div class="grid2">${PEN.opts.map(o=>`<button class="opt ${cls(o)}" data-act="pen:${o}" ${answered?'disabled':''}><span class="pic">${picOf(o)}</span><span class="lbl">${esc(ITEM[o].nl)}</span></button>`).join('')}</div>`
+    : `<p class="ex-k">Penalty ${n}: hoe zeg je dit?</p>
+       <div class="prompt"><span class="pic">${picOf(it.id)}</span><div class="meta"><div class="nl">${esc(it.nl)}</div></div></div>
+       <div class="list1">${PEN.opts.map(o=>`<button class="opt row ${cls(o)}" data-act="pen:${o}" ${answered?'disabled':''}><span class="ph">${esc(ITEM[o].ph)}</span><span class="ar" lang="ar">${ITEM[o].ar}</span></button>`).join('')}</div>`;
+  const ok = PEN.res[PEN.i];
+  const last = PEN.i >= PEN.order.length-1;
+  return `<div class="lesson">${head}
+    <div class="pitch" aria-hidden="true"><div class="stands"></div><div class="goal"></div><div class="boxline"></div><div class="spot"></div>
+      <div class="keeper" id="pen-keeper">${KEEPER}</div><div class="ball" id="pen-ball">⚽</div>
+      <div class="callout" id="pen-call">${ok?'GOOOON!<small>Doelpunt!</small>':'Gered!<small>De keeper had hem</small>'}</div></div>
+    <div class="pen-q">${q}</div>
+    <div class="lfoot ${answered?(ok?'ok':'bad'):''}"><div class="pen-fb" id="pen-fb">
+      ${ok?`<div class="fb">${mascot(64,'cheer','')}<div><div class="big">Goooon!</div><div class="sm">${esc(it.ph)} = ${esc(it.nl)}</div></div></div>`
+          :`<div class="fb">${mascot(64,'encourage','')}<div><div class="big">Bijna!</div><div class="sm">Het goede antwoord: <b>${esc(it.ph)}</b> = ${esc(it.nl)}</div></div></div>`}
+      <button class="btn ${ok?'ok':'try'} wide" data-act="pen-next" aria-label="Verder">${isKid()?'<span class="big-ic" aria-hidden="true">➜</span>':last?'Uitslag':isDuel()?'Volgende speler':'Volgende penalty'}</button></div>
+      ${answered?'':'<p class="muted" style="text-align:center">Kies het goede antwoord om te schieten!</p>'}</div>
+  </div>`;
+}
+function penShoot(o){
+  if(!PEN || PEN.state!=='q') return;
+  const id = penCur(), ok = o===id, who = PEN.order[PEN.i];
+  PEN.sel = o; PEN.state='shot'; PEN.res[PEN.i] = ok; record(id, ok);
+  if(ok){ PEN.xp[who] += 3; if(hasAudio(id) && !voiceOn()) play(id,true); }
+  render();
+  setTimeout(()=>sfx(ok?'goal':'bad'), 520);
+  if(voiceOn()) setTimeout(()=>speakNL(ok?'Goal! Goed zo!':'Gered! Luister nog eens.', ()=>{ if(hasAudio(id)) play(id,true); }), 900);
+  const side = pick(['L','R','C']);
+  const bx = {L:'27%',R:'73%',C:'50%'}[side], by = side==='C' ? '30%' : '34%';
+  setTimeout(()=>{
+    const ball = $('#pen-ball'), kp = $('#pen-keeper'); if(!ball||!kp) return;
+    ball.style.left = bx; ball.style.top = ok ? by : '50%'; ball.style.transform = 'translate(-50%,-50%) scale(.62) rotate(540deg)';
+    if(ok){ const ks = side==='L' ? '70%' : side==='R' ? '30%' : pick(['30%','70%']); kp.style.left = ks; kp.style.transform = `translateX(-50%) rotate(${parseFloat(ks)<50?-55:55}deg)`; }
+    else { kp.style.left = bx; kp.style.transform = `translateX(-50%) rotate(${side==='L'?-25:side==='R'?25:0}deg)`; }
+  }, 40);
+  setTimeout(()=>{ const c=$('#pen-call'), f=$('#pen-fb'); if(c) c.classList.add('show'); if(f) f.classList.add('show'); if(ok) confetti(35); }, 600);
+}
+function penNext(){
+  PEN.i++; PEN.sel=null; PEN.opts=null;
+  if(PEN.i >= PEN.order.length){
+    PEN.state = 'end';
+    let winner = null;
+    if(isDuel()){ const [a,b] = PEN.players, ga = penGoals(a), gb = penGoals(b); if(ga!==gb) winner = ga>gb ? a : b; }
+    PEN.players.forEach(id=>{
+      const pl = byId(id); if(!pl) return;
+      daily(pl); pl.xp += PEN.xp[id]; pl.today.xp += PEN.xp[id];
+      const d = daily(pl);
+      if(!pl.today.claimed && pl.today[d.k] >= d.n){ pl.today.claimed = true; pl.xp += 20; pl.today.xp += 20; }
+      const w = wk(pl), g = penGoals(id); w.goals += g; w.best = Math.max(w.best, g);
+      if(id===winner) w.duelsWon++;
+    });
+    penEndRestore();
+    save(); render(); sfx('goal');
+    if(isDuel() || penGoals(PEN.players[0])>=4) confetti(70);
+    return;
+  }
+  DB.activeId = PEN.order[PEN.i];
+  PEN.state = isDuel() ? 'turn' : 'q';
+  render();
+  if(PEN.state==='q') penAuto(); else penTurnVoice();
+}
+
+/* ---------- scorebord ---------- */
+function daysLeft(){ return 7 - ((new Date().getDay()+6)%7); }
+function scoresHTML(){
+  const p = me();
+  const rows = DB.profiles.map(x=>({x, w:(x.week && x.week.k===weekKey()) ? x.week : {stars:0,lessons:0,goals:0,best:0,duelsWon:0}}))
+    .sort((a,b)=> b.w.stars-a.w.stars || b.w.goals-a.w.goals || b.w.duelsWon-a.w.duelsWon || String(a.x.name).localeCompare(String(b.x.name)));
+  const medal = i => ['🥇','🥈','🥉'][i] || (i+1)+'.';
+  const anyone = rows.some(r=>r.w.stars||r.w.goals);
+  const others = DB.profiles.filter(x=>x.id!==p.id);
+  const dl = daysLeft();
+  return topbarHTML(p) + `<h1 class="page-h">Scorebord</h1>
+  <p class="page-sub">Week ${weekKey().split('-W')[1]} · nog ${dl} ${dl===1?'dag':'dagen'} · maandag begint iedereen weer bij nul</p>
+  ${rows.length>1 && anyone ? `<div class="podium">${[1,0,2].filter(i=>rows[i]).map(i=>`<div class="pod p${i+1}"><span class="pav">${rows[i].x.avatar}</span><b>${esc(rows[i].x.name)}</b><span class="pstars">⭐ ${rows[i].w.stars}</span><div class="block">${i+1}</div></div>`).join('')}</div>` : ''}
+  <div class="panel score-list">
+    ${rows.map((r,i)=>`<div class="srow ${r.x.id===p.id?'me':''}"><span class="rank">${anyone?medal(i):'–'}</span><span class="pav">${r.x.avatar}</span>
+      <div class="sname"><b>${esc(r.x.name)}${r.x.id===p.id?' <span class="you">jij</span>':''}</b><span>${ageLabel(r.x.age)} · niveau ${r.x.level}</span></div>
+      <div class="snums"><span title="Sterren deze week">⭐ <b>${r.w.stars}</b></span><span title="Doelpunten deze week">⚽ <b>${r.w.goals}</b></span><span title="Duels gewonnen">🏆 <b>${r.w.duelsWon}</b></span></div></div>`).join('')}
+    ${anyone?'':'<p class="muted" style="margin-top:8px">Nog niemand heeft deze week gespeeld. Wie verdient de eerste ster?</p>'}
+  </div>
+  <div class="panel duel-card"><h3>⚽ Penalty-duel</h3>
+    <p class="muted">Om de beurt 5 penalty's op één telefoon of tablet. Iedereen krijgt vragen op zijn eigen niveau, dus groot en klein kunnen allebei winnen.</p>
+    ${others.length ? `<p class="lb" style="margin:12px 0 8px">${esc(p.name)} speelt tegen:</p><div class="opp-grid">${others.map(o=>`<button class="pcard" data-act="duel:${o.id}"><span class="pav">${o.avatar}</span><span class="pname">${esc(o.name)}</span><span class="plvl">niveau ${o.level}</span></button>`).join('')}</div>`
+      : `<p class="status" style="margin-top:12px">Maak eerst een tweede speler aan, dan kun je een duel spelen.</p><button class="btn ghost wide" data-act="go:profiles">Speler toevoegen</button>`}
+  </div>
+  <div class="panel"><h3>Hoe werkt de score?</h3>
+    <p class="muted">⭐ Sterren verdien je met lessen: maximaal 3 per les, op je eigen niveau. ⚽ Doelpunten tellen bij penaltyschieten en duels. 🏆 telt gewonnen duels. Wie de meeste sterren heeft, staat bovenaan.</p>
+  </div>`;
+}
+
+/* ---------- inloggen ---------- */
+function authErr(e){
+  const m = String(e && e.message || '').toLowerCase();
+  if(m.includes('invalid login')) return 'E-mailadres of wachtwoord klopt niet.';
+  if(m.includes('not confirmed')) return 'Bevestig eerst je e-mailadres via de link in je mail.';
+  if(m.includes('already registered') || m.includes('already been registered')) return 'Dit e-mailadres heeft al een account. Log in.';
+  if(m.includes('password') && (m.includes('least') || m.includes('weak') || m.includes('short'))) return 'Kies een sterker wachtwoord van minstens 8 tekens.';
+  if(m.includes('rate') || m.includes('too many')) return 'Te veel pogingen. Wacht een paar minuten en probeer het opnieuw.';
+  if(m.includes('fetch') || m.includes('network')) return 'Geen verbinding. Controleer je internet.';
+  return 'Dat lukte niet: ' + (e && e.message || 'onbekende fout');
+}
+function authHTML(){
+  const A = S.auth;
+  if(!sb) return `<div class="splash"><div class="sun-disc">${mascot(150,'encourage')}</div><h1 style="font-size:34px">Geen verbinding</h1><p class="lead">De app kon niet laden. Controleer je internet en probeer het opnieuw.</p><button class="btn wide" style="max-width:320px" data-act="reload">Opnieuw proberen</button></div>`;
+  if(A.mode==='sent') return `<div class="auth"><div class="auth-hero">${mascot(110,'cheer','m-dance')}</div>
+    <div class="form"><h2 class="auth-h">${A.reset?'Check je mail':'Bijna klaar!'}</h2>
+    <p>${A.reset?'We hebben een link gestuurd naar':'We hebben een bevestigingsmail gestuurd naar'} <b>${esc(A.email||'')}</b>. ${A.reset?'Open de link op dit apparaat om een nieuw wachtwoord te kiezen.':'Tik op de link in die mail en log daarna hier in.'}</p>
+    <p class="hint">Niets ontvangen? Kijk ook in je spam of ongewenste mail.</p>
+    <button class="btn wide" data-act="auth:login">Naar inloggen</button></div></div>`;
+  const signup = A.mode==='signup', reset = A.mode==='reset', np = A.mode==='newpass';
+  return `<div class="auth">
+    <div class="auth-hero">${mascot(104,'happy')}<h1>Masri <span>Kids</span></h1></div>
+    <form class="form" id="aform" autocomplete="on" novalidate>
+      <h2 class="auth-h">${signup?'Account maken':reset?'Wachtwoord vergeten':np?'Nieuw wachtwoord':'Inloggen'}</h2>
+      <p class="muted">${signup?'Voor ouders en verzorgers. Je kinderen spelen onder jouw account; zij hebben geen eigen e-mail nodig.':reset?'We sturen je een link om een nieuw wachtwoord te kiezen.':np?'Kies een nieuw wachtwoord voor je account.':'Log in met je ouderaccount.'}</p>
+      ${np?'':`<div><label class="lb" for="a-email">E-mailadres</label><input class="inp" id="a-email" type="email" inputmode="email" autocomplete="email" value="${esc(A.email||'')}"></div>`}
+      ${reset?'':`<div><label class="lb" for="a-pass">${np?'Nieuw wachtwoord':'Wachtwoord'}</label><input class="inp" id="a-pass" type="password" autocomplete="${signup||np?'new-password':'current-password'}">${signup||np?'<p class="hint">Minstens 8 tekens.</p>':''}</div>`}
+      ${signup?`<label class="switch consent"><input type="checkbox" id="a-ok"> <span>Ik ben ouder of verzorger en geef toestemming om de namen en de voortgang van mijn kinderen in dit account te bewaren.</span></label>`:''}
+      ${A.msg?`<p class="status err" role="alert">${esc(A.msg)}</p>`:''}
+      <button class="btn wide" type="submit" id="a-go" ${A.busy?'disabled':''}>${A.busy?'Even geduld…':signup?'Account maken':reset?'Stuur de link':np?'Opslaan':'Inloggen'}</button>
+    </form>
+    <div class="auth-links">${signup||reset?`<button class="link" data-act="auth:login">Ik heb al een account</button>`:np?'':`<button class="link" data-act="auth:signup">Nieuw hier? Maak een account</button><button class="link" data-act="auth:reset">Wachtwoord vergeten?</button>`}</div>
+  </div>`;
+}
+async function authSubmit(){
+  const A = S.auth; if(A.busy) return;
+  const email = ($('#a-email') ? $('#a-email').value : A.email || '').trim();
+  const pass = $('#a-pass') ? $('#a-pass').value : '';
+  A.email = email; A.msg = '';
+  if(A.mode!=='newpass' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ A.msg = 'Vul een geldig e-mailadres in.'; render(); return; }
+  if(A.mode!=='reset' && pass.length < (A.mode==='login' ? 1 : 8)){ A.msg = A.mode==='login' ? 'Vul je wachtwoord in.' : 'Kies een wachtwoord van minstens 8 tekens.'; render(); return; }
+  if(A.mode==='signup' && !$('#a-ok').checked){ A.msg = 'Vink aan dat je ouder of verzorger bent en toestemming geeft.'; render(); return; }
+  A.busy = true; render();
+  try{
+    if(A.mode==='login'){ const {error} = await sb.auth.signInWithPassword({email, password:pass}); if(error) throw error; }
+    else if(A.mode==='signup'){ const {data, error} = await sb.auth.signUp({email, password:pass, options:{emailRedirectTo: location.origin}}); if(error) throw error; if(!data.session){ A.mode='sent'; A.reset=false; } }
+    else if(A.mode==='reset'){ const {error} = await sb.auth.resetPasswordForEmail(email, {redirectTo: location.origin}); if(error) throw error; A.mode='sent'; A.reset=true; }
+    else if(A.mode==='newpass'){ const {error} = await sb.auth.updateUser({password:pass}); if(error) throw error; A.mode='login'; toast('Nieuw wachtwoord opgeslagen'); S.screen = me() ? 'home' : 'profiles'; }
+  }catch(e){ A.msg = authErr(e); }
+  A.busy = false; render();
+}
+let loadedFor = null;
+async function onSession(session){
+  const u = session && session.user || null;
+  AUTH.user = u; AUTH.ready = true;
+  if(!u){
+    loadedFor = null; DB = EMPTY_DB(); MEDIA.audio = {}; MEDIA.shared = {}; Object.keys(PICS).forEach(k=>delete PICS[k]); AUTH.admin = false;
+    if(S.screen!=='splash') S.screen = 'auth';
+    render(); return;
+  }
+  if(loadedFor === u.id){ if(S.screen==='loading') S.screen = me() ? 'home' : 'profiles'; render(); return; }
+  loadedFor = u.id;
+  const wasSplash = S.screen==='splash';
+  if(!wasSplash) { S.screen = 'loading'; render(); }
+  await Promise.all([loadFamily(), loadMedia(), checkAdmin()]);
+  if(S.auth.mode==='newpass'){ S.screen = 'auth'; }
+  else if(!wasSplash) S.screen = me() ? 'home' : 'profiles';
+  render();
+}
+
+/* ---------- schermen ---------- */
+function splashHTML(){
+  return `<div class="splash">
+    <div class="sun-disc">${mascot(170,'happy')}</div>
+    <div><h1>Masri <span>Kids</span></h1><div class="ar ar-title" lang="ar">مصري</div></div>
+    <p class="lead">Leer Egyptisch Arabisch met Mishmish de kat</p>
+    <div class="feat"><span class="chip">🗺️ ${WORLDS.length} werelden</span><span class="chip">🗣️ ${WORDS.length} woorden</span><span class="chip">💬 ${SENTENCES.length} zinnetjes</span></div>
+    <button class="btn sun wide" style="max-width:320px" data-act="start" ${AUTH.ready?'':'disabled'}>${AUTH.ready?(AUTH.user?'Beginnen':'Inloggen of account maken'):'Even laden…'}</button>
+    ${AUTH.user?`<p class="hint">Ingelogd als ${esc(AUTH.user.email||'')}</p>`:''}
+  </div>`;
+}
+function loadingHTML(){
+  return `<div class="splash"><div class="sun-disc">${mascot(150,'wow')}</div><p class="lead">Mishmish haalt je spelers op…</p></div>`;
+}
+function profilesHTML(){
+  if(S.newP) return newProfileHTML();
+  return `<h1 class="ptitle">Wie gaat er spelen?</h1><p class="psub">Kies je profiel</p>
+  <div class="profiles">
+    ${DB.profiles.map(p=>`<button class="pcard" data-act="pick:${p.id}"><span class="pav">${p.avatar}</span><span class="pname">${esc(p.name)}</span><span class="plvl">${p.age>=18?'volwassene · ':''}niveau ${p.level} · ${p.xp} XP</span></button>`).join('')}
+    <button class="pcard add" data-act="newp"><span class="pav">+</span><span class="pname">Nieuwe speler</span><span class="plvl">kind of volwassene</span></button>
+    ${DB.profiles.length?'':'<p class="empty-note">Nog geen spelers. Maak er een aan voor je kind, of voor jezelf om mee te doen.</p>'}
+  </div>
+  <p style="text-align:center;margin-top:28px"><button class="link" data-act="go:gate">Voor ouders</button></p>`;
+}
+function newProfileHTML(){
+  const n = S.newP;
+  return `<h1 class="ptitle">Nieuw profiel</h1><p class="psub">Even samen invullen met papa of mama. Ouders kunnen ook een eigen speler maken om mee te doen.</p>
+  <form class="form" id="pform" autocomplete="off">
+    <div><label class="lb" for="np-name">Hoe heet je?</label><input class="inp" id="np-name" maxlength="20" value="${esc(n.name)}" placeholder="Naam"></div>
+    <div><span class="lb">Hoe oud ben je?</span><div class="seg">${[4,5,6,7,8,9].map(a=>`<button type="button" class="${n.age===a?'on':''}" data-act="np-age:${a}">${a}</button>`).join('')}<button type="button" class="${n.age===18?'on':''}" data-act="np-age:18">volwassene</button></div>
+      <p class="hint">${n.age ? (n.age<=6 ? 'Niveau 1: plaatjes, luisteren en korte spelletjes' : 'Niveau 2: woorden, zinnetjes en gesprekjes') : 'Het niveau past zich aan de leeftijd aan.'}</p></div>
+    <div><span class="lb">Ik ben een…</span><div class="seg"><button type="button" class="${n.gender==='m'?'on':''}" data-act="np-g:m">${n.age===18?'man':'jongen'}</button><button type="button" class="${n.gender==='f'?'on':''}" data-act="np-g:f">${n.age===18?'vrouw':'meisje'}</button></div>
+      <p class="hint">In het Egyptisch klinken sommige woorden anders voor jongens en meisjes.</p></div>
+    <div><span class="lb">Kies je dier</span><div class="seg av">${AVATARS.map(a=>`<button type="button" class="${n.avatar===a?'on':''}" data-act="np-av:${a}" aria-label="${a}">${a}</button>`).join('')}</div></div>
+    <button type="submit" class="btn wide" ${n.name.trim()&&n.age?'':'disabled'} id="np-save">Klaar!</button>
+    <button type="button" class="btn ghost wide" data-act="np-cancel">Terug</button>
+  </form>`;
+}
+function topbarHTML(p){
+  return `<div class="topbar">
+    <button class="me" data-act="go:profiles" aria-label="Wissel van profiel"><span class="pav">${p.avatar}</span><span>${esc(p.name)}</span></button>
+    <div class="stats"><span class="stat" title="Dagen op rij">🔥 ${curStreak(p)}</span><span class="stat" title="Sterren">⭐ ${totalStars(p)}</span><span class="stat" title="XP">⚡ ${p.xp}</span></div>
+  </div>`;
+}
+function homeHTML(){
+  const p = me();
+  const d = daily(p);
+  const missed = p.last && p.last!==today() && p.last!==yesterday();
+  let firstOpen = null;
+  for(const wi of worldOrder(p)){ for(const l of WORLDS[wi].lessons.map((l,li)=>({...l,wi,li}))){ if(!firstOpen && lessonUnlocked(p,l.wi,l.li) && !p.lessons[l.id]) firstOpen=l.id; } }
+  let h = topbarHTML(p);
+  if(missed) h += `<div class="welcome">${mascot(54,'happy','')}<span>Ahlan! Fijn dat je er weer bent. Zullen we verder spelen?</span></div>`;
+  h += `<div class="daily"><span class="ic">${p.today.claimed?'✅':d.e}</span><div class="tx"><div class="k">Uitdaging van vandaag</div><div class="t">${d.t}</div>
+        <div class="bar"><i style="width:${Math.round(d.have/d.n*100)}%"></i></div></div><span style="font-weight:900;font-variant-numeric:tabular-nums">${p.today.claimed?'+20 XP':d.have+'/'+d.n}</span></div>`;
+  h += `<button class="pen-card" data-act="penalty"><span class="ic">⚽</span><span><b>Penaltyschieten</b><span>Elk goed antwoord is een doelpunt!</span></span></button>`;
+  worldOrder(p).forEach((wi,pos)=>{
+    const w = WORLDS[wi];
+    const open = worldUnlocked(p,wi);
+    const done = w.lessons.filter(l=>p.lessons[l.id]).length;
+    h += `<section class="world" style="--wc:${open?w.color:'#B8B0A0'};--wcd:${open?w.dark:'#958C7B'}">
+      <div class="wband"><div><span class="wnum">Wereld ${pos+1}</span><h2>${w.name}</h2><p>${w.desc}</p><div class="wprog">${done}/5 lessen</div></div><div class="wemoji">${w.emoji}</div></div>
+      <div class="path">`;
+    w.lessons.forEach((l,li)=>{
+      const un = lessonUnlocked(p,wi,li), st = p.lessons[l.id]||0, cur = l.id===firstOpen;
+      h += `<div class="node-row" style="--x:${OFFS[li]}px">
+        ${cur?'<span class="startbub">START</span>':''}
+        <button class="node ${un?'':'locked'} ${cur?'cur':''}" data-act="${un?`lesson:${wi}:${li}`:'locked'}" aria-label="${esc(l.title)}${un?'':' (op slot)'}">${un?l.icon:ICON_LOCK}</button>
+        <span class="nlabel">${esc(l.title)}</span>
+        ${st?`<span class="nstars">${[1,2,3].map(n=>STAR(n<=st,18)).join('')}</span>`:''}
+      </div>`;
+    });
+    h += `</div>${open?'':`<div class="wlock">🔒 Speel 3 lessen in ${esc(WORLDS[prevWorld(p,wi)]?.name||'')} om deze wereld te openen</div>`}</section>`;
+  });
+  h += `<section class="soon"><h3>Binnenkort</h3><div class="soon-grid">${COMING.map(([e,n],i)=>`<div class="soon-card"><span class="e">${e}</span><span>${n}<small>Wereld ${i+WORLDS.length+1}</small></span></div>`).join('')}</div></section>`;
+  return h;
+}
+function stickersHTML(){
+  const p = me();
+  return topbarHTML(p) + `<h1 class="page-h">Stickerboek</h1><p class="page-sub">${p.stickers.length} van ${STICKERS.length} stickers. Elke nieuwe les geeft een sticker uit Egypte.</p>
+  <div class="stk-grid">${STICKERS.map((s,i)=>p.stickers.includes(i)
+    ? `<div class="stk-item"><div class="stk">${stickerFace(s)}</div><span>${esc(s.n)}</span></div>`
+    : `<div class="stk-item locked"><div class="stk">?</div><span>Les ${(i%5)+1} · ${esc(WORLDS[Math.floor(i/5)].name)}</span></div>`).join('')}</div>`;
+}
+function wordsHTML(){
+  const p = me();
+  return topbarHTML(p) + `<h1 class="page-h">Mijn woordjes</h1><p class="page-sub">${learned(p).length} geleerd · tik op de luidspreker om te luisteren</p>
+  ${WORLDS.map(w=>`<div class="wgroup"><h2>${w.emoji} ${w.name}</h2><div class="wlist">${wordsOfWorld(w.id).map(x=>{
+      const s = p.words[x.id]; const l = (s?.c||0)>=2;
+      return `<div class="wrow ${s?'':'unseen'}"><span class="pic">${picOf(x.id)}</span><div class="mid"><div class="ph">${esc(x.ph)}</div><div class="nl">${esc(x.nl)}</div></div><span class="ar" lang="ar">${x.ar}</span>${l?'<span class="badge">✓</span>':''}${playBtn(x.id,'sm')}</div>`;
+    }).join('')}</div></div>`).join('')}`;
+}
+
+/* ---------- ouders ---------- */
+function gateHTML(){
+  if(!S.gate){ const a=4+Math.floor(Math.random()*5), b=3+Math.floor(Math.random()*6); S.gate={a,b,opts:shuffle([a+b,a+b+1,a+b-2,a+b+3])}; }
+  const g = S.gate;
+  return `<div class="gate">
+    <h1 class="page-h">Alleen voor ouders</h1><p class="muted">Beantwoord deze som om verder te gaan.</p>
+    <div class="q">${g.a} + ${g.b} = ?</div>
+    <div class="seg">${g.opts.map(o=>`<button data-act="gate:${o}">${o}</button>`).join('')}</div>
+    <button class="btn ghost" data-act="go:${DB.activeId?'home':'profiles'}">Terug</button>
+  </div>`;
+}
+function parentHTML(){
+  const tabs = [['overview','Voortgang'],['settings','Instellingen'],['audio',"Geluid & foto's"]];
+  let h = `<h1 class="page-h">Ouderdashboard</h1><p class="page-sub">☁️ Alles wordt bewaard in je account${AUTH.user?` (${esc(AUTH.user.email||'')})`:''}${AUTH.admin?' · beheerder':''}</p>
+    <div class="ptabs">${tabs.map(([k,t])=>`<button class="${S.ptab===k?'on':''}" data-act="ptab:${k}">${t}</button>`).join('')}</div>`;
+  if(S.ptab==='audio') return h + audioPanel();
+  if(!DB.profiles.length) return h + `<div class="panel"><h3>Nog geen kinderen</h3><p class="muted">Maak eerst een profiel aan.</p><p style="margin-top:12px"><button class="btn" data-act="go:profiles">Profiel maken</button></p></div>`;
+  if(!S.pkid || !DB.profiles.find(p=>p.id===S.pkid)) S.pkid = DB.activeId || DB.profiles[0].id;
+  h += `<div class="ptabs">${DB.profiles.map(p=>`<button class="${S.pkid===p.id?'on':''}" data-act="pkid:${p.id}">${p.avatar} ${esc(p.name)}</button>`).join('')}</div>`;
+  const p = DB.profiles.find(x=>x.id===S.pkid);
+  return h + (S.ptab==='overview' ? overviewPanel(p) : settingsPanel(p));
+}
+function overviewPanel(p){
+  const lw = learned(p);
+  const hard = WORDS.concat(SENTENCES).map(x=>({x, s:p.words[x.id]})).filter(o=>o.s && o.s.w>0).sort((a,b)=>(b.s.w-b.s.c*.5)-(a.s.w-a.s.c*.5)).slice(0,6);
+  const best = ALL_LESSONS.filter(l=>p.best[l.id]).sort((a,b)=>p.best[a.id].mistakes-p.best[b.id].mistakes).slice(0,5);
+  return `<div class="panel"><h3>Samenvatting</h3><div class="tiles">
+      <div class="tile-n"><b>${p.xp}</b><span>XP</span></div>
+      <div class="tile-n"><b>${Object.keys(p.lessons).length}/${ALL_LESSONS.length}</b><span>lessen af</span></div>
+      <div class="tile-n"><b>${lw.length}/${WORDS.length}</b><span>woorden geleerd</span></div>
+      <div class="tile-n"><b>${p.days.length}</b><span>dagen geoefend</span></div>
+    </div><p class="muted" style="margin-top:10px">Niveau ${p.level} · ${ageLabel(p.age)} · nu ${curStreak(p)} dag(en) op rij · ${p.stickers.length} stickers</p></div>
+  <div class="panel"><h3>Deze week</h3><div class="tiles">
+      <div class="tile-n"><b>${wk(p).stars}</b><span>sterren</span></div>
+      <div class="tile-n"><b>${wk(p).lessons}</b><span>lessen</span></div>
+      <div class="tile-n"><b>${wk(p).goals}</b><span>doelpunten</span></div>
+      <div class="tile-n"><b>${wk(p).duelsWon}</b><span>duels gewonnen</span></div></div></div>
+  <div class="panel"><h3>Voortgang per wereld</h3>${WORLDS.map(w=>{const d=w.lessons.filter(l=>p.lessons[l.id]).length;
+      return `<div class="prog-row"><span>${w.emoji} ${w.name}</span><span class="pb"><i style="width:${d/5*100}%"></i></span><span>${d}/5</span></div>`;}).join('')}</div>
+  <div class="panel"><h3>Geleerde woorden</h3>${lw.length?`<div class="chips">${lw.map(w=>`<span class="chip">${w.pic} ${esc(w.ph)} <span class="muted">${esc(w.nl)}</span></span>`).join('')}</div>`:'<p class="muted">Een woord telt als geleerd als het twee keer goed is gegaan.</p>'}</div>
+  <div class="panel"><h3>Hier kan je kind hulp bij gebruiken</h3>${hard.length?`<div class="wlist">${hard.map(o=>`<div class="wrow"><span class="pic">${picOf(o.x.id)}</span><div class="mid"><div class="ph">${esc(o.x.ph)}</div><div class="nl">${esc(o.x.nl)}</div></div><span class="badge warn">${o.s.w}× lastig</span><span class="badge">${o.s.c}× goed</span>${playBtn(o.x.id,'sm')}</div>`).join('')}</div>`:'<p class="muted">Nog niets opvallends. Fijn!</p>'}</div>
+  <div class="panel"><h3>Beste resultaten</h3>${best.length?`<div class="wlist">${best.map(l=>`<div class="wrow"><span class="pic">${l.icon}</span><div class="mid"><div class="ph">${esc(l.title)}</div><div class="nl">${esc(WORLDS[l.wi].name)} · ${p.best[l.id].mistakes} foutjes</div></div><span class="nstars">${[1,2,3].map(n=>STAR(n<=p.lessons[l.id],16)).join('')}</span></div>`).join('')}</div>`:'<p class="muted">Nog geen lessen gespeeld.</p>'}</div>`;
+}
+function settingsPanel(p){
+  return `<div class="panel"><h3>Profiel van ${esc(p.name)}</h3>
+    <div class="setrow"><label for="set-name">Naam</label><input class="inp" id="set-name" maxlength="20" value="${esc(p.name)}" data-setp="name"></div>
+    <div class="setrow"><label>Leeftijd</label><div class="seg">${[4,5,6,7,8,9].map(a=>`<button class="${p.age===a?'on':''}" data-act="setp-age:${a}">${a}</button>`).join('')}<button class="${p.age>=18?'on':''}" data-act="setp-age:18">volwassene</button></div></div>
+    <div class="setrow"><label>Niveau</label><div class="seg"><button class="${p.level===1?'on':''}" data-act="setp-lvl:1">1 · 4–6 jaar</button><button class="${p.level===2?'on':''}" data-act="setp-lvl:2">2 · 7+ en volwassenen</button></div>
+      <p class="hint">Niveau 1: plaatjes, luisteren, memory en nazeggen. Niveau 2: vertalen, zinnen bouwen, memory en nazeggen.</p></div>
+    <div class="setrow"><label>Jongen of meisje</label><div class="seg"><button class="${p.gender==='m'?'on':''}" data-act="setp-g:m">jongen</button><button class="${p.gender==='f'?'on':''}" data-act="setp-g:f">meisje</button></div></div>
+    <label class="switch"><input type="checkbox" id="set-unlock" data-setp="unlockAll" ${p.unlockAll?'checked':''}> Alle werelden en lessen openzetten</label>
+  </div>
+  <div class="panel danger-zone"><h3>Profiel verwijderen</h3>
+    ${S.confirmDel?`<p class="muted" style="margin-bottom:10px">Alle voortgang van ${esc(p.name)} verdwijnt. Weet je het zeker?</p><div class="seg"><button data-act="del-yes" style="color:var(--coral-d)">Ja, verwijderen</button><button data-act="del-no">Nee</button></div>`
+      :`<button class="mini danger" data-act="del-ask">Verwijder ${esc(p.name)}</button>`}
+  </div>
+  <div class="panel"><h3>Account</h3>
+    <p class="muted" style="margin-bottom:12px">Ingelogd als <b>${esc(AUTH.user&&AUTH.user.email||'')}</b>. Op elk apparaat waar je met dit account inlogt, zie je dezelfde spelers, scores, opnames en foto's.</p>
+    <button class="btn ghost wide" data-act="logout">Uitloggen</button>
+  </div>`;
+}
+const STATUS_LABEL = {cloud:'☁️ opgeslagen', fail:'mislukt', too_large:'te groot'};
+function itemOptions(sel){
+  return WORLDS.map(w=>`<optgroup label="${esc(w.name)}">${[...WORDS.filter(x=>x.w===w.id),...SENTENCES.filter(x=>x.w===w.id)]
+    .map(x=>`<option value="${x.id}" ${x.id===sel?'selected':''}>${esc(x.ph)} – ${esc(x.nl)}${hasAudio(x.id)?' ✓':''}</option>`).join('')}</optgroup>`).join('');
+}
+function bulkPanel(){
+  const B = S.bulk; if(!B) return '';
+  const n = B.assign.filter(Boolean).length;
+  const count = {}; B.assign.forEach(id=>{ if(id) count[id]=(count[id]||0)+1; });
+  return `<div class="panel"><h3>Opnames koppelen (${B.files.length})</h3>
+    <p class="muted" style="margin-bottom:6px">Luister en controleer bij welk woord elke opname hoort. Een ✓ in de lijst betekent dat dat woord al een opname heeft; die wordt dan vervangen.</p>
+    ${B.files.map((f,i)=>`<div class="brow"><button class="play sm" data-bplay="${i}" aria-label="Luister naar ${esc(f.name)}">${ICON_SPK}</button>
+      <div class="bmid"><div class="fname">${i+1}. ${esc(f.name)}</div><select class="inp sel" id="ba-${i}" data-bassign="${i}" ${B.busy?'disabled':''}><option value="">Niet gebruiken</option>${itemOptions(B.assign[i])}</select></div>
+      ${B.status[i]?`<span class="badge ${B.status[i]==='cloud'||B.status[i]==='local'?'':'warn'}">${STATUS_LABEL[B.status[i]]}</span>`:(B.assign[i]&&count[B.assign[i]]>1?'<span class="badge warn">dubbel</span>':'')}</div>`).join('')}
+    ${B.busy?`<p class="status on" style="margin-top:12px">Bezig met opslaan… ${B.done}/${n}</p>`
+      :`<div class="brow-actions"><button class="btn wide" data-act="bulk-save" ${n?'':'disabled'}>Opslaan (${n})</button><button class="btn ghost wide" data-act="bulk-cancel">Annuleren</button></div>`}
+  </div>`;
+}
+function autoAssign(files){
+  const norm = t => String(t).toLowerCase().normalize('NFD').replace(/[^a-z0-9]/g,'');
+  const items = [...WORDS,...SENTENCES], used = new Set();
+  const out = files.map(f=>{ const base = norm(f.name.replace(/\.[^.]+$/,''));
+    const m = base && items.find(x=>!used.has(x.id) && (norm(x.id)===base || norm(x.ph)===base || norm(x.nl)===base));
+    if(m){ used.add(m.id); return m.id; } return ''; });
+  const queue = [...WORDS.filter(w=>w.w===S.filterW),...SENTENCES.filter(x=>x.w===S.filterW)].filter(x=>!hasAudio(x.id) && !used.has(x.id));
+  return out.map(v=> v || (queue.length ? queue.shift().id : ''));
+}
+function closeBulk(){ if(S.bulk) S.bulk.urls.forEach(u=>{ try{URL.revokeObjectURL(u);}catch(e){} }); S.bulk=null; }
+async function bulkSave(){
+  const B = S.bulk; if(!B || B.busy) return;
+  B.busy = true; B.done = 0; B.status = []; render();
+  for(let i=0;i<B.files.length;i++){
+    const id = B.assign[i]; if(!id) continue;
+    const f = B.files[i];
+    B.status[i] = f.size > 3e6 ? 'too_large' : await saveAudio(id, f);
+    B.done++; render();
+  }
+  B.busy = false;
+  const ok = B.status.filter(x=>x==='cloud'||x==='local').length;
+  const bad = B.status.filter(x=>x==='fail'||x==='too_large').length;
+  toast(bad ? `${ok} opgeslagen, ${bad} niet gelukt (${LAST_ERR})` : `${ok} opname${ok===1?'':'s'} opgeslagen`);
+  if(!bad) closeBulk();
+  render();
+}
+function recSessionPanel(){
+  const R = S.recS; if(!R) return '';
+  const id = R.queue[R.i], x = ITEM[id], live = REC.id===id;
+  return `<div class="panel rec-panel"><h3>🎙️ Opnamesessie · ${R.i+1} van ${R.queue.length}</h3>
+    <div class="wordcard">
+      <div class="pic">${picOf(id)}</div>
+      <div class="ar" lang="ar">${x.ar}</div><div class="ph">${esc(x.ph)}</div><div class="nl">${esc(x.nl)}</div>
+      ${x.tip?`<p class="tip">💡 ${esc(x.tip)}</p>`:''}
+    </div>
+    <button class="recbig ${live?'live':''}" data-act="rec:${id}" ${REC.busy?'disabled':''} aria-label="${live?'Stop opname':'Start opname'}">${REC.busy?'…':live?'■':'🎙️'}</button>
+    <p class="muted" style="text-align:center">${REC.busy?'Opslaan…':live?'Spreek nu. Tik op ■ als je klaar bent.':'Tik op de microfoon en zeg het woord één keer, rustig en duidelijk.'}</p>
+    <div class="rec-actions">${hasAudio(id)?playBtn(id,'sm'):''}<button class="mini" data-act="rec-skip" ${live||REC.busy?'disabled':''}>Overslaan ➜</button><button class="mini danger" data-act="rec-end" ${live||REC.busy?'disabled':''}>Stoppen</button></div>
+  </div>`;
+}
+function audioPanel(){
+  const items = WORDS.filter(w=>w.w===S.filterW).concat(SENTENCES.filter(s=>s.w===S.filterW));
+  const every = [...WORDS,...SENTENCES];
+  const rec = every.filter(x=>hasAudio(x.id)).length;
+  const ver = every.filter(x=>DB.verified[x.id]).length;
+  const missing = every.filter(x=>!hasAudio(x.id)).length;
+  return `<div class="panel"><h3>Uitspraak</h3>
+    <div class="tiles" style="margin-bottom:12px"><div class="tile-n"><b>${rec}/${every.length}</b><span>met opname</span></div><div class="tile-n"><b>${ver}/${every.length}</b><span>gecontroleerd</span></div></div>
+    <p class="status on">${AUTH.admin?'⭐ Je bent beheerder: jouw opnames zijn te horen voor alle gezinnen die de app gebruiken.':'☁️ Je opnames worden in je account bewaard en zijn te horen op al je apparaten.'}</p>
+    <label class="switch"><input type="checkbox" id="set-tts" data-sets="tts" ${DB.settings.tts?'checked':''}> Computerstem gebruiken als er nog geen opname is</label>
+    <p class="hint">De computerstem is geen native Egyptische uitspraak en klinkt vaak als standaard-Arabisch. Knoppen met de computerstem zijn paars en hebben het label "computerstem".</p>
+    <label class="switch" style="margin-top:14px"><input type="checkbox" id="set-nlvoice" data-sets="nlVoice" ${DB.settings.nlVoice!==false?'checked':''}> Voorleesstem voor de opdrachten (niveau 1)</label>
+    <p class="hint">Een Nederlandse computerstem leest de opdrachten voor ("Luister. Welk plaatje hoort erbij?") en zegt "Goed zo!". Egyptische woorden spreekt hij nooit uit; die komen alleen van jouw opnames.</p>
+  </div>
+  ${recSessionPanel()}
+  ${S.recS||!recSupported()?'':`<div class="panel"><h3>🎙️ Inspreken in de app</h3>
+    <p class="muted" style="margin-bottom:12px">De app laat je de woorden één voor één zien. Tik op de microfoon, zeg het woord, tik op stop. Hij slaat het op en gaat door naar het volgende woord.</p>
+    <button class="btn sun wide" data-act="rec-start" ${missing?'':'disabled'}>${missing?`Start opnamesessie (${missing} zonder opname)`:'Alles heeft al een opname 🎉'}</button>
+    <p class="hint">Je kunt ook per woord opnemen met de 🎙️-knop in de lijst hieronder. De eerste keer vraagt je telefoon om toegang tot de microfoon.</p>
+  </div>`}
+  ${bulkPanel()}
+  ${S.bulk||S.recS?'':`<div class="panel"><h3>Of: opnames uploaden</h3>
+    <p class="muted" style="margin-bottom:12px">Heb je al opnames in Dictafoon? Kies ze hier allemaal tegelijk en koppel ze aan de woorden.</p>
+    <label class="btn ghost wide" for="bulk-in">Meerdere opnames kiezen<input type="file" id="bulk-in" accept="audio/*,.m4a" multiple data-bulk hidden></label>
+  </div>`}
+  <div class="panel"><h3>Uitspraaksleutel</h3><div class="key">
+    <b>ch</b><span>als in "lachen" (خ)</span><b>gh</b><span>Nederlandse g, als in "gaan" (غ)</span>
+    <b>g</b><span>harde g, als in "goal" (ج)</span><b>h</b><span>hete h, alsof je op een brilletje blaast (ح)</span>
+    <b>'</b><span>klein stopje of keelklank (ء ع ق)</span><b>sj</b><span>als in "sjaal"</span>
+    <b>j</b><span>als in "jas"</span><b>oe</b><span>als in "boek"</span></div>
+    <p class="hint">De zware klanken (ص ط ض) zijn in de uitspraak niet apart aangegeven. Daarvoor zijn echte opnames nodig.</p></div>
+  <div class="panel"><h3>Eigen foto's</h3>
+    <p class="muted">Maak het persoonlijk: zet bij <b>teeta</b> een foto van oma, bij <b>otta</b> jullie kat, bij <b>baba</b> papa. Een echte foto snapt een kind van 4 meteen, en een woord met foto komt ook in de plaatjesspelletjes. Tik hieronder bij een woord op <b>📷 Foto</b>. Foto's zijn alleen zichtbaar voor jouw gezin.</p>
+  </div>
+  <div class="panel"><h3>Woorden en zinnen</h3>
+    <div class="ptabs">${WORLDS.map(w=>`<button class="${S.filterW===w.id?'on':''}" data-act="fw:${w.id}">${w.emoji} ${w.name}</button>`).join('')}</div>
+    ${items.map((x,n)=>{ const where = MEDIA.audio[x.id] ? '☁️ eigen opname' : MEDIA.shared[x.id] ? '☁️ gedeelde opname' : AUDIO_FILES[x.id] ? '✓ ingebouwd' : '';
+      const canDel = !!MEDIA.audio[x.id] || (AUTH.admin && !!MEDIA.shared[x.id]);
+      const live = REC.id===x.id;
+      return `<div class="arow"><span class="ar" lang="ar">${x.ar}</span><div style="min-width:0"><div class="ph">${n+1}. ${esc(x.ph)}</div><div class="nl">${esc(x.nl)}${where?` · <b style="color:var(--ok-d)">${where}</b>`:''}</div></div>
+      <div class="acts">${playBtn(x.id,'sm')}
+        ${recSupported()?`<button class="mini ${live?'rec-on':''}" data-act="rec:${x.id}" ${REC.busy||(REC.mr&&!live)?'disabled':''}>${live?'■ Stop':'🎙️ Opnemen'}</button>`:''}
+        <label class="mini">⬆ ${where?'Vervang':'Upload'}<input type="file" accept="audio/*,.m4a" data-upload="${x.id}" id="up-${x.id}"></label>
+        ${canDel?`<button class="mini danger" data-act="delaudio:${x.id}">Wis</button>`:''}
+        ${ITEM[x.id].kind==='word'?`${PICS[x.id]?`<img class="thumb" src="${PICS[x.id]}" alt="Foto bij ${esc(x.ph)}">`:''}<label class="mini">📷 ${PICS[x.id]?'Andere foto':'Foto'}<input type="file" accept="image/*" data-pic="${x.id}" id="pic-${x.id}"></label>${PICS[x.id]?`<button class="mini danger" data-act="delpic:${x.id}">Wis foto</button>`:''}`:''}
+        <button class="mini ${DB.verified[x.id]?'on':''}" data-act="verify:${x.id}" aria-pressed="${!!DB.verified[x.id]}">${DB.verified[x.id]?'✓ Gecontroleerd':'Controleer'}</button>
+      </div></div>`;}).join('')}
+  </div>`;
+}
+
+/* ---------- render ---------- */
+function navHTML(){
+  const items = [['home','🗺️','Leren'],['words','📖','Woorden'],['scores','🏆','Scores'],['stickers','🌟','Stickers'],['gate','🔒','Ouders']];
+  const cur = S.screen==='parent' ? 'gate' : S.screen;
+  return `<nav class="nav" aria-label="Menu"><div class="nav-in">${items.map(([k,e,t])=>`<button class="${cur===k?'on':''}" data-act="go:${k}"><span class="e">${e}</span>${t}</button>`).join('')}</div></nav>`;
+}
+function render(){
+  const app = $('#app');
+  const scr = S.screen;
+  if(scr!=='splash' && scr!=='auth' && scr!=='loading' && AUTH.ready && !AUTH.user){ S.screen='auth'; return render(); }
+  if(['home','words','stickers','penalty','scores','lesson','done'].includes(scr) && !me()) { S.screen='profiles'; return render(); }
+  const map = {splash:splashHTML, auth:authHTML, loading:loadingHTML, profiles:profilesHTML, home:homeHTML, words:wordsHTML, stickers:stickersHTML, scores:scoresHTML, gate:gateHTML, parent:parentHTML, lesson:lessonHTML, done:doneHTML, penalty:penHTML};
+  const showNav = me() && ['home','words','stickers','scores','gate','parent'].includes(scr);
+  app.className = (showNav ? '' : 'full') + (isKid() ? ' lvl1' : '');
+  app.innerHTML = map[scr]() + (showNav ? navHTML() : '');
+  if(scr==='profiles' && S.newP){
+    const f = $('#pform'), nm = $('#np-name');
+    nm.addEventListener('input', ()=>{ S.newP.name = nm.value; $('#np-save').disabled = !(nm.value.trim() && S.newP.age); });
+    f.addEventListener('submit', e=>{ e.preventDefault(); createProfile(); });
+  }
+  if(scr==='auth'){ const f = $('#aform'); if(f) f.addEventListener('submit', e=>{ e.preventDefault(); authSubmit(); }); }
+}
+let toastT;
+function toast(msg){
+  document.querySelectorAll('.toast').forEach(t=>t.remove());
+  const t = document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t);
+  clearTimeout(toastT); toastT = setTimeout(()=>t.remove(), 2600);
+}
+function createProfile(){
+  const n = S.newP; if(!n.name.trim()||!n.age) return;
+  const p = {id:uid()+uid(), created:Date.now(), name:n.name.trim(), age:n.age, level:n.age<=6?1:2, gender:n.gender, avatar:n.avatar,
+    xp:0, lessons:{}, best:{}, words:{}, stickers:[], days:[], streak:0, last:null, today:null, unlockAll:false};
+  DB.profiles.push(p); DB.activeId=p.id; save(); flush(); S.newP=null; S.screen='home'; render();
+}
+
+/* ---------- klikken ---------- */
+document.addEventListener('click', e=>{
+  const bp = e.target.closest('[data-bplay]');
+  if(bp && S.bulk){ e.preventDefault(); try{ if(curAudio) curAudio.pause(); }catch(x){} curAudio = new Audio(S.bulk.urls[+bp.dataset.bplay]); curAudio.play().catch(()=>toast('Deze opname kon niet worden afgespeeld.')); return; }
+  const pb = e.target.closest('[data-play]');
+  if(pb){ e.preventDefault(); play(pb.dataset.play); return; }
+  const el = e.target.closest('[data-act]'); if(!el) return;
+  const [act, a, b] = el.dataset.act.split(':');
+  const p = me();
+  switch(act){
+    case 'start': if(!AUTH.ready) return; S.screen = !AUTH.user ? 'auth' : (loadedFor ? (me() ? 'home' : 'profiles') : 'loading'); break;
+    case 'reload': location.reload(); return;
+    case 'auth': S.auth = {mode:a, email:S.auth.email}; break;
+    case 'logout': recRelease(); flush().finally(()=>sb.auth.signOut()); S.screen='auth'; S.auth={mode:'login'}; break;
+    case 'go': if(S.screen==='penalty'){ penEndRestore(); PEN=null; } if(a==='gate') S.gate=null; if(a==='profiles') S.newP=null; if(S.recS && a!=='parent'){ S.recS=null; recRelease(); }
+      S.screen=a; S.confirmDel=false; window.scrollTo(0,0); break;
+    case 'duel': startPenalty(a); return;
+    case 'pen-ready': if(PEN){ PEN.state='q'; render(); penAuto(); } return;
+    case 'rec': recToggle(a); return;
+    case 'rec-start': { const q = [...WORDS,...SENTENCES].filter(x=>!hasAudio(x.id)).map(x=>x.id); if(!q.length) return; S.recS = {queue:q, i:0}; window.scrollTo(0,0); break; }
+    case 'rec-skip': recNext(); break;
+    case 'rec-end': S.recS = null; recRelease(); break;
+    case 'pick': DB.activeId=a; save(); S.screen='home'; break;
+    case 'newp': S.newP={name:'',age:null,gender:null,avatar:pick(AVATARS)}; break;
+    case 'np-age': S.newP.age=+a; break;
+    case 'np-g': S.newP.gender=a; break;
+    case 'np-av': S.newP.avatar=a; break;
+    case 'np-cancel': S.newP=null; break;
+    case 'lesson': startLesson(+a,+b); return;
+    case 'penalty': startPenalty(); return;
+    case 'pen': penShoot(a); return;
+    case 'pen-next': penNext(); return;
+    case 'pen-again': { const opp = PEN && PEN.players.length>1 ? PEN.players.find(x=>x!==PEN.home) : null; penEndRestore(); startPenalty(opp); return; }
+    case 'locked': toast('Speel eerst de les ervoor!'); return;
+    case 'opt': if(L.state!=='answer') return; L.sel=a; if(L.steps[L.i].type==='translate') play(a,true);
+      if(isKid() && L.steps[L.i].type==='listen'){ check(); return; } break;
+    case 'helpme': if(S.screen==='lesson') autoPlay(); else penAuto(true); return;
+    case 'tile': { const st=L.steps[L.i]; if(L.state!=='answer'||st.ans.includes(+a)) return; st.ans.push(+a); break; }
+    case 'untile': { const st=L.steps[L.i]; if(L.state!=='answer') return; st.ans.splice(+a,1); break; }
+    case 'mem': memTap(+a); return;
+    case 'check': check(); return;
+    case 'said': sfx('ok'); if(voiceOn()) setTimeout(()=>speakNL(pick(PRAISE_NL)),300); L.xp+=2; record(L.steps[L.i].id,true); L.ok=true; L.state='feedback'; L.praise=praise(); break;
+    case 'next': next(); return;
+    case 'quit': S.sheet='quit'; break;
+    case 'quit-no': S.sheet=null; break;
+    case 'quit-yes': S.sheet=null; L=null; S.screen='home'; break;
+    case 'gate': if(+a===S.gate.a+S.gate.b){ S.screen='parent'; S.ptab='overview'; } else { toast('Dat klopt niet. Probeer het nog eens.'); S.gate=null; } break;
+    case 'ptab': S.ptab=a; S.confirmDel=false; if(a!=='audio' && S.recS){ S.recS=null; recRelease(); } break;
+    case 'pkid': S.pkid=a; S.confirmDel=false; break;
+    case 'fw': S.filterW=+a; break;
+    case 'setp-age': { const k=DB.profiles.find(x=>x.id===S.pkid); k.age=+a; k.level=+a<=6?1:2; save(); break; }
+    case 'setp-lvl': { const k=DB.profiles.find(x=>x.id===S.pkid); k.level=+a; save(); break; }
+    case 'setp-g': { const k=DB.profiles.find(x=>x.id===S.pkid); k.gender=a; save(); break; }
+    case 'del-ask': S.confirmDel=true; break;
+    case 'del-no': S.confirmDel=false; break;
+    case 'del-yes': if(sb && AUTH.user) sb.from('players').delete().eq('id', S.pkid).then(({error})=>{ if(error) toast('Verwijderen lukte niet online.'); }); DB.profiles=DB.profiles.filter(x=>x.id!==S.pkid); if(DB.activeId===S.pkid) DB.activeId=DB.profiles[0]?.id||null; S.pkid=null; S.confirmDel=false; save(); toast('Profiel verwijderd'); break;
+    case 'verify': if(DB.verified[a]) delete DB.verified[a]; else DB.verified[a]=true; save(); break;
+    case 'delaudio': removeAudio(a).then(()=>{ toast('Opname gewist'); render(); }); return;
+    case 'bulk-save': bulkSave(); return;
+    case 'delpic': removePic(a).then(()=>{ toast('Foto gewist'); render(); }); return;
+    case 'bulk-cancel': closeBulk(); break;
+    default: return;
+  }
+  render();
+});
+document.addEventListener('change', async e=>{
+  const t = e.target;
+  if(t.dataset.upload){
+    const f = t.files && t.files[0]; if(!f) return;
+    if(!f.type.startsWith('audio/') && !/\.(mp3|m4a|wav|ogg|aac|webm)$/i.test(f.name)){ toast('Kies een audiobestand (mp3, m4a of wav).'); return; }
+    if(f.size > 3e6){ toast('Dit bestand is te groot. Houd opnames korter dan een paar seconden.'); return; }
+    toast('Bezig met opslaan…');
+    const r = await saveAudio(t.dataset.upload, f);
+    const ph = ITEM[t.dataset.upload].ph;
+    toast(r==='cloud' ? 'Opgeslagen voor "'+ph+'"' : 'Opslaan lukte niet ('+LAST_ERR+')');
+    render(); return;
+  }
+  if(t.dataset.pic){
+    const f = t.files && t.files[0]; if(!f) return;
+    toast('Foto opslaan…');
+    const r = await savePic(t.dataset.pic, f);
+    toast(r==='ok' ? 'Foto opgeslagen bij "'+ITEM[t.dataset.pic].ph+'"' : 'Foto opslaan lukte niet ('+LAST_ERR+')');
+    render(); return;
+  }
+  if(t.dataset.bulk!==undefined){
+    const files = [...(t.files||[])].sort((x,y)=>x.name.localeCompare(y.name,'nl',{numeric:true}));
+    if(!files.length) return;
+    closeBulk();
+    S.bulk = {files, assign:autoAssign(files), urls:files.map(f=>URL.createObjectURL(f)), status:[], busy:false, done:0};
+    render(); window.scrollTo(0,0); return;
+  }
+  if(t.dataset.bassign!==undefined && S.bulk){ S.bulk.assign[+t.dataset.bassign] = t.value; S.bulk.status=[]; render(); return; }
+  if(t.dataset.sets){ DB.settings[t.dataset.sets] = t.checked; save(); render(); return; }
+  if(t.dataset.setp){
+    const k = DB.profiles.find(x=>x.id===S.pkid); if(!k) return;
+    if(t.dataset.setp==='name'){ if(t.value.trim()) k.name=t.value.trim(); }
+    else if(t.dataset.setp==='unlockAll') k.unlockAll = t.checked;
+    save(); render();
+  }
+});
+
+/* ---------- start ---------- */
+render();
+if(sb){
+  sb.auth.onAuthStateChange((ev, session)=>{
+    if(ev==='PASSWORD_RECOVERY'){ S.auth = {mode:'newpass'}; S.screen = 'auth'; }
+    setTimeout(()=>onSession(session), 0);
+  });
+} else { AUTH.ready = true; render(); }
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState==='hidden'){ if(SYNC.t) flush(); return; }
+  if(AUTH.user && !SYNC.t && !busyScreen() && !S.newP && S.screen!=='auth'){
+    Promise.all([loadFamily(), loadMedia()]).then(()=>{ if(!busyScreen() && !S.newP) render(); });
+  }
+});
+window.addEventListener('pagehide', ()=>{ if(SYNC.t) flush(); });
+if('speechSynthesis' in window){ try{ pickNL(); speechSynthesis.onvoiceschanged=pickNL; }catch(e){} }
+</script>
+</body>
+</html>
