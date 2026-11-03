@@ -719,6 +719,40 @@ h1,h2,h3,.ptitle,.page-h,.ex-k,.pname,.auth-h{font-family:var(--f-display);font-
 .sun-disc{box-shadow:none}
 .daily .tx .bar{border-radius:999px}
 .toast{background:var(--duo-ink);border-radius:12px}
+/* ---------- beloningen ---------- */
+.reward{display:flex;gap:14px;align-items:center;background:#fff;border:2px solid var(--duo-line);border-radius:16px;padding:14px 16px;margin-bottom:14px}
+.reward .re{flex:none;width:58px;height:58px;border-radius:14px;display:grid;place-items:center;font-size:36px;background:#FFF4CC}
+.reward.fam .re{background:var(--duo-sel)}
+.reward .rt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.reward .rk{font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--duo-mute)}
+.reward .rn{font-family:var(--f-display);font-weight:900;font-size:19px;color:var(--duo-ink);overflow-wrap:anywhere}
+.reward .rmsg{font-weight:800;font-size:14px;color:var(--duo-mute)}
+.reward.done{border-color:#FFC800;background:#FFFBEA}
+.reward.done .re{animation:jump .8s ease-out 2}
+.reward.done .rmsg{color:#B88A00}
+.gbar{position:relative;height:18px;border-radius:999px;background:var(--duo-line);overflow:hidden;margin-top:6px}
+.gbar i{display:block;height:100%;border-radius:999px;background:#FFC800;transition:width .4s}
+.reward.fam .gbar i{background:#1CB0F6}
+.gbar span{position:absolute;inset:0;display:grid;place-items:center;font-size:11px;font-weight:900;color:var(--duo-ink)}
+.fam-av{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.fam-av span{display:flex;align-items:center;gap:3px;font-size:20px}
+.fam-av small{font-size:12px;font-weight:900;color:var(--duo-mute)}
+.goal-hit{display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;max-width:420px;padding:16px;border-radius:16px;background:#FFFBEA;border:2px solid #FFC800;animation:pop .5s .4s both}
+.goal-hit.fam{background:var(--duo-sel);border-color:var(--duo-sel-b)}
+.goal-hit .ge{font-size:52px;animation:jump .8s ease-out 3}
+.goal-hit b{font-family:var(--f-display);font-size:22px;color:#B88A00}
+.goal-hit.fam b{color:var(--duo-sel-t)}
+.goal-hit span:last-child{font-weight:800;color:var(--duo-ink)}
+.goal-edit{border-top:2px solid var(--duo-line);padding:14px 0 6px}
+.goal-edit:first-of-type{border-top:0;padding-top:0}
+.ge-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ge-head .pav{width:40px;height:40px;font-size:24px}
+.ge-head b{font-family:var(--f-display);font-size:18px;flex:1}
+.stepper{display:flex;align-items:center;gap:12px}
+.stepper button{width:44px;height:44px;border-radius:12px;background:#fff;border:2px solid var(--duo-line);box-shadow:0 3px 0 var(--duo-line);font-size:24px;font-weight:900;color:var(--nile)}
+.stepper button:active{transform:translateY(3px);box-shadow:none}
+.stepper b{min-width:80px;text-align:center;font-family:var(--f-display);font-size:20px}
+.goal-edit .seg.av button,.panel .seg.av button{min-width:44px;min-height:44px;font-size:24px}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 
@@ -958,7 +992,7 @@ async function flush(){
       const {error} = await sb.from('players').upsert(DB.profiles.map(p=>({id:p.id, family_id:AUTH.user.id, data:p, updated_at:now})));
       if(error) throw error;
     }
-    const {error:e2} = await sb.from('family_settings').upsert({family_id:AUTH.user.id, data:{tts:!!DB.settings.tts, nlVoice:DB.settings.nlVoice!==false, verified:DB.verified||{}}, updated_at:now});
+    const {error:e2} = await sb.from('family_settings').upsert({family_id:AUTH.user.id, data:{tts:!!DB.settings.tts, nlVoice:DB.settings.nlVoice!==false, verified:DB.verified||{}, familyGoal:DB.settings.familyGoal||null, familyGiven:DB.settings.familyGiven||null}, updated_at:now});
     if(e2) throw e2;
   }catch(e){ toast('Online opslaan lukte even niet. Controleer je internetverbinding.'); }
 }
@@ -977,7 +1011,7 @@ async function loadFamily(){
   }
   DB.profiles = (r1.data||[]).map(r=>({...r.data, id:r.id})).sort((a,b)=>(a.created||0)-(b.created||0) || String(a.name).localeCompare(String(b.name)));
   const st = (r2.data && r2.data.data) || {};
-  DB.settings = {tts:!!st.tts, nlVoice: st.nlVoice!==false};
+  DB.settings = {tts:!!st.tts, nlVoice: st.nlVoice!==false, familyGoal: st.familyGoal||null, familyGiven: st.familyGiven||null};
   DB.verified = st.verified || {};
   DB.activeId = DB.profiles.find(p=>p.id===keepActive) ? keepActive : null;
   saveLocal();
@@ -1126,7 +1160,31 @@ function weekKey(d=new Date()){
   const y = t.getUTCFullYear(), w = Math.ceil(((t - Date.UTC(y,0,1)) / 864e5 + 1) / 7);
   return y + '-W' + String(w).padStart(2,'0');
 }
-function wk(p){ const k = weekKey(); if(!p.week || p.week.k!==k) p.week = {k, stars:0, lessons:0, goals:0, best:0, duelsWon:0}; return p.week; }
+function wk(p){ const k = weekKey(); if(!p.week || p.week.k!==k){ if(p.week && p.week.k) p.prevWeek = p.week; p.week = {k, stars:0, lessons:0, goals:0, best:0, duelsWon:0}; } return p.week; }
+const ZERO_WEEK = {stars:0, lessons:0, goals:0, best:0, duelsWon:0};
+const prevWeekKey = () => { const d = new Date(); d.setDate(d.getDate()-7); return weekKey(d); };
+function weekOf(p){ return (p.week && p.week.k===weekKey()) ? p.week : ZERO_WEEK; }
+function lastWeekOf(p){ const k = prevWeekKey(); return (p.week && p.week.k===k) ? p.week : (p.prevWeek && p.prevWeek.k===k ? p.prevWeek : null); }
+// Kampioen van de week = meeste sterren vorige week (bij gelijke stand allebei)
+function champions(){
+  const ls = DB.profiles.map(x=>({x, w:lastWeekOf(x)})).filter(o=>o.w && o.w.stars>0);
+  if(!ls.length) return new Set();
+  const top = Math.max(...ls.map(o=>o.w.stars));
+  return new Set(ls.filter(o=>o.w.stars===top).map(o=>o.x.id));
+}
+const crown = id => champions().has(id) ? ' 👑' : '';
+// Weekdoel per speler: {stars, reward, emoji}. Gehaald = sterren deze week >= doel.
+function goalState(p){
+  const g = p.goal; if(!g || !g.stars) return null;
+  const have = weekOf(p).stars, k = weekKey();
+  return {g, have, left:Math.max(0, g.stars-have), done: have>=g.stars, given: p.goalGiven===k};
+}
+function familyState(){
+  const g = DB.settings.familyGoal; if(!g || !g.stars) return null;
+  const have = DB.profiles.reduce((n,x)=>n+weekOf(x).stars, 0), k = weekKey();
+  return {g, have, left:Math.max(0, g.stars-have), done: have>=g.stars, given: DB.settings.familyGiven===k};
+}
+const REWARD_EMOJI = ['🍦','🍿','🎬','🍕','🍲','🧁','🎮','⚽','🏊','🛝','📚','🎁'];
 const ageLabel = a => a>=18 ? 'volwassene' : a + ' jaar';
 function daily(p){
   const d = DAILY[dayIndex()%DAILY.length];
@@ -1474,16 +1532,20 @@ function finishLesson(){
   const d2 = daily(p);
   if(!p.today.claimed && p.today[d2.k] >= d2.n){ p.today.claimed = true; xp += 20; p.today.xp += 20; dailyBonus = true; }
   p.xp += xp;
+  const gBefore = goalState(p), fBefore = familyState();
   { const w7 = wk(p); w7.stars += stars; w7.lessons++; }
+  const gAfter = goalState(p), fAfter = familyState();
+  const goalHit = !!(gAfter && gAfter.done && !(gBefore && gBefore.done)), famHit = !!(fAfter && fAfter.done && !(fBefore && fBefore.done));
   // wereld klaar?
   const w = WORLDS[L.wi];
   const worldDone = firstTime && w.lessons.every(l=>p.lessons[l.id]);
   const nxt = WORLDS.findIndex((x,i)=>!x.bonus && prevWorld(p,i)===L.wi);
   const unlockedNext = firstTime && nxt>=0 && w.lessons.filter(l=>p.lessons[l.id]).length===3;
   save();
-  LAST = {stars, xp, mistakes:L.mistakes, sticker, dailyBonus, worldDone, unlockedNext, nextName: WORLDS[nxt]?.name, worldName:w.name};
+  LAST = {stars, xp, mistakes:L.mistakes, goalHit, famHit, goal:gAfter && gAfter.g, fam:fAfter && fAfter.g, sticker, dailyBonus, worldDone, unlockedNext, nextName: WORLDS[nxt]?.name, worldName:w.name};
   L = null; S.screen='done'; render(); confetti(stars===3||worldDone?90:50); sfx('goal');
-  if(voiceOn()) setTimeout(()=>speakNL(sticker ? 'Hoera! De les is klaar. Je krijgt een nieuwe sticker!' : 'Hoera! De les is klaar!'), 500);
+  if(goalHit || famHit) setTimeout(()=>confetti(120), 700);
+  if(voiceOn()) setTimeout(()=>speakNL(goalHit ? 'Hoera! Je hebt je weekdoel gehaald! Laat het aan papa of mama zien!' : famHit ? 'Hoera! Samen hebben jullie het gezinsdoel gehaald!' : sticker ? 'Hoera! De les is klaar. Je krijgt een nieuwe sticker!' : 'Hoera! De les is klaar!'), 500);
 }
 function doneHTML(){
   const r = LAST;
@@ -1491,6 +1553,8 @@ function doneHTML(){
     ${mascot(140,'cheer','m-dance')}
     <h1>${r.worldDone ? 'Wereld voltooid!' : 'Les klaar!'}</h1>
     <div class="bigstars">${[1,2,3].map(n=>`<span class="s">${STAR(n<=r.stars,80)}</span>`).join('')}</div>
+    ${r.goalHit?`<div class="goal-hit"><span class="ge">${r.goal.emoji||'🎁'}</span><b>Weekdoel gehaald!</b><span>Je hebt ${esc(r.goal.reward||'je beloning')} verdiend. Laat dit aan papa of mama zien!</span></div>`:''}
+    ${r.famHit?`<div class="goal-hit fam"><span class="ge">${r.fam.emoji||'🎁'}</span><b>Gezinsdoel gehaald!</b><span>Samen hebben jullie ${esc(r.fam.reward||'de beloning')} verdiend!</span></div>`:''}
     <div class="rewards"><div class="rw rw-xp"><span class="rwh">XP verdiend</span><b>⚡ ${r.xp}</b></div><div class="rw rw-star"><span class="rwh">Sterren</span><b>⭐ ${r.stars}/3</b></div><div class="rw rw-ok"><span class="rwh">Foutjes</span><b>🎯 ${r.mistakes}</b></div></div>
     ${r.sticker?`<div class="sticker-reveal"><span class="k">Nieuwe sticker!</span><div class="stk">${stickerFace(r.sticker)}</div><b>${esc(r.sticker.n)}</b></div>`:''}
     ${r.dailyBonus?`<p class="extra-msg">⭐ Dagelijkse uitdaging gehaald! +20 XP</p>`:''}
@@ -1655,6 +1719,60 @@ function penNext(){
   if(PEN.state==='q') penAuto(); else penTurnVoice();
 }
 
+/* ---------- beloningen ---------- */
+function goalBar(have, need){ return `<div class="gbar"><i style="width:${Math.min(100, Math.round(have/need*100))}%"></i><span>${Math.min(have,need)}/${need} ⭐</span></div>`; }
+function rewardCards(p){
+  let h = '';
+  const gs = goalState(p);
+  if(gs){
+    h += `<div class="reward ${gs.done?'done':''}"><span class="re">${gs.g.emoji||'🎁'}</span><div class="rt">
+      <div class="rk">${gs.given?'Beloning gekregen':'Jouw weekdoel'}</div>
+      <div class="rn">${gs.given?'✓ ':''}${esc(gs.g.reward||'Beloning')}</div>
+      ${gs.done ? `<div class="rmsg">${gs.given?'Goed gedaan deze week!':'Gehaald! Laat dit aan papa of mama zien 🎉'}</div>` : `<div class="rmsg">Nog <b>${gs.left} ⭐</b> te gaan</div>`}
+      ${goalBar(gs.have, gs.g.stars)}</div></div>`;
+  }
+  const fs = familyState();
+  if(fs){
+    h += `<div class="reward fam ${fs.done?'done':''}"><span class="re">${fs.g.emoji||'🎁'}</span><div class="rt">
+      <div class="rk">${fs.given?'Gezinsbeloning gekregen':'Gezinsdoel · samen'}</div>
+      <div class="rn">${fs.given?'✓ ':''}${esc(fs.g.reward||'Beloning')}</div>
+      <div class="rmsg">${fs.done?(fs.given?'Lekker samen genoten!':'Gehaald! Jullie hebben het samen verdiend 🎉'):`Samen nog <b>${fs.left} ⭐</b>`}</div>
+      ${goalBar(fs.have, fs.g.stars)}
+      <div class="fam-av">${DB.profiles.map(x=>`<span title="${esc(x.name)}">${x.avatar}<small>${weekOf(x).stars}</small></span>`).join('')}</div></div></div>`;
+  }
+  return h;
+}
+function rewardsPanel(){
+  const k = weekKey(), ch = champions();
+  const fs = familyState(), fg = DB.settings.familyGoal || {};
+  const emojiPick = (cur, act) => `<div class="seg av">${REWARD_EMOJI.map(e=>`<button class="${cur===e?'on':''}" data-act="${act}:${e}" aria-label="${e}">${e}</button>`).join('')}</div>`;
+  return `<div class="panel"><h3>👑 Kampioen van de week</h3>
+    <p class="muted">Wie vorige week de meeste sterren had, krijgt deze week een kroon bij zijn naam.</p>
+    <p style="margin-top:10px;font-weight:900;font-size:18px">${ch.size ? DB.profiles.filter(x=>ch.has(x.id)).map(x=>`${x.avatar} ${esc(x.name)} 👑`).join(' &nbsp; ') : '<span class="muted">Nog geen kampioen: de eerste kroon komt na deze week.</span>'}</p>
+  </div>
+  <div class="panel"><h3>🎁 Weekdoel per speler</h3>
+    <p class="muted" style="margin-bottom:12px">Kies per speler hoeveel sterren hij deze week moet halen, en wat hij dan krijgt. Een les levert maximaal 3 sterren op. Kies voor kleintjes een haalbaar doel, bijvoorbeeld 5 sterren.</p>
+    ${DB.profiles.map(x=>{ const g = x.goal || {}; const st = goalState(x);
+      return `<div class="goal-edit">
+        <div class="ge-head"><span class="pav">${x.avatar}</span><b>${esc(x.name)}</b>${st?`<span class="badge ${st.done?'':'new'}">${st.done?(st.given?'uitgereikt ✓':'gehaald!'):`${st.have}/${st.g.stars} ⭐`}</span>`:''}</div>
+        <div class="setrow"><label>Aantal sterren deze week</label><div class="stepper"><button data-act="gstars:${x.id}:-1" aria-label="Minder">−</button><b>${g.stars||0} ⭐</b><button data-act="gstars:${x.id}:1" aria-label="Meer">+</button></div></div>
+        <div class="setrow"><label for="greward-${x.id}">Beloning</label><input class="inp" id="greward-${x.id}" maxlength="40" placeholder="bijv. ijsje, filmavond, 30 min. gamen" value="${esc(g.reward||'')}" data-greward="${x.id}"></div>
+        ${emojiPick(g.emoji, 'gemoji:'+x.id)}
+        ${st && st.done && !st.given ? `<button class="btn ok wide" style="margin-top:12px" data-act="ggive:${x.id}">Beloning uitgereikt ✓</button>` : ''}
+        ${g.stars ? `<button class="mini danger" style="margin-top:10px" data-act="gclear:${x.id}">Weekdoel uitzetten</button>` : ''}
+      </div>`; }).join('') || '<p class="muted">Maak eerst een speler aan.</p>'}
+  </div>
+  <div class="panel"><h3>👨‍👩‍👧‍👦 Gezinsdoel</h3>
+    <p class="muted" style="margin-bottom:12px">Alle sterren van iedereen tellen samen. Zo helpen de groten de kleintjes, en wint het hele gezin.</p>
+    <div class="setrow"><label>Samen aantal sterren deze week</label><div class="stepper"><button data-act="fstars:-5" aria-label="Minder">−</button><b>${fg.stars||0} ⭐</b><button data-act="fstars:5" aria-label="Meer">+</button></div></div>
+    <div class="setrow"><label for="freward">Beloning</label><input class="inp" id="freward" maxlength="40" placeholder="bijv. koshari-avond, uitje naar het zwembad" value="${esc(fg.reward||'')}" data-freward="1"></div>
+    ${emojiPick(fg.emoji, 'femoji')}
+    ${fs ? `<p class="status ${fs.done?'on':''}" style="margin-top:12px">Deze week: ${fs.have}/${fs.g.stars} ⭐${fs.done?(fs.given?' · uitgereikt ✓':' · gehaald!'):''}</p>` : ''}
+    ${fs && fs.done && !fs.given ? `<button class="btn ok wide" data-act="fgive">Gezinsbeloning uitgereikt ✓</button>` : ''}
+    ${fg.stars ? `<button class="mini danger" style="margin-top:10px" data-act="fclear">Gezinsdoel uitzetten</button>` : ''}
+  </div>`;
+}
+
 /* ---------- scorebord ---------- */
 function daysLeft(){ return 7 - ((new Date().getDay()+6)%7); }
 function scoresHTML(){
@@ -1670,10 +1788,11 @@ function scoresHTML(){
   ${rows.length>1 && anyone ? `<div class="podium">${[1,0,2].filter(i=>rows[i]).map(i=>`<div class="pod p${i+1}"><span class="pav">${rows[i].x.avatar}</span><b>${esc(rows[i].x.name)}</b><span class="pstars">⭐ ${rows[i].w.stars}</span><div class="block">${i+1}</div></div>`).join('')}</div>` : ''}
   <div class="panel score-list">
     ${rows.map((r,i)=>`<div class="srow ${r.x.id===p.id?'me':''}"><span class="rank">${anyone?medal(i):'–'}</span><span class="pav">${r.x.avatar}</span>
-      <div class="sname"><b>${esc(r.x.name)}${r.x.id===p.id?' <span class="you">jij</span>':''}</b><span>${ageLabel(r.x.age)} · niveau ${r.x.level}</span></div>
+      <div class="sname"><b>${esc(r.x.name)}${crown(r.x.id)}${r.x.id===p.id?' <span class="you">jij</span>':''}</b><span>${ageLabel(r.x.age)} · niveau ${r.x.level}</span></div>
       <div class="snums"><span title="Sterren deze week">⭐ <b>${r.w.stars}</b></span><span title="Doelpunten deze week">⚽ <b>${r.w.goals}</b></span><span title="Duels gewonnen">🏆 <b>${r.w.duelsWon}</b></span></div></div>`).join('')}
     ${anyone?'':'<p class="muted" style="margin-top:8px">Nog niemand heeft deze week gespeeld. Wie verdient de eerste ster?</p>'}
   </div>
+  ${familyState() ? rewardCards({}).trim() : ''}
   <div class="panel duel-card"><h3>⚽ Penalty-duel</h3>
     <p class="muted">Om de beurt 5 penalty's op één telefoon of tablet. Iedereen krijgt vragen op zijn eigen niveau, dus groot en klein kunnen allebei winnen.</p>
     ${others.length ? `<p class="lb" style="margin:12px 0 8px">${esc(p.name)} speelt tegen:</p><div class="opp-grid">${others.map(o=>`<button class="pcard" data-act="duel:${o.id}"><span class="pav">${o.avatar}</span><span class="pname">${esc(o.name)}</span><span class="plvl">niveau ${o.level}</span></button>`).join('')}</div>`
@@ -1772,7 +1891,7 @@ function profilesHTML(){
   if(S.newP) return newProfileHTML();
   return `<h1 class="ptitle">Wie gaat er spelen?</h1><p class="psub">Kies je profiel</p>
   <div class="profiles">
-    ${DB.profiles.map(p=>`<button class="pcard" data-act="pick:${p.id}"><span class="pav">${p.avatar}</span><span class="pname">${esc(p.name)}</span><span class="plvl">${p.age>=18?'volwassene · ':''}niveau ${p.level} · ${p.xp} XP</span></button>`).join('')}
+    ${DB.profiles.map(p=>`<button class="pcard" data-act="pick:${p.id}"><span class="pav">${p.avatar}</span><span class="pname">${esc(p.name)}${crown(p.id)}</span><span class="plvl">${p.age>=18?'volwassene · ':''}niveau ${p.level} · ${p.xp} XP</span></button>`).join('')}
     <button class="pcard add" data-act="newp"><span class="pav">+</span><span class="pname">Nieuwe speler</span><span class="plvl">kind of volwassene</span></button>
     ${DB.profiles.length?'':'<p class="empty-note">Nog geen spelers. Maak er een aan voor je kind, of voor jezelf om mee te doen.</p>'}
   </div>
@@ -1794,7 +1913,7 @@ function newProfileHTML(){
 }
 function topbarHTML(p){
   return `<div class="topbar">
-    <button class="me" data-act="go:profiles" aria-label="Wissel van profiel"><span class="pav">${p.avatar}</span><span>${esc(p.name)}</span></button>
+    <button class="me" data-act="go:profiles" aria-label="Wissel van profiel"><span class="pav">${p.avatar}</span><span>${esc(p.name)}${crown(p.id)}</span></button>
     <div class="stats"><span class="stat st-fire ${curStreak(p)?'':'off'}" title="Dagen op rij">🔥 ${curStreak(p)}</span><span class="stat st-star" title="Sterren">⭐ ${totalStars(p)}</span><span class="stat st-xp" title="XP">⚡ ${p.xp}</span></div>
   </div>`;
 }
@@ -1808,6 +1927,7 @@ function homeHTML(){
   if(missed) h += `<div class="welcome">${mascot(54,'happy','')}<span>Ahlan! Fijn dat je er weer bent. Zullen we verder spelen?</span></div>`;
   h += `<div class="daily"><span class="ic">${p.today.claimed?'✅':d.e}</span><div class="tx"><div class="k">Uitdaging van vandaag</div><div class="t">${d.t}</div>
         <div class="bar"><i style="width:${Math.round(d.have/d.n*100)}%"></i></div></div><span style="font-weight:900;font-variant-numeric:tabular-nums">${p.today.claimed?'+20 XP':d.have+'/'+d.n}</span></div>`;
+  h += rewardCards(p);
   h += `<button class="pen-card" data-act="penalty"><span class="ic">⚽</span><span><b>Penaltyschieten</b><span>Elk goed antwoord is een doelpunt!</span></span></button>`;
   worldOrder(p).forEach((wi,pos)=>{
     const w = WORLDS[wi];
@@ -1858,10 +1978,11 @@ function gateHTML(){
   </div>`;
 }
 function parentHTML(){
-  const tabs = [['overview','Voortgang'],['settings','Instellingen'],['audio',"Geluid & foto's"]];
+  const tabs = [['overview','Voortgang'],['rewards','Beloningen'],['settings','Instellingen'],['audio',"Geluid & foto's"]];
   let h = `<h1 class="page-h">Ouderdashboard</h1><p class="page-sub">☁️ Alles wordt bewaard in je account${AUTH.user?` (${esc(AUTH.user.email||'')})`:''}${AUTH.admin?' · beheerder':''}</p>
     <div class="ptabs">${tabs.map(([k,t])=>`<button class="${S.ptab===k?'on':''}" data-act="ptab:${k}">${t}</button>`).join('')}</div>`;
   if(S.ptab==='audio') return h + audioPanel();
+  if(S.ptab==='rewards') return h + rewardsPanel();
   if(!DB.profiles.length) return h + `<div class="panel"><h3>Nog geen kinderen</h3><p class="muted">Maak eerst een profiel aan.</p><p style="margin-top:12px"><button class="btn" data-act="go:profiles">Profiel maken</button></p></div>`;
   if(!S.pkid || !DB.profiles.find(p=>p.id===S.pkid)) S.pkid = DB.activeId || DB.profiles[0].id;
   h += `<div class="ptabs">${DB.profiles.map(p=>`<button class="${S.pkid===p.id?'on':''}" data-act="pkid:${p.id}">${p.avatar} ${esc(p.name)}</button>`).join('')}</div>`;
@@ -2105,6 +2226,14 @@ document.addEventListener('click', e=>{
     case 'setp-lvl': { const k=DB.profiles.find(x=>x.id===S.pkid); k.level=+a; save(); break; }
     case 'setp-g': { const k=DB.profiles.find(x=>x.id===S.pkid); k.gender=a; save(); break; }
     case 'setp-av': { const k=DB.profiles.find(x=>x.id===S.pkid); k.avatar=a; save(); break; }
+    case 'gstars': { const k=byId(a); if(!k) return; k.goal = k.goal||{}; k.goal.stars = Math.max(0, Math.min(60, (k.goal.stars||0) + (+b) * ((k.goal.stars||0)>=10?3:1))); if(!k.goal.emoji) k.goal.emoji='🎁'; save(); break; }
+    case 'gemoji': { const k=byId(a); if(!k) return; k.goal = k.goal||{}; k.goal.emoji = b; save(); break; }
+    case 'ggive': { const k=byId(a); if(!k) return; k.goalGiven = weekKey(); save(); confetti(60); toast('Beloning uitgereikt voor '+k.name); break; }
+    case 'gclear': { const k=byId(a); if(!k) return; delete k.goal; save(); break; }
+    case 'fstars': { const g = DB.settings.familyGoal = DB.settings.familyGoal||{}; g.stars = Math.max(0, Math.min(300, (g.stars||0) + (+a))); if(!g.emoji) g.emoji='🎁'; save(); break; }
+    case 'femoji': { const g = DB.settings.familyGoal = DB.settings.familyGoal||{}; g.emoji = a; save(); break; }
+    case 'fgive': DB.settings.familyGiven = weekKey(); save(); confetti(80); toast('Gezinsbeloning uitgereikt. Geniet ervan!'); break;
+    case 'fclear': DB.settings.familyGoal = null; save(); break;
     case 'del-ask': S.confirmDel=true; break;
     case 'del-no': S.confirmDel=false; break;
     case 'del-yes': if(sb && AUTH.user) sb.from('players').delete().eq('id', S.pkid).then(({error})=>{ if(error) toast('Verwijderen lukte niet online.'); }); DB.profiles=DB.profiles.filter(x=>x.id!==S.pkid); if(DB.activeId===S.pkid) DB.activeId=DB.profiles[0]?.id||null; S.pkid=null; S.confirmDel=false; save(); toast('Profiel verwijderd'); break;
@@ -2145,6 +2274,8 @@ document.addEventListener('change', async e=>{
   }
   if(t.dataset.bassign!==undefined && S.bulk){ S.bulk.assign[+t.dataset.bassign] = t.value; S.bulk.status=[]; render(); return; }
   if(t.dataset.sets){ DB.settings[t.dataset.sets] = t.checked; save(); render(); return; }
+  if(t.dataset.greward){ const k = byId(t.dataset.greward); if(!k) return; k.goal = k.goal||{}; k.goal.reward = t.value.trim().slice(0,40); if(!k.goal.emoji) k.goal.emoji='🎁'; save(); render(); return; }
+  if(t.dataset.freward){ const g = DB.settings.familyGoal = DB.settings.familyGoal||{}; g.reward = t.value.trim().slice(0,40); if(!g.emoji) g.emoji='🎁'; save(); render(); return; }
   if(t.dataset.setp){
     const k = DB.profiles.find(x=>x.id===S.pkid); if(!k) return;
     if(t.dataset.setp==='name'){ if(t.value.trim()) k.name=t.value.trim(); }
