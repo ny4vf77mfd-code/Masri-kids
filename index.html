@@ -954,6 +954,64 @@ button,.opt,.mitem,.tile,.node{touch-action:manipulation;-webkit-user-select:non
 .scene-who{font-size:84px;line-height:1}
 .a-wel{gap:8px}.a-wel h2{font-size:26px}.a-wel p{font-size:17px;font-weight:700;color:var(--duo-mute)}
 .cav.who{font-size:30px}
+/* ---------- AI-taalpartner ---------- */
+.talk-card{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px;border-radius:16px;margin-bottom:14px;border:2px solid #99E0D8;background:#ECFAF8;color:var(--duo-ink)}
+.talk-card .ic{flex:none;width:48px;height:48px;display:grid;place-items:center;font-size:28px}
+.talk-card b{display:block;font-family:var(--f-display);font-size:18px}.talk-card span span{font-size:13px;font-weight:700;color:var(--duo-mute)}
+.talk-card em{margin-left:auto;font-style:normal;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;background:var(--nile,#0F9488);color:#fff;padding:3px 8px;border-radius:999px}
+.adult-talk{margin-top:4px}
+.talk-top{position:sticky;top:0;z-index:5;display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:8px;background:var(--duo-bg,#fff);padding:8px 0;border-bottom:2px solid var(--duo-line)}
+.talk-top b{text-align:center;font-family:var(--f-display);font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.talk-top .x{width:44px;height:44px;border-radius:12px;border:0;background:none;font-size:20px;color:var(--duo-mute)}
+.talk-top .tgl{height:34px;border-radius:10px;border:2px solid var(--duo-line);background:#fff;font-weight:900;font-size:13px;color:var(--duo-mute)}
+.talk-top .tgl.on{border-color:var(--duo-sel-b);background:var(--duo-sel);color:var(--duo-sel-t)}
+.talk-intro{display:flex;align-items:center;gap:14px;margin:16px 0}
+.talk-intro p{font-weight:700;color:var(--duo-mute);line-height:1.5}
+.ava{flex:none;width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:#0F9488;color:#fff;font-family:var(--f-display);font-size:34px;font-weight:800}
+.ava.sm{width:34px;height:34px;font-size:16px}.ava.kid{background:#FFE7CC;font-size:20px}
+.talk-log{display:flex;flex-direction:column;gap:10px;padding:14px 0 230px}
+.tmsg{display:flex;align-items:flex-end;gap:8px;max-width:100%}
+.tmsg.me{justify-content:flex-end}
+.tb{min-width:0;max-width:82%;padding:10px 14px;border-radius:18px;background:#fff;border:2px solid var(--duo-line);display:flex;flex-direction:column;gap:2px;overflow-wrap:anywhere}
+.tmsg.me .tb{background:var(--duo-sel);border-color:var(--duo-sel-b);color:var(--duo-sel-t);font-weight:800;border-bottom-right-radius:6px}
+.tmsg.ai .tb{border-bottom-left-radius:6px}
+.tb .tph,.tph{font-size:17px;font-weight:900;color:var(--duo-ink)}
+.tb .ar{font-size:20px;direction:rtl;text-align:right}
+.tb small{font-size:14px;font-weight:700;color:var(--duo-mute)}
+.tnl{align-self:flex-start;margin-top:4px;border:0;background:none;padding:0;font-weight:900;font-size:13px;color:var(--duo-sel-t)}
+.tav{flex:none}
+.tcorr,.texpl,.twords,.tadult{margin:0 0 0 42px;padding:10px 12px;border-radius:14px;display:flex;flex-direction:column;gap:3px;font-size:14px}
+.tcorr{margin:0 0 0 auto;max-width:82%;background:#FFF7E6;border:2px solid #FFD58A}
+.tcorr .ar{font-size:18px;direction:rtl;text-align:right}
+.tcorr p,.texpl p{font-weight:700;color:var(--duo-ink);line-height:1.45}
+.texpl{background:#F2F6FF;border:2px solid #CFDCFF}
+.twords{background:#ECFAF8;border:2px solid #99E0D8}
+.tw{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-weight:700}
+.tw .ar{font-size:17px}
+.tadult{background:#FFF1F4;border:2px solid #FFC2D0;font-weight:800;color:var(--duo-ink)}
+.k{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--duo-mute)}
+.typing{flex-direction:row;gap:5px;padding:14px}
+.typing i{width:8px;height:8px;border-radius:50%;background:var(--duo-mute);opacity:.4;animation:tdot 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,60%,100%{opacity:.25}30%{opacity:.9}}
+.terr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:14px;background:#FFF1F0;border:2px solid #FFC9C2;font-weight:800}
+.talk-foot{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--duo-bg,#fff);border-top:2px solid var(--duo-line);padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:8px}
+.talk-foot>*{width:100%;max-width:640px;margin:0 auto}
+.tsug{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}
+.tsug .chip{flex:none;white-space:nowrap}
+.tin{display:flex;gap:8px;align-items:center}
+.tin .inp{flex:1;min-width:0;margin:0}
+.tin .btn{flex:none;min-height:48px;width:52px;padding:0}
+.mic{flex:none;width:48px;height:48px;border-radius:14px;border:2px solid var(--duo-line);background:#fff;font-size:20px}
+.mic.on{background:#FFE9E4;border-color:#FFC6B9;color:var(--coral-d,#C0392B);animation:recpulse 1s ease-in-out infinite}
+.trow{display:flex;gap:8px}.trow .btn{flex:1;min-height:42px;font-size:15px}
+.steps{margin:10px 0 12px 20px;display:flex;flex-direction:column;gap:6px;font-weight:700}
+.steps code{background:#F2F4F7;padding:1px 6px;border-radius:6px}
+.ttest h3{font-size:17px}
+.tres{border-top:1px solid var(--duo-line);padding-top:8px;margin-top:8px;display:flex;flex-direction:column;gap:3px}
+.tres .ar{font-size:18px}
+.bad{color:#C0392B;font-weight:800}
+.tb2{display:flex;flex-direction:column;gap:2px}.tb2 .ar{direction:rtl;text-align:right}.tb2 small{color:var(--duo-mute);font-weight:700}
 /* snelheid: secties buiten beeld niet tekenen */
 .world,.mod,.drow2,.scn-grid,.panel{content-visibility:auto;contain-intrinsic-size:auto 420px}
 .drow2{contain-intrinsic-size:auto 72px}
@@ -1836,7 +1894,7 @@ async function checkAdmin(){
   const {data} = await sb.from('admins').select('user_id').eq('user_id', AUTH.user.id).maybeSingle();
   AUTH.admin = !!data;
 }
-function busyScreen(){ return S.screen==='lesson' || S.screen==='penalty' || !!REC.mr || !!(S.bulk && S.bulk.busy); }
+function busyScreen(){ return S.screen==='talk' || S.screen==='lesson' || S.screen==='penalty' || !!REC.mr || !!(S.bulk && S.bulk.busy); }
 const me = () => DB.profiles.find(p=>p.id===DB.activeId);
 
 /* ---------- opnames en foto's (Supabase Storage) ---------- */
@@ -3063,6 +3121,7 @@ function adultHomeHTML(){
         ${GRAMMAR[m.id]?`<button class="lb gram-b" data-act="agram:${m.id}">📘 Uitleg</button>`:''}
       </div></section>`;
   }).join('');
+  h += talkCardHTML(p, 'adult-talk');
   h += `<h2 class="sect">Gesprekssituaties</h2><div class="scn-grid">${SCENARIOS.map(sc=>`<button class="scn-card ${(p.lessons||{})[sc.id]?'done':''}" data-act="ascn:${sc.id}"><span class="who">${sc.who}</span><b>${esc(sc.title)}</b><span>Niveau ${sc.lv}${(p.lessons||{})[sc.id]?' · ✓ gedaan':''}</span></button>`).join('')}</div>`;
   if(S.sheet && S.sheet.startsWith('gram:')){ const mid = S.sheet.slice(5), m = ADULT_MODS.find(x=>x.id===mid);
     h += `<div class="sheet-bg" data-act="sheet-close"><div class="sheet gram-sheet" onclick="event.stopPropagation()"><div class="gram"><span class="gk">📘 Uitleg</span><h2>${esc(m.title)}</h2>${GRAMMAR[mid]}</div><button class="btn wide" data-act="sheet-close">Sluiten</button></div></div>`; }
@@ -3071,7 +3130,7 @@ function adultHomeHTML(){
 function practiceHTML(){
   const p = me(), seen = seenItems(p);
   const count = {review:dueWords(p,2).length, listen:seen.filter(id=>hasAudio(lid(id))).length, speak:((p.favs||[]).length||seen.length), build:seen.filter(id=>ITEM[id].ph.split(' ').length>=2).length, mistakes:seen.filter(id=>(p.words[id].w||0)>0).length, favs:(p.favs||[]).length};
-  return topbarHTML(p) + `<h1 class="page-h">Oefenen</h1><p class="page-sub">Korte oefeningen met woorden die je al kent.</p>
+  return topbarHTML(p) + `<h1 class="page-h">Oefenen</h1><p class="page-sub">Korte oefeningen met woorden die je al kent.</p>${talkCardHTML(p)}
   <div class="prac-grid">${Object.entries(PRACTICE).map(([k,x])=>`<button class="prac" data-act="prac:${k}" ${count[k]?'':'disabled'}><span class="pe">${x.e}</span><b>${x.t}</b><span>${x.d}</span><em>${count[k]} ${k==='review'?'klaar om te herhalen':'beschikbaar'}</em></button>`).join('')}</div>
   <div class="panel"><h3>📝 Woordenschattoetsen</h3><p class="muted" style="margin-bottom:10px">Tien vragen per module. Je beste score wordt bewaard.</p>
     <div class="chips">${ADULT_MODS.map(m=>`<button class="chip" data-act="atest:${m.id}">${m.icon} ${esc(m.title)}${(p.atests||{})[m.id]!==undefined?` · <b>${p.atests[m.id]}%</b>`:''}</button>`).join('')}</div></div>`;
@@ -3083,9 +3142,14 @@ function dictHTML(){
   const q2 = q ? tlQuery(q) : '';
   if(q) ids = adultIds.concat(allItems().map(x=>x.id)).filter((id,i,a)=>{ if(a.indexOf(id)!==i || !ITEM[id]) return false; const h = [ITEM[id].ph, ITEM[id].nl, ITEM[id].ar].join(' ').toLowerCase(); return h.includes(q) || h.includes(q2); });
   const lim = S.dlimit || 50;
+  if(f==='ai'){ const aw = (p.aiWords||[]).filter(w=>!q || [w.ph,w.nl,w.ar].join(' ').toLowerCase().includes(q) || [w.ph,w.nl,w.ar].join(' ').toLowerCase().includes(tlQuery(q)));
+    return topbarHTML(p) + `<h1 class="page-h">Mijn woordenboek</h1><p class="page-sub">${aw.length} woorden bewaard uit gesprekken met Salma</p>
+    <input class="inp" id="dq" type="search" placeholder="Zoek in het Nederlands, Egyptisch of Arabisch" value="${esc(S.dq||'')}" data-dq="1">
+    <div class="ptabs" style="margin-top:10px">${[['mine','Mijn woorden'],['fav','★ Favorieten'],['err','Fouten'],['ai','💬 Uit gesprekken'],['all','Alles']].map(([k,t])=>`<button class="${f===k?'on':''}" data-act="df:${k}">${t}</button>`).join('')}</div>
+    <div class="dict">${aw.map(w=>`<div class="drow2"><div class="dmain"><span class="ar" lang="ar">${esc(w.ar)}</span><b>${esc(w.ph)}</b><span class="dnl">${esc(w.nl)}</span><span class="dst">uit gesprek · geen opname</span></div></div>`).join('')}</div>`; }
   return topbarHTML(p) + `<h1 class="page-h">Mijn woordenboek</h1><p class="page-sub">${adultLearned(p)} van ${adultTotal()} woorden en zinnen geleerd · ${favs.size} favorieten</p>
   <input class="inp" id="dq" type="search" placeholder="Zoek in het Nederlands, Egyptisch of Arabisch" value="${esc(S.dq||'')}" data-dq="1">
-  <div class="ptabs" style="margin-top:10px">${[['mine','Mijn woorden'],['fav','★ Favorieten'],['err','Fouten'],['all','Alles']].map(([k,t])=>`<button class="${f===k?'on':''}" data-act="df:${k}">${t}</button>`).join('')}</div>
+  <div class="ptabs" style="margin-top:10px">${[['mine','Mijn woorden'],['fav','★ Favorieten'],['err','Fouten'],...((p.aiWords||[]).length?[['ai','💬 Uit gesprekken']]:[]),['all','Alles']].map(([k,t])=>`<button class="${f===k?'on':''}" data-act="df:${k}">${t}</button>`).join('')}</div>
   <div class="dict">${ids.slice(0,lim).map(id=>{ const it = ITEM[id], x = (p.words||{})[id]||{}, sid = lid(id);
     return `<div class="drow2"><div class="dmain"><span class="ar" lang="ar">${ITEM[sid].ar}</span><b>${esc(ITEM[sid].ph)}</b><span class="dnl">${esc(it.nl)}</span>${(x.c||x.w)?`<span class="dst">${(x.c||0)>=2?'✓ geleerd':'geoefend'}${x.w?` · ${x.w}× fout`:''}</span>`:''}</div>
       <div class="dact">${playBtn(sid,'sm',false)}${hasAudio(sid)?`<button class="slowbtn" data-play-slow="${sid}" aria-label="Langzaam">🐢</button>`:''}<button class="favbtn sm ${favs.has(baseOf(id))?'on':''}" data-act="fav:${baseOf(id)}" aria-label="Favoriet">${favs.has(baseOf(id))?'★':'☆'}</button></div></div>`; }).join('') || `<p class="muted" style="margin-top:14px">${f==='fav'?'Nog geen favorieten. Tik op ☆ bij een woord.':f==='err'?'Nog geen fouten gemaakt.':'Nog niets. Speel een les, dan komen je woorden hier.'}</p>`}</div>
@@ -3102,6 +3166,7 @@ function aprogHTML(){
     <div class="tile-n"><b>${adultLearned(p)}</b><span>geleerd</span></div><div class="tile-n"><b>${curStreak(p)}</b><span>dagen op rij</span></div>
     <div class="tile-n"><b>${fmtMin(weekTime(p))}</b><span>min. deze week</span></div><div class="tile-n"><b>${accuracy(p)===null?'–':Math.round(accuracy(p)*100)+'%'}</b><span>goed (laatste 30)</span></div></div></div>
   ${adultLevelsHTML(p)}
+  ${p.ai?`<div class="panel"><h3>💬 Gesprekken met Salma</h3><div class="tiles"><div class="tile-n"><b>${p.ai.sessions}</b><span>gesprekken</span></div><div class="tile-n"><b>${p.ai.msgs}</b><span>berichten gestuurd</span></div><div class="tile-n"><b>${(p.aiWords||[]).length}</b><span>woorden bewaard</span></div></div></div>`:''}
   <div class="panel"><h3>Mijn niveau en dagdoel</h3>
     <div class="setrow"><label>Ik begin op</label><div class="seg">${ADULT_LEVELS.map(L0=>`<button class="${(p.alevel||1)===L0.n?'on':''}" data-act="alevel:${L0.n}">${L0.n} · ${esc(L0.title)}</button>`).join('')}</div></div>
     <div class="setrow"><label>Dagdoel</label><div class="seg">${[10,20,30,50].map(n=>`<button class="${(p.dgoal||20)===n?'on':''}" data-act="dgoal:${n}">${n} XP</button>`).join('')}</div><p class="hint">Een les levert ongeveer 20 tot 30 XP op.</p></div></div>
@@ -3109,6 +3174,157 @@ function aprogHTML(){
   <div class="panel"><h3>❌ Overzicht van fouten</h3>${errs.length ? `<div class="dict">${errs.map(id=>{ const sid = lid(id); return `<div class="drow2"><div class="dmain"><b>${esc(ITEM[sid].ph)}</b><span class="dnl">${esc(ITEM[id].nl)}</span><span class="dst">${p.words[id].w}× fout · ${p.words[id].c||0}× goed</span></div><div class="dact">${playBtn(sid,'sm',false)}</div></div>`; }).join('')}</div><button class="btn ghost wide" style="margin-top:12px" data-act="prac:mistakes">Oefen deze fouten</button>` : '<p class="muted">Nog geen fouten. Mooi!</p>'}</div>
   <button class="btn ghost wide" data-act="go:scores">🏆 Scorebord van je gezin</button>`;
 }
+
+
+/* =====================================================================
+   AI-TAALPARTNER (Mishmish voor kinderen 7-9, Salma voor volwassenen)
+   De app praat alleen met onze eigen server-functie 'ai-chat' op Supabase.
+   Daar staat de API-sleutel en daar worden personage, niveau en veiligheid bepaald.
+   Spraak: invoer via de spraakherkenning van de browser (als die Egyptisch ondersteunt).
+   Gesproken AI-antwoorden: komen later via AI_VOICE (nu uit, zie aiSpeak).
+   ===================================================================== */
+const AI = { enabled:null, model:null, test:null, testing:false };
+const AI_VOICE = { enabled:false };                 // later: tekst-naar-spraak voor AI-antwoorden
+function aiSpeak(turn){ if(!AI_VOICE.enabled) return; /* aansluitpunt voor een spraakprovider */ }
+const STT = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+const KID_SCENES = [['animals','🐾','Dieren'],['food','🍞','Eten en drinken'],['football','⚽','Voetbal'],['family','👨‍👩‍👧','Familiewoorden'],['colors','🎨','Kleuren en cijfers']];
+const ADULT_SCENES = () => [['free','☕','Vrij gesprek'], ...SCENARIOS.map(x=>[x.id, x.who, x.title])];
+const aiCan = p => !!p && AI.enabled===true && (p.track==='adult' || (p.kind ? p.kind==='k2' : p.level===2));
+const aiName = p => p.track==='adult' ? 'Salma' : 'Mishmish';
+async function aiCall(body){
+  if(!sb) throw new Error('offline');
+  const {data, error} = await sb.functions.invoke('ai-chat', {body});
+  if(error){ let msg = 'De taalpartner reageert even niet. Probeer het zo nog eens.';
+    try{ const j = await error.context.json(); if(j && j.error) msg = j.error==='not_configured' ? 'De taalpartner is nog niet ingesteld.' : j.error; }catch(e){}
+    throw new Error(msg); }
+  return data;
+}
+async function aiStatus(){ try{ const d = await aiCall({action:'status'}); AI.enabled = !!d.enabled; AI.model = d.modelAdult; }catch(e){ AI.enabled = false; } if(!busyScreen()) render(); }
+function aiNorm(t){
+  const n = x => x && x.ph ? {...x, ph:translit(x.ph, x.ar)} : x;
+  if(!t) return t;
+  return {...t, reply:n(t.reply), suggestions:(t.suggestions||[]).map(n), new_words:(t.new_words||[]).map(n),
+    correction: t.correction && (t.correction.better_ar||t.correction.better_ph) ? {...t.correction, better_ph: translit(t.correction.better_ph||'', t.correction.better_ar||'')} : null};
+}
+function knownWords(p){
+  return Object.entries(p.words||{}).filter(([id,x])=>ITEM[id] && (x.c||0)>=1).sort((a,b)=>(b[1].c||0)-(a[1].c||0)).slice(0,60)
+    .map(([id])=>{ const it = ITEM[lid(id)] || ITEM[id]; return {ar:it.ar, ph:it.ph, nl:ITEM[id].nl}; });
+}
+function talkStart(scene){
+  const p = me(); S.talk = {scene, msgs:[], busy:true, err:null, t0:Date.now(), words:[], sent:0, showNl:p.track!=='adult'};
+  S.screen = 'talk'; render(); aiSend('', {start:true});
+}
+async function aiSend(text, opt={}){
+  const p = me(), T = S.talk; if(!T || (T.busy && !opt.start)) return;
+  if(text) { T.msgs.push({role:'me', text, explain:!!opt.explain}); T.sent++; }
+  T.busy = true; T.err = null; render(); talkScroll();
+  const history = T.msgs.slice(0, text ? -1 : undefined).filter(m=>!m.local).map(m=> m.role==='me' ? {role:'user', text:m.text} : {role:'assistant', text: m.turn.reply.ar + ' (' + m.turn.reply.ph + ')'});
+  try{
+    const d = await aiCall({action:'chat', player_id:p.id, scene:T.scene, message:text, start:!!opt.start, explain_nl:!!opt.explain, history, known_words:knownWords(p)});
+    if(S.talk!==T) return;
+    const turn = aiNorm(d.turn);
+    if(turn.correction && text){ const last = T.msgs[T.msgs.length-1]; if(last && last.role==='me') last.corr = turn.correction; }
+    T.msgs.push({role:'ai', turn});
+    (turn.new_words||[]).forEach(w=>{ if(!T.words.find(x=>x.ar===w.ar)) T.words.push(w); });
+    aiSpeak(turn);
+  }catch(e){ if(S.talk!==T) return; T.err = e.message; if(text){ T.msgs.pop(); T.sent--; T.retry = {text, opt}; } else T.retry = {text:'', opt}; }
+  T.busy = false; render(); talkScroll();
+}
+function talkScroll(){ requestAnimationFrame(()=>{ const el = $('.talk-log'); if(el) el.scrollTop = el.scrollHeight; window.scrollTo(0, document.body.scrollHeight); }); }
+function talkEnd(){
+  const p = me(), T = S.talk; if(!T) { S.screen='home'; return; }
+  const xp = Math.min(20, T.sent*2);
+  if(T.sent){ daily(p); p.xp += xp; p.today.xp += xp; addTime(p, T.t0);
+    p.ai = p.ai || {sessions:0, msgs:0};
+    p.ai.sessions++; p.ai.msgs += T.sent; p.ai.last = today();
+    p.hist = (p.hist||[]).concat({d:today(), t:'Gesprek met '+aiName(p), w:'Taalpartner', ok:T.sent, n:T.sent, st:0, s:Math.round((Date.now()-T.t0)/1000)}).slice(-40);
+    save(); toast(`Goed gepraat! +${xp} XP`); }
+  stopListen(); S.talk = null; S.screen = 'home';
+}
+function saveAiWord(i){
+  const p = me(), w = S.talk && S.talk.words[i]; if(!w) return;
+  p.aiWords = p.aiWords || [];
+  if(!p.aiWords.find(x=>x.ar===w.ar)){ p.aiWords.unshift({...w, d:today()}); p.aiWords = p.aiWords.slice(0,300); save(); toast('Bewaard in je woordenboek'); }
+}
+// spraakherkenning (alleen als de browser het kan; anders geen knop)
+let REC2 = null;
+function listen(){
+  if(!STT) return;
+  if(REC2){ stopListen(); render(); return; }
+  try{
+    REC2 = new STT(); REC2.lang = 'ar-EG'; REC2.interimResults = true; REC2.maxAlternatives = 1;
+    REC2.onresult = e=>{ const txt = [...e.results].map(r=>r[0].transcript).join(' '); const el = $('#talk-in'); if(el) el.value = txt; };
+    REC2.onerror = e=>{ const m = e.error==='not-allowed' ? 'Sta de microfoon toe voor deze website.' : e.error==='no-speech' ? 'Ik hoorde niets. Probeer het nog eens.' : e.error==='language-not-supported' ? 'Deze browser herkent geen Egyptisch Arabisch. Typ je antwoord.' : 'Spraakherkenning lukte niet. Typ je antwoord.'; toast(m); };
+    REC2.onend = ()=>{ REC2 = null; render(); const el = $('#talk-in'); if(el && el.value) el.focus(); };
+    REC2.start(); render();
+  }catch(e){ REC2 = null; toast('Spraakherkenning lukte niet. Typ je antwoord.'); }
+}
+function stopListen(){ try{ if(REC2) REC2.stop(); }catch(e){} }
+
+function talkCardHTML(p, cls=''){
+  if(!aiCan(p)) return '';
+  const ad = p.track==='adult';
+  return `<button class="talk-card ${cls}" data-act="go:talk"><span class="ic">${ad?'💬':mascot(44,'happy','')}</span><span><b>Praat met ${aiName(p)}</b><span>${ad?'Oefen echte gesprekken in het Egyptisch':'Kletsen in het Egyptisch met Mishmish'}</span></span><em>Nieuw</em></button>`;
+}
+function bub(x, showNl){ return `<b class="tph">${esc(x.ph)}</b><span class="ar" lang="ar">${esc(x.ar)}</span>${showNl?`<small>${esc(x.nl)}</small>`:''}`; }
+function talkHTML(){
+  const p = me(), T = S.talk, ad = p.track==='adult';
+  if(!aiCan(p)) return `<div class="panel"><h3>Taalpartner</h3><p class="muted">${AI.enabled===false?'De taalpartner is nog niet beschikbaar.':'Even laden…'}</p><button class="btn ghost wide" style="margin-top:12px" data-act="go:home">Terug</button></div>`;
+  if(!T) {
+    const list = ad ? ADULT_SCENES() : KID_SCENES;
+    return `<div class="talk-top"><button class="x" data-act="go:home" aria-label="Terug">✕</button><b>Praat met ${aiName(p)}</b><span></span></div>
+    <div class="talk-intro">${ad?'<span class="ava">S</span>':mascot(90,'happy','')}<p>${ad?`Salma komt uit Caïro en praat alleen Egyptisch met je${p.alevel?`, op niveau ${p.alevel}`:''}. Ze verbetert je vriendelijk en legt uit in het Nederlands als je dat vraagt.`:'Mishmish praat Egyptisch met je over een onderwerp. Je mag typen of praten. Weet je iets niet? Schrijf het in het Nederlands!'}</p></div>
+    <h2 class="sect">${ad?'Kies een situatie':'Waar wil je over praten?'}</h2>
+    <div class="scn-grid">${list.map(([k,e,t])=>`<button class="scn-card" data-act="talk-scene:${k}"><span class="who">${e}</span><b>${esc(t)}</b></button>`).join('')}</div>
+    <p class="hint" style="margin-top:14px">${ad?'Antwoorden worden gemaakt door AI (Claude). Ze kunnen soms fouten bevatten.':'Mishmish is een computerprogramma. Vertel hem geen geheimen, je adres of je school.'}</p>`;
+  }
+  const scene = (ad ? ADULT_SCENES() : KID_SCENES).find(x=>x[0]===T.scene) || ['','💬',''];
+  const lastAi = [...T.msgs].reverse().find(m=>m.role==='ai');
+  const log = T.msgs.map((m,i)=>{
+    if(m.role==='me') return `<div class="tmsg me"><div class="tb">${m.explain?'🇳🇱 ':''}${esc(m.text)}</div></div>${m.corr?`<div class="tcorr"><span class="k">${ad?'Natuurlijker':'Zo zeg je het'}</span><b class="tph">${esc(m.corr.better_ph)}</b><span class="ar" lang="ar">${esc(m.corr.better_ar||'')}</span>${m.corr.uitleg_nl?`<p>${esc(m.corr.uitleg_nl)}</p>`:''}</div>`:''}`;
+    const t = m.turn, open = T.showNl || m.open;
+    return `<div class="tmsg ai">${ad?'<span class="ava sm">S</span>':`<span class="tav">${mascot(34,'happy','')}</span>`}<div class="tb">${bub(t.reply, open)}${!T.showNl&&!m.open?`<button class="tnl" data-act="talk-nl:${i}">Vertaling</button>`:''}</div></div>
+      ${t.needs_adult?`<div class="tadult">💛 ${esc(t.explanation_nl||'Praat hierover met papa, mama of een andere volwassene die je vertrouwt.')}</div>`:t.explanation_nl?`<div class="texpl"><span class="k">Uitleg</span><p>${esc(t.explanation_nl)}</p></div>`:''}
+      ${(t.new_words||[]).length?`<div class="twords"><span class="k">Nieuw woord${t.new_words.length>1?'en':''}</span>${t.new_words.map(w=>{ const k = T.words.findIndex(x=>x.ar===w.ar); const saved = (p.aiWords||[]).some(x=>x.ar===w.ar); return `<span class="tw"><b class="tph">${esc(w.ph)}</b> <span class="ar" lang="ar">${esc(w.ar)}</span> = ${esc(w.nl)}${ad?`<button class="favbtn sm ${saved?'on':''}" data-act="talk-save:${k}" aria-label="Bewaar">${saved?'★':'☆'}</button>`:''}</span>`; }).join('')}</div>`:''}`;
+  }).join('');
+  const sug = !T.busy && lastAi && !lastAi.turn.needs_adult ? (lastAi.turn.suggestions||[]) : [];
+  return `<div class="talk-top"><button class="x" data-act="talk-end" aria-label="Stoppen">✕</button><b>${scene[1]} ${esc(scene[2])}</b>${ad?`<button class="tgl ${T.showNl?'on':''}" data-act="talk-nlall">NL</button>`:'<span></span>'}</div>
+  <div class="talk-log">${log}${T.busy?`<div class="tmsg ai"><span class="ava sm ${ad?'':'kid'}">${ad?'S':'🐱'}</span><div class="tb typing"><i></i><i></i><i></i></div></div>`:''}
+  ${T.err?`<div class="terr">${esc(T.err)} <button class="btn ghost" data-act="talk-retry">Opnieuw</button></div>`:''}</div>
+  <div class="talk-foot">
+    ${sug.length?`<div class="tsug">${sug.map((x,i)=>`<button class="chip" data-act="talk-sug:${i}"><b>${esc(x.ph)}</b> <span class="muted">${esc(x.nl)}</span></button>`).join('')}</div>`:''}
+    <form class="tin" id="talk-form" autocomplete="off">
+      ${STT?`<button type="button" class="mic ${REC2?'on':''}" data-act="talk-mic" aria-label="${REC2?'Stop met luisteren':'Inspreken'}">${REC2?'■':'🎙️'}</button>`:''}
+      <input class="inp" id="talk-in" maxlength="300" placeholder="${ad?'Typ in het Egyptisch (of Nederlands)':'Typ of praat…'}" ${T.busy?'disabled':''}>
+      <button type="submit" class="btn" ${T.busy?'disabled':''} aria-label="Verstuur">➤</button>
+    </form>
+    <div class="trow"><button class="btn ghost" data-act="talk-explain" ${T.busy||!lastAi?'disabled':''}>🇳🇱 Leg uit</button><button class="btn ghost" data-act="talk-end">Klaar</button></div>
+  </div>`;
+}
+function aiPanel(){
+  if(!AUTH.admin) return `<div class="panel"><h3>Taalpartner</h3><p class="muted">Alleen de beheerder kan dit instellen.</p></div>`;
+  const R = AI.test;
+  let h = `<div class="panel"><h3>AI-taalpartner</h3>
+    <p class="status ${AI.enabled?'on':''}">${AI.enabled===null?'Status wordt opgehaald…':AI.enabled?`✅ Actief · model ${esc(AI.model||'')}`:'⏸️ Nog niet actief: er is nog geen API-sleutel ingesteld.'}</p>
+    ${AI.enabled?'':`<ol class="steps"><li>Maak een API-sleutel op <b>console.anthropic.com</b> (API Keys) en zet tegoed bij Billing.</li><li>Ga in Supabase naar je project → Edge Functions → Secrets.</li><li>Voeg toe: <code>ANTHROPIC_API_KEY</code> met de sleutel als waarde.</li><li>Kom hier terug en tik op Status vernieuwen.</li></ol><button class="btn ghost" data-act="ai-refresh">Status vernieuwen</button>`}
+  </div>`;
+  h += `<div class="panel"><h3>Dialecttest</h3><p class="muted" style="margin-bottom:10px">12 testgesprekken (volwassenen en kinderen) met twee AI-modellen. De app telt woorden uit het standaard-Arabisch (fusha) en uit het Egyptisch. Lees de antwoorden ook zelf: jouw oordeel telt het zwaarst.</p>
+    <button class="btn" data-act="ai-test" ${AI.enabled&&!AI.testing?'':'disabled'}>${AI.testing?'Bezig, duurt ± 30 seconden…':'Start de dialecttest'}</button></div>`;
+  if(R && R.summary){
+    h += `<div class="panel"><h3>Uitslag</h3><div class="tiles">${R.summary.map(x=>`<div class="tile-n"><b>${x.msaHits}</b><span>fusha-woorden · ${esc(x.model)}</span></div><div class="tile-n"><b>${x.egyHits}</b><span>Egyptische woorden · ${x.ok}/${x.total} gelukt · ${(x.avgMs/1000).toFixed(1)} s</span></div>`).join('')}</div></div>`;
+    const notes = [...new Set(R.results.map(r=>r.note))];
+    h += notes.map(n=>{ const rs = R.results.filter(r=>r.note===n); const r0 = rs[0];
+      return `<div class="panel ttest"><h3>${esc(n)}</h3><p class="muted">${r0.kind==='kids'?'Kind':'Volwassene, niveau '+r0.level} · leerling: “${esc(r0.msg)}”</p>${rs.map(r=>{ const t = r.turn && aiNorm(r.turn);
+        return `<div class="tres"><span class="k">${esc(r.model)}${r.msa&&r.msa.length?` · <span class="bad">fusha: ${esc(r.msa.join(', '))}</span>`:''}</span>${r.error?`<p class="bad">${esc(r.error)}</p>`:`<div class="tb2">${bub(t.reply,true)}</div>${t.correction?`<p class="muted">Correctie: <b>${esc(t.correction.better_ph)}</b> ${esc(t.correction.better_ar||'')} · ${esc(t.correction.uitleg_nl||'')}</p>`:''}${t.explanation_nl?`<p class="muted">Uitleg: ${esc(t.explanation_nl)}</p>`:''}${t.needs_adult?'<p class="muted">⚠️ Verwijst naar een volwassene</p>':''}`}</div>`; }).join('')}</div>`; }).join('');
+  }
+  return h;
+}
+async function aiRunTest(){
+  AI.testing = true; render();
+  try{ AI.test = await aiCall({action:'dialect-test'}); }catch(e){ toast(e.message); }
+  AI.testing = false; render();
+}
+async function aiLoadLastTest(){ if(!sb || !AUTH.admin || AI.test) return; try{ const {data} = await sb.from('ai_tests').select('summary,results').order('created_at',{ascending:false}).limit(1).maybeSingle(); if(data){ AI.test = data; render(); } }catch(e){} }
 
 /* ---------- scorebord ---------- */
 function daysLeft(){ return 7 - ((new Date().getDay()+6)%7); }
@@ -3208,6 +3424,7 @@ async function onSession(session){
   const media = loadMedia().then(()=>{ if(had && !busyScreen() && S.screen!=='loading') render(); warmAll(); }).catch(()=>{});
   if(had) warmAll();
   await Promise.all([loadFamily(), checkAdmin(), loadContent(), had ? null : media]);
+  aiStatus();
   if(S.auth.mode==='newpass'){ S.screen = 'auth'; }
   else if(!wasSplash) S.screen = me() ? 'home' : 'profiles';
   render();
@@ -3279,6 +3496,7 @@ function homeHTML(){
   h += `<div class="daily"><span class="ic">${p.today.claimed?'✅':d.e}</span><div class="tx"><div class="k">Uitdaging van vandaag</div><div class="t">${d.t}</div>
         <div class="bar"><i style="width:${Math.round(d.have/d.n*100)}%"></i></div></div><span style="font-weight:900;font-variant-numeric:tabular-nums">${p.today.claimed?'+20 XP':d.have+'/'+d.n}</span></div>`;
   h += rewardCards(p);
+  h += talkCardHTML(p);
   h += `<button class="pen-card" data-act="penalty"><span class="ic">⚽</span><span><b>Penaltyschieten</b><span>Elk goed antwoord is een doelpunt!</span></span></button>`;
   worldOrder(p).forEach((wi,pos)=>{
     const w = WORLDS[wi];
@@ -3341,12 +3559,13 @@ function gateHTML(){
   </div>`;
 }
 function parentHTML(){
-  const tabs = [['overview','Voortgang'],['rewards','Beloningen'],['content','Woorden'],['audio',"Geluid & foto's"],['settings','Instellingen']];
+  const tabs = [['overview','Voortgang'],['rewards','Beloningen'],['content','Woorden'],['audio',"Geluid & foto's"],['ai','Taalpartner'],['settings','Instellingen']];
   let h = `<h1 class="page-h">Ouderdashboard</h1><p class="page-sub">☁️ Alles wordt bewaard in je account${AUTH.user?` (${esc(AUTH.user.email||'')})`:''}${AUTH.admin?' · beheerder':''}</p>
     <div class="ptabs">${tabs.map(([k,t])=>`<button class="${S.ptab===k?'on':''}" data-act="ptab:${k}">${t}</button>`).join('')}</div>`;
   if(S.ptab==='audio') return h + audioPanel();
   if(S.ptab==='rewards') return h + rewardsPanel();
   if(S.ptab==='content') return h + contentPanel();
+  if(S.ptab==='ai'){ aiLoadLastTest(); return h + aiPanel(); }
   if(!DB.profiles.length) return h + `<div class="panel"><h3>Nog geen kinderen</h3><p class="muted">Maak eerst een profiel aan.</p><p style="margin-top:12px"><button class="btn" data-act="go:profiles">Profiel maken</button></p></div>`;
   if(!S.pkid || !DB.profiles.find(p=>p.id===S.pkid)) S.pkid = DB.activeId || DB.profiles[0].id;
   h += `<div class="ptabs">${DB.profiles.map(p=>`<button class="${S.pkid===p.id?'on':''}" data-act="pkid:${p.id}">${p.avatar} ${esc(p.name)}</button>`).join('')}</div>`;
@@ -3585,8 +3804,8 @@ function render(){
   const app = $('#app');
   const scr = S.screen;
   if(scr!=='splash' && scr!=='auth' && scr!=='loading' && AUTH.ready && !AUTH.user){ S.screen='auth'; return render(); }
-  if(['home','words','stickers','penalty','scores','lesson','done','dict','practice','aprog'].includes(scr) && !me()) { S.screen='profiles'; return render(); }
-  const map = {splash:splashHTML, auth:authHTML, loading:loadingHTML, profiles:profilesHTML, home:()=>isAdult()?adultHomeHTML():homeHTML(), dict:dictHTML, practice:practiceHTML, aprog:aprogHTML, words:wordsHTML, stickers:stickersHTML, scores:scoresHTML, gate:gateHTML, parent:parentHTML, lesson:lessonHTML, done:doneHTML, penalty:penHTML};
+  if(['home','words','stickers','penalty','scores','lesson','done','dict','practice','aprog','talk'].includes(scr) && !me()) { S.screen='profiles'; return render(); }
+  const map = {splash:splashHTML, auth:authHTML, loading:loadingHTML, profiles:profilesHTML, home:()=>isAdult()?adultHomeHTML():homeHTML(), dict:dictHTML, practice:practiceHTML, talk:talkHTML, aprog:aprogHTML, words:wordsHTML, stickers:stickersHTML, scores:scoresHTML, gate:gateHTML, parent:parentHTML, lesson:lessonHTML, done:doneHTML, penalty:penHTML};
   const showNav = me() && ['home','words','stickers','scores','gate','parent','dict','practice','aprog'].includes(scr);
   app.className = (showNav ? '' : 'full') + (isKid() ? ' lvl1' : '') + (isAdult() ? ' adult' : '');
   app.innerHTML = map[scr]() + (showNav ? navHTML() : '');
@@ -3595,6 +3814,7 @@ function render(){
     if(nm) nm.addEventListener('input', ()=>{ S.newP.name = nm.value; $('#np-save').disabled = !(S.newP.kind && nm.value.trim() && S.newP.age); });
     f.addEventListener('submit', e=>{ e.preventDefault(); createProfile(); });
   }
+  if(scr==='talk'){ const f = $('#talk-form'); if(f) f.addEventListener('submit', e=>{ e.preventDefault(); const el = $('#talk-in'); const v = el ? el.value.trim() : ''; if(v){ stopListen(); aiSend(v); } }); }
   if(scr==='auth'){ const f = $('#aform'); if(f) f.addEventListener('submit', e=>{ e.preventDefault(); authSubmit(); }); }
 }
 let toastT;
@@ -3629,7 +3849,7 @@ document.addEventListener('click', e=>{
     case 'reload': location.reload(); return;
     case 'auth': S.auth = {mode:a, email:S.auth.email}; break;
     case 'logout': recRelease(); flush().finally(()=>sb.auth.signOut()); S.screen='auth'; S.auth={mode:'login'}; break;
-    case 'go': if(S.screen==='penalty'){ penEndRestore(); PEN=null; } if(a==='gate') S.gate=null; if(a==='profiles') S.newP=null; if(S.recS && a!=='parent'){ S.recS=null; recRelease(); }
+    case 'go': if(a==='talk'){ S.talk=null; } if(S.screen==='talk' && a!=='talk'){ stopListen(); S.talk=null; } if(S.screen==='penalty'){ penEndRestore(); PEN=null; } if(a==='gate') S.gate=null; if(a==='profiles') S.newP=null; if(S.recS && a!=='parent'){ S.recS=null; recRelease(); }
       S.screen=a; S.confirmDel=false; window.scrollTo(0,0); break;
     case 'duel': startPenalty(a); return;
     case 'pen-ready': if(PEN){ PEN.state='q'; render(); penAuto(); } return;
@@ -3675,6 +3895,17 @@ document.addEventListener('click', e=>{
     case 'mr': matchTap('r', a); return;
     case 'review': startReview(); return;
     case 'alesson': startAdultLesson(a, +b); return;
+    case 'talk-scene': talkStart(a); return;
+    case 'talk-end': talkEnd(); break;
+    case 'talk-retry': { const r = S.talk && S.talk.retry; if(r){ S.talk.retry = null; aiSend(r.text, r.opt); } return; }
+    case 'talk-sug': { const lastAi = [...S.talk.msgs].reverse().find(m=>m.role==='ai'); const x = lastAi && lastAi.turn.suggestions[+a]; if(x){ const el = $('#talk-in'); if(el){ el.value = x.ph; el.focus(); } } return; }
+    case 'talk-explain': aiSend('Kun je dat uitleggen in het Nederlands?', {explain:true}); return;
+    case 'talk-nl': S.talk.msgs[+a].open = true; break;
+    case 'talk-nlall': S.talk.showNl = !S.talk.showNl; break;
+    case 'talk-save': saveAiWord(+a); break;
+    case 'talk-mic': listen(); return;
+    case 'ai-refresh': AI.enabled = null; render(); aiStatus(); return;
+    case 'ai-test': aiRunTest(); return;
     case 'ascn': startScenario(a); return;
     case 'atest': startAdultTest(a); return;
     case 'agram': S.sheet = 'gram:' + a; break;

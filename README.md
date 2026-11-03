@@ -34,3 +34,18 @@ Alle uitspraak (`ph`) gaat door één functie: `translit(ph, ar)` in `index.html
 - Typ je oude spelling in (sj, ch, oe, j, aa), dan zet de app die automatisch om.
 - De 3 en de 7 komen uit het Arabische schrift ernaast. Klopt het aantal niet, dan blijft het teken staan.
 - Vaste uitzonderingen staan in `TL_MANUAL`, bijvoorbeeld `Ma3a Salama`.
+
+## AI-taalpartner
+
+- Kinderen van 7 tot 9 praten met Mishmish, volwassenen en tieners met Salma. Voor kinderen van 4 tot 6 staat hij uit: die kunnen nog niet lezen, en gesproken antwoorden zijn er nog niet.
+- Server: `supabase/functions/ai-chat/index.ts`, als Edge Function `ai-chat`. De API-sleutel staat alleen daar, als secret `ANTHROPIC_API_KEY`.
+- Personage, niveau en veiligheidsregels bepaalt de server op basis van het profiel in de database. Bij kinderen worden berichten met persoonlijke gegevens (e-mail, telefoonnummer, adres, links) niet naar de AI gestuurd.
+- Instellingen (secrets, allemaal optioneel):
+  - `AI_MODEL_ADULT`, `AI_MODEL_KIDS` (standaard `claude-sonnet-5-5`)
+  - `AI_DAILY_LIMIT`: berichten per gezin per dag (standaard 150)
+  - `AI_TEST_MODELS`
+- Tabellen:
+  - `ai_usage`: telt alleen het aantal berichten per gezin per dag. De inhoud van gesprekken wordt niet op de server bewaard.
+  - `ai_tests`: uitslagen van de dialecttest.
+- Dialecttest: Ouders → Taalpartner → Start de dialecttest (alleen voor de beheerder).
+- Spraak: inspreken loopt via de spraakherkenning van de browser (`ar-EG`). De knop verschijnt alleen als de browser dat kan. Gesproken AI-antwoorden kunnen later worden aangesloten in `aiSpeak()`.
