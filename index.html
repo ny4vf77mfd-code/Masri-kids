@@ -2086,6 +2086,11 @@ function mascot(size=120, mood='happy', cls='bob'){
 
 /* ---------- audio ---------- */
 let curAudio = null;
+// Elke stap krijgt een eigen 'geluidsronde'. Gaat het spel verder, dan wordt alles van de vorige ronde gestopt
+// en starten uitgestelde woordjes van de vorige vraag niet meer.
+let AGEN = 0;
+const later = (fn, ms) => { const g = AGEN; setTimeout(()=>{ if(g===AGEN) fn(); }, ms); };
+function hush(){ AGEN++; try{ if(curAudio){ curAudio.onended = null; curAudio.pause(); curAudio = null; } }catch(e){} try{ if('speechSynthesis' in window) speechSynthesis.cancel(); }catch(e){} }
 const audioSrc = id => MEDIA.audio[id] || MEDIA.shared[id] || AUDIO_FILES[id] || null;
 const hasAudio = id => !!audioSrc(id);
 function audioMode(id){ return hasAudio(id) ? 'real' : 'none'; }
@@ -2115,7 +2120,8 @@ async function play(id, quiet=false, rate=1){
 let nlVoice = null;
 function pickNL(){ try{ const vs = speechSynthesis.getVoices(); nlVoice = vs.find(v=>/^nl[-_]NL/i.test(v.lang)) || vs.find(v=>/^nl/i.test(v.lang)) || null; }catch(e){} }
 function voiceOn(){ const p = me(); return !!p && p.level===1 && DB.settings.nlVoice!==false && 'speechSynthesis' in window; }
-function speakNL(text, then){
+function speakNL(text, then0){
+  const g0 = AGEN, then = then0 ? ()=>{ if(g0===AGEN) then0(); } : null;
   if(!voiceOn() || !text){ if(then) then(); return; }
   try{
     try{ if(curAudio){ curAudio.pause(); curAudio=null; } }catch(e){}
@@ -2261,11 +2267,11 @@ function startReview(){
 }
 function autoPlay(){
   const st = L && L.steps[L.i]; if(!st) return;
-  if(st.type==='welcome'){ const p = me(); if(voiceOn()) setTimeout(()=>speakNL('Hoi '+p.name+'! '+(st.srs?'We gaan herhalen wat je al kent.':'We gaan leren. Luister goed!')), 300); return; }
+  if(st.type==='welcome'){ const p = me(); if(voiceOn()) later(()=>speakNL('Hoi '+p.name+'! '+(st.srs?'We gaan herhalen wat je al kent.':'We gaan leren. Luister goed!')), 300); return; }
   const word = ['intro','listen','meaning','say','listen-nl'].includes(st.type) && hasAudio(st.id);
-  if(voiceOn() && INSTR[st.type]) setTimeout(()=>speakNL(INSTR[st.type], ()=>{ if(word) play(st.id,true); }), 300);
-  else if(word) setTimeout(()=>play(st.id,true), 350);
-  else if(st.type==='chat'){ const q = res(st.turns[st.t].q); if(hasAudio(q)) setTimeout(()=>play(q,true), 350); }
+  if(voiceOn() && INSTR[st.type]) later(()=>speakNL(INSTR[st.type], ()=>{ if(word) play(st.id,true); }), 300);
+  else if(word) later(()=>play(st.id,true), 350);
+  else if(st.type==='chat'){ const q = res(st.turns[st.t].q); if(hasAudio(q)) later(()=>play(q,true), 350); }
 }
 
 /* ---------- oefeningen tekenen ---------- */
@@ -2473,7 +2479,7 @@ function answer(ok){
   const st = L.steps[L.i];
   L.ok = ok; L.state='feedback';
   sfx(ok?'ok':'bad');
-  if(voiceOn()) setTimeout(()=>speakNL(ok ? pick(PRAISE_NL) : 'Bijna! Luister nog eens.', ()=>{ if(hasAudio(st.id)) play(st.id,true); }), 350);
+  if(voiceOn()) later(()=>speakNL(ok ? pick(PRAISE_NL) : 'Bijna! Luister nog eens.', ()=>{ if(hasAudio(st.id)) play(st.id,true); }), 350);
   if(ok){ L.xp += 2; L.praise = praise(); if(st.id) record(st.id,true); }
   else {
     L.mistakes++; if(st.id) record(st.id,false);
@@ -2491,6 +2497,7 @@ function check(){
 function next(){
   const st = L.steps[L.i];
   if(st.type==='intro'){ const p = me(), b = baseOf(st.id); if(!p.words[b]) p.words[b] = {c:0, w:0, b:0, d:today()}; }
+  hush();
   L.i++; L.sel=null; L.state='answer'; L.ok=null;
   if(SELF.url){ try{ URL.revokeObjectURL(SELF.url); }catch(e){} SELF.url = null; }
   if(L.i >= L.steps.length) return finishLesson();
@@ -2603,7 +2610,7 @@ function finishLesson(){
   LAST = {srs, adult:!!L.lesson.adult, test:!!L.lesson.test, pct, stars, xp, mistakes:L.mistakes, goalHit, famHit, goal:gAfter && gAfter.g, fam:fAfter && fAfter.g, sticker, dailyBonus, worldDone, world:w, unlockedNext, next: WORLDS[nxt], badges};
   L = null; S.screen='done'; window.scrollTo(0,0); render(); confetti(stars===3||worldDone?90:50); sfx('goal');
   if(goalHit || famHit || worldDone) setTimeout(()=>confetti(120), 700);
-  if(voiceOn()) setTimeout(()=>speakNL(goalHit ? 'Hoera! Je hebt je weekdoel gehaald! Laat het aan papa of mama zien!' : famHit ? 'Hoera! Samen hebben jullie het gezinsdoel gehaald!' : worldDone ? 'Wauw! Je hebt een hele wereld af!' : sticker ? 'Hoera! De les is klaar. Je krijgt een nieuwe sticker!' : 'Hoera! Goed gedaan!'), 500);
+  if(voiceOn()) later(()=>speakNL(goalHit ? 'Hoera! Je hebt je weekdoel gehaald! Laat het aan papa of mama zien!' : famHit ? 'Hoera! Samen hebben jullie het gezinsdoel gehaald!' : worldDone ? 'Wauw! Je hebt een hele wereld af!' : sticker ? 'Hoera! De les is klaar. Je krijgt een nieuwe sticker!' : 'Hoera! Goed gedaan!'), 500);
 }
 function doneHTML(){
   const r = LAST;
@@ -2666,8 +2673,8 @@ function penCur(){ return PEN.qs[PEN.order[PEN.i]][penShotNo(PEN.i)]; }
 function penGoals(id){ return PEN.order.reduce((n,who,i)=> n + (who===id && PEN.res[i]===true ? 1 : 0), 0); }
 function penTurnVoice(){ const p = me(); if(p && 'speechSynthesis' in window && DB.settings.nlVoice!==false){ try{ speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance('Beurt van ' + p.name + '!'); u.lang='nl-NL'; if(nlVoice) u.voice=nlVoice; speechSynthesis.speak(u); }catch(e){} } }
 function penAuto(){ if(!PEN || PEN.state!=='q') return; const id = penCur(); if(!id || !isKid()) return;
-  if(voiceOn()) setTimeout(()=>speakNL('Luister. Welk plaatje is het? Schiet!', ()=>{ if(hasAudio(id)) play(id,true); }), 300);
-  else if(hasAudio(id)) setTimeout(()=>play(id,true), 350); }
+  if(voiceOn()) later(()=>speakNL('Luister. Welk plaatje is het? Schiet!', ()=>{ if(hasAudio(id)) play(id,true); }), 300);
+  else if(hasAudio(id)) later(()=>play(id,true), 350); }
 function penEndRestore(){ if(PEN && PEN.home && byId(PEN.home)) DB.activeId = PEN.home; }
 function penDots(id){
   return PEN.order.map((who,i)=>who===id ? i : -1).filter(i=>i>=0).map(i=>{ const r = PEN.res[i];
@@ -2744,7 +2751,7 @@ function penShoot(o){
   if(ok){ PEN.xp[who] += 3; if(hasAudio(id) && !voiceOn()) play(id,true); }
   render();
   setTimeout(()=>sfx(ok?'goal':'bad'), 520);
-  if(voiceOn()) setTimeout(()=>speakNL(ok?'Goal! Goed zo!':'Gered! Luister nog eens.', ()=>{ if(hasAudio(id)) play(id,true); }), 900);
+  if(voiceOn()) later(()=>speakNL(ok?'Goal! Goed zo!':'Gered! Luister nog eens.', ()=>{ if(hasAudio(id)) play(id,true); }), 900);
   const side = pick(['L','R','C']);
   const bx = {L:'27%',R:'73%',C:'50%'}[side], by = side==='C' ? '30%' : '34%';
   setTimeout(()=>{
@@ -2756,6 +2763,7 @@ function penShoot(o){
   setTimeout(()=>{ const c=$('#pen-call'), f=$('#pen-fb'); if(c) c.classList.add('show'); if(f) f.classList.add('show'); if(ok) confetti(35); }, 600);
 }
 function penNext(){
+  hush();
   PEN.i++; PEN.sel=null; PEN.opts=null;
   if(PEN.i >= PEN.order.length){
     PEN.state = 'end';
@@ -3559,7 +3567,7 @@ document.addEventListener('click', e=>{
       saveContent(id, d).then(ok=>{ if(ok){ S.cnew = null; toast('Nieuw woord toegevoegd: ' + d.ph); render(); } }); return; }
     case 'rec-skip': recNext(); break;
     case 'rec-end': S.recS = null; recRelease(); break;
-    case 'pick': { DB.activeId=a; save(); S.screen='home'; const pl = me(); if(pl && voiceOn()){ const hr = new Date().getHours(); setTimeout(()=>speakNL((hr<12?'Goedemorgen ':hr<18?'Hoi ':'Goedenavond ')+pl.name+'! Klaar om te spelen?'), 250); } break; }
+    case 'pick': { DB.activeId=a; save(); S.screen='home'; const pl = me(); if(pl && voiceOn()){ const hr = new Date().getHours(); later(()=>speakNL((hr<12?'Goedemorgen ':hr<18?'Hoi ':'Goedenavond ')+pl.name+'! Klaar om te spelen?'), 250); } break; }
     case 'newp': S.newP={name:'',age:null,gender:null,avatar:pick(AVATARS)}; break;
     case 'np-age': S.newP.age=+a; break;
     case 'np-kind': S.newP.kind=a; S.newP.age = a==='teen' ? 13 : a==='adult' ? 18 : null; break;
@@ -3594,7 +3602,7 @@ document.addEventListener('click', e=>{
     case 'hint': { const st=L.steps[L.i]; if(st.hintUsed||L.state!=='answer') return; st.hintUsed=true;
       if(st.type==='fill'){ const wrong = st.choices.map((c,k)=>k).filter(k=>st.choices[k]!==st.answer && k!==L.sel); if(wrong.length) st.hiddenK=[pick(wrong)]; }
       else { const wrong = (st.opts||[]).filter(o=>o!==st.id && o!==L.sel); if(wrong.length>1) st.hidden=[pick(wrong)]; }
-      if(['listen','meaning','listen-nl'].includes(st.type) && hasAudio(st.id)) setTimeout(()=>play(st.id,true),200);
+      if(['listen','meaning','listen-nl'].includes(st.type) && hasAudio(st.id)) later(()=>play(st.id,true),200);
       if(voiceOn()) speakNL('Eentje kan weg! Kijk nog eens goed.'); break; }
     case 'opt': if(L.state!=='answer') return; L.sel=a; if(['translate','picword','chat'].includes(L.steps[L.i].type)) play(a,true);
       if(isKid() && L.steps[L.i].type==='listen'){ check(); return; } break;
@@ -3603,11 +3611,11 @@ document.addEventListener('click', e=>{
     case 'untile': { const st=L.steps[L.i]; if(L.state!=='answer') return; st.ans.splice(+a,1); break; }
     case 'mem': memTap(+a); return;
     case 'check': check(); return;
-    case 'said': sfx('ok'); if(voiceOn()) setTimeout(()=>speakNL(pick(PRAISE_NL)),300); L.xp+=2; record(L.steps[L.i].id,true); L.ok=true; L.state='feedback'; L.praise=praise(); break;
+    case 'said': sfx('ok'); if(voiceOn()) later(()=>speakNL(pick(PRAISE_NL)),300); L.xp+=2; record(L.steps[L.i].id,true); L.ok=true; L.state='feedback'; L.praise=praise(); break;
     case 'next': next(); return;
     case 'quit': S.sheet='quit'; break;
     case 'quit-no': S.sheet=null; break;
-    case 'quit-yes': S.sheet=null; addTime(me(), L && L.t0); save(); selfRelease(); L=null; S.screen='home'; break;
+    case 'quit-yes': hush(); S.sheet=null; addTime(me(), L && L.t0); save(); selfRelease(); L=null; S.screen='home'; break;
     case 'gate': if(+a===S.gate.a+S.gate.b){ S.screen='parent'; S.ptab='overview'; } else { toast('Dat klopt niet. Probeer het nog eens.'); S.gate=null; } break;
     case 'ptab': S.ptab=a; S.confirmDel=false; if(a!=='audio' && S.recS){ S.recS=null; recRelease(); } break;
     case 'pkid': S.pkid=a; S.confirmDel=false; break;
