@@ -37,15 +37,13 @@ Alle uitspraak (`ph`) gaat door één functie: `translit(ph, ar)` in `index.html
 
 ## AI-taalpartner
 
-- Kinderen van 7 tot 9 praten met Mishmish, volwassenen en tieners met Salma. Voor kinderen van 4 tot 6 staat hij uit: die kunnen nog niet lezen, en gesproken antwoorden zijn er nog niet.
-- Server: `supabase/functions/ai-chat/index.ts`, als Edge Function `ai-chat`. De API-sleutel staat alleen daar, als secret `ANTHROPIC_API_KEY`.
-- Personage, niveau en veiligheidsregels bepaalt de server op basis van het profiel in de database. Bij kinderen worden berichten met persoonlijke gegevens (e-mail, telefoonnummer, adres, links) niet naar de AI gestuurd.
-- Instellingen (secrets, allemaal optioneel):
-  - `AI_MODEL_ADULT`, `AI_MODEL_KIDS` (standaard `claude-sonnet-5-5`)
-  - `AI_DAILY_LIMIT`: berichten per gezin per dag (standaard 150)
-  - `AI_TEST_MODELS`
-- Tabellen:
-  - `ai_usage`: telt alleen het aantal berichten per gezin per dag. De inhoud van gesprekken wordt niet op de server bewaard.
-  - `ai_tests`: uitslagen van de dialecttest.
-- Dialecttest: Ouders → Taalpartner → Start de dialecttest (alleen voor de beheerder).
-- Spraak: inspreken loopt via de spraakherkenning van de browser (`ar-EG`). De knop verschijnt alleen als de browser dat kan. Gesproken AI-antwoorden kunnen later worden aangesloten in `aiSpeak()`.
+- **Personages.** Kinderen van 7 tot 9 praten met Mishmish, volwassenen en tieners met Salma. Voor kinderen van 4 tot 6 staat hij uit, omdat zij nog niet kunnen lezen.
+- **Staat standaard UIT.** De beheerder activeert hem per doelgroep in Ouders → Taalpartner. Dat kan pas als alle antwoorden van de dialecttest zijn beoordeeld. Tot die tijd kan alleen de beheerder proefgesprekken voeren.
+- **Kinderen.** Een ouder zet de taalpartner per kind aan en kiest een daglimiet (Instellingen). Gesprekken zijn terug te lezen bij Voortgang. Berichten met een e-mailadres, telefoonnummer, adres of link gaan niet naar de AI.
+- **Server.** `supabase/functions/ai-chat/` bestaat uit drie bestanden:
+  - `index.ts`: toegang, limieten en veiligheid
+  - `prompts.ts`: personages, de 20 testsituaties en het antwoordformaat (Arabisch, Franco, Nederlands, correctie)
+  - `providers.ts`: de AI-provider. Een andere provider = daar een provider toevoegen + secret `AI_PROVIDER`.
+- **Sleutel.** Alleen als Supabase Secret: `ANTHROPIC_API_KEY`.
+- **Kosten.** Tabel `ai_config` bevat de modellen, het maandbudget in tokens en het aantal berichten per gezin per dag. `ai_usage` telt berichten en tokens. De inhoud van gesprekken wordt niet op de server bewaard (alleen de gesprekken van kinderen in hun eigen profiel, voor de ouders). Stel ook in de Anthropic Console een maximaal maandbedrag in.
+- **Tests.** `ai_tests` (dialecttest), `ai_ratings` (jouw beoordelingen, blind A/B) en `ai_speech_tests` (spraakherkenning en stemmen per apparaat).

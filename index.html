@@ -1012,6 +1012,20 @@ button,.opt,.mitem,.tile,.node{touch-action:manipulation;-webkit-user-select:non
 .tres .ar{font-size:18px}
 .bad{color:#C0392B;font-weight:800}
 .tb2{display:flex;flex-direction:column;gap:2px}.tb2 .ar{direction:rtl;text-align:right}.tb2 small{color:var(--duo-mute);font-weight:700}
+.rate{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px}
+.rate span{width:100%;font-size:13px;font-weight:800;color:var(--duo-mute)}
+.tcorr2 .k{display:block}
+.rate button{width:38px;height:38px;border-radius:10px;border:2px solid var(--duo-line);background:#fff;font-weight:900}
+.rate button.on{border-color:var(--duo-sel-b);background:var(--duo-sel);color:var(--duo-sel-t)}
+.inp.sm{min-height:40px;font-size:14px;margin-top:6px}
+.tcorr2{padding:8px 10px;border-radius:10px;background:#FFF7E6;border:1px solid #FFD58A;font-size:14px}
+.tcorr2 .ar{font-size:16px}
+.sprow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--duo-line);flex-wrap:wrap}
+.sprow .dmain{flex:1;min-width:160px}
+.sprow .ar{font-size:18px}
+.ailog{margin-top:8px}.ailog .lb{width:100%;text-align:left}.ailog .lb.warn{border-color:#FFC2D0;background:#FFF1F4}
+.ailog-t{padding:10px 12px;border:2px solid var(--duo-line);border-top:0;border-radius:0 0 10px 10px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.ailog-t p.me b{color:var(--duo-sel-t)}
 /* snelheid: secties buiten beeld niet tekenen */
 .world,.mod,.drow2,.scn-grid,.panel{content-visibility:auto;contain-intrinsic-size:auto 420px}
 .drow2{contain-intrinsic-size:auto 72px}
@@ -3183,13 +3197,16 @@ function aprogHTML(){
    Spraak: invoer via de spraakherkenning van de browser (als die Egyptisch ondersteunt).
    Gesproken AI-antwoorden: komen later via AI_VOICE (nu uit, zie aiSpeak).
    ===================================================================== */
-const AI = { enabled:null, model:null, test:null, testing:false };
+const AI = { enabled:null, st:null, test:null, testing:false, ratings:{}, reveal:false, sp:{stt:[], tts:{}} };
 const AI_VOICE = { enabled:false };                 // later: tekst-naar-spraak voor AI-antwoorden
 function aiSpeak(turn){ if(!AI_VOICE.enabled) return; /* aansluitpunt voor een spraakprovider */ }
 const STT = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 const KID_SCENES = [['animals','🐾','Dieren'],['food','🍞','Eten en drinken'],['football','⚽','Voetbal'],['family','👨‍👩‍👧','Familiewoorden'],['colors','🎨','Kleuren en cijfers']];
 const ADULT_SCENES = () => [['free','☕','Vrij gesprek'], ...SCENARIOS.map(x=>[x.id, x.who, x.title])];
-const aiCan = p => !!p && AI.enabled===true && (p.track==='adult' || (p.kind ? p.kind==='k2' : p.level===2));
+// toegang: sleutel ingesteld + (geactiveerd voor deze doelgroep of beheerder in proefmodus) + bij kinderen: 7-9 en toestemming van een ouder
+const aiKidAge = p => p.kind ? p.kind==='k2' : p.level===2;
+const aiActiveFor = p => !!AI.st && (p.track==='adult' ? AI.st.active_adult : AI.st.active_kids);
+const aiCan = p => !!p && AI.enabled===true && (aiActiveFor(p) || AUTH.admin) && (p.track==='adult' || (aiKidAge(p) && p.aiAllowed===true));
 const aiName = p => p.track==='adult' ? 'Salma' : 'Mishmish';
 async function aiCall(body){
   if(!sb) throw new Error('offline');
@@ -3199,7 +3216,7 @@ async function aiCall(body){
     throw new Error(msg); }
   return data;
 }
-async function aiStatus(){ try{ const d = await aiCall({action:'status'}); AI.enabled = !!d.enabled; AI.model = d.modelAdult; }catch(e){ AI.enabled = false; } if(!busyScreen()) render(); }
+async function aiStatus(){ try{ const d = await aiCall({action:'status'}); AI.st = d; AI.enabled = !!d.configured; }catch(e){ AI.enabled = false; AI.st = null; } if(!busyScreen()) render(); }
 function aiNorm(t){
   const n = x => x && x.ph ? {...x, ph:translit(x.ph, x.ar)} : x;
   if(!t) return t;
@@ -3237,6 +3254,7 @@ function talkEnd(){
   if(T.sent){ daily(p); p.xp += xp; p.today.xp += xp; addTime(p, T.t0);
     p.ai = p.ai || {sessions:0, msgs:0};
     p.ai.sessions++; p.ai.msgs += T.sent; p.ai.last = today();
+    if(p.track!=='adult'){ p.aiLog = (p.aiLog||[]).concat({d:today(), scene:T.scene, msgs:T.msgs.map(m=> m.role==='me' ? {r:'me', t:m.text} : {r:'ai', t:m.turn.reply.ph, nl:m.turn.reply.nl, adult:!!m.turn.needs_adult})}).slice(-10); }
     p.hist = (p.hist||[]).concat({d:today(), t:'Gesprek met '+aiName(p), w:'Taalpartner', ok:T.sent, n:T.sent, st:0, s:Math.round((Date.now()-T.t0)/1000)}).slice(-40);
     save(); toast(`Goed gepraat! +${xp} XP`); }
   stopListen(); S.talk = null; S.screen = 'home';
@@ -3276,7 +3294,7 @@ function talkHTML(){
     <div class="talk-intro">${ad?'<span class="ava">S</span>':mascot(90,'happy','')}<p>${ad?`Salma komt uit Caïro en praat alleen Egyptisch met je${p.alevel?`, op niveau ${p.alevel}`:''}. Ze verbetert je vriendelijk en legt uit in het Nederlands als je dat vraagt.`:'Mishmish praat Egyptisch met je over een onderwerp. Je mag typen of praten. Weet je iets niet? Schrijf het in het Nederlands!'}</p></div>
     <h2 class="sect">${ad?'Kies een situatie':'Waar wil je over praten?'}</h2>
     <div class="scn-grid">${list.map(([k,e,t])=>`<button class="scn-card" data-act="talk-scene:${k}"><span class="who">${e}</span><b>${esc(t)}</b></button>`).join('')}</div>
-    <p class="hint" style="margin-top:14px">${ad?'Antwoorden worden gemaakt door AI (Claude). Ze kunnen soms fouten bevatten.':'Mishmish is een computerprogramma. Vertel hem geen geheimen, je adres of je school.'}</p>`;
+    <p class="hint" style="margin-top:14px">${ad?'Antwoorden worden gemaakt door AI (Claude). Ze kunnen soms fouten bevatten.':'Mishmish is een computerprogramma. Vertel hem geen geheimen, je adres of je school. Papa en mama kunnen je gesprekjes teruglezen.'}</p>${aiActiveFor(p)?'':'<p class="status" style="margin-top:10px">🔒 Proefmodus: alleen jij als beheerder ziet dit, tot je de taalpartner activeert.</p>'}`;
   }
   const scene = (ad ? ADULT_SCENES() : KID_SCENES).find(x=>x[0]===T.scene) || ['','💬',''];
   const lastAi = [...T.msgs].reverse().find(m=>m.role==='ai');
@@ -3301,30 +3319,126 @@ function talkHTML(){
     <div class="trow"><button class="btn ghost" data-act="talk-explain" ${T.busy||!lastAi?'disabled':''}>🇳🇱 Leg uit</button><button class="btn ghost" data-act="talk-end">Klaar</button></div>
   </div>`;
 }
+const blindLabel = (testId, model, models) => { const i = models.indexOf(model); const flip = (testId||0) % 2 === 1; return ['A','B','C'][flip && models.length===2 ? 1-i : i]; };
+function ratingStats(R){
+  const out = {}; (R.summary||[]).forEach(x=>{ out[x.model] = {n:0, sum:0}; });
+  Object.values(AI.ratings).forEach(r=>{ if(out[r.model]){ out[r.model].n++; out[r.model].sum += r.score; } });
+  return out;
+}
 function aiPanel(){
   if(!AUTH.admin) return `<div class="panel"><h3>Taalpartner</h3><p class="muted">Alleen de beheerder kan dit instellen.</p></div>`;
-  const R = AI.test;
+  const st = AI.st || {}, cfg = st.config || {}, R = AI.test, models = R ? R.summary.map(x=>x.model) : [];
+  const total = R ? R.results.filter(r=>!r.error).length : 0, done = Object.keys(AI.ratings).length, allRated = R && done >= total && total>0;
+  const stats = R ? ratingStats(R) : {};
+  const m = st.month || {msgs:0, tokens_in:0, tokens_out:0}, mt = m.tokens_in + m.tokens_out, lim = Number(cfg.monthly_token_limit||0);
+  const fmt = n => Number(n).toLocaleString('nl-NL');
   let h = `<div class="panel"><h3>AI-taalpartner</h3>
-    <p class="status ${AI.enabled?'on':''}">${AI.enabled===null?'Status wordt opgehaald…':AI.enabled?`✅ Actief · model ${esc(AI.model||'')}`:'⏸️ Nog niet actief: er is nog geen API-sleutel ingesteld.'}</p>
-    ${AI.enabled?'':`<ol class="steps"><li>Maak een API-sleutel op <b>console.anthropic.com</b> (API Keys) en zet tegoed bij Billing.</li><li>Ga in Supabase naar je project → Edge Functions → Secrets.</li><li>Voeg toe: <code>ANTHROPIC_API_KEY</code> met de sleutel als waarde.</li><li>Kom hier terug en tik op Status vernieuwen.</li></ol><button class="btn ghost" data-act="ai-refresh">Status vernieuwen</button>`}
-  </div>`;
-  h += `<div class="panel"><h3>Dialecttest</h3><p class="muted" style="margin-bottom:10px">12 testgesprekken (volwassenen en kinderen) met twee AI-modellen. De app telt woorden uit het standaard-Arabisch (fusha) en uit het Egyptisch. Lees de antwoorden ook zelf: jouw oordeel telt het zwaarst.</p>
-    <button class="btn" data-act="ai-test" ${AI.enabled&&!AI.testing?'':'disabled'}>${AI.testing?'Bezig, duurt ± 30 seconden…':'Start de dialecttest'}</button></div>`;
-  if(R && R.summary){
-    h += `<div class="panel"><h3>Uitslag</h3><div class="tiles">${R.summary.map(x=>`<div class="tile-n"><b>${x.msaHits}</b><span>fusha-woorden · ${esc(x.model)}</span></div><div class="tile-n"><b>${x.egyHits}</b><span>Egyptische woorden · ${x.ok}/${x.total} gelukt · ${(x.avgMs/1000).toFixed(1)} s</span></div>`).join('')}</div></div>`;
-    const notes = [...new Set(R.results.map(r=>r.note))];
-    h += notes.map(n=>{ const rs = R.results.filter(r=>r.note===n); const r0 = rs[0];
-      return `<div class="panel ttest"><h3>${esc(n)}</h3><p class="muted">${r0.kind==='kids'?'Kind':'Volwassene, niveau '+r0.level} · leerling: “${esc(r0.msg)}”</p>${rs.map(r=>{ const t = r.turn && aiNorm(r.turn);
-        return `<div class="tres"><span class="k">${esc(r.model)}${r.msa&&r.msa.length?` · <span class="bad">fusha: ${esc(r.msa.join(', '))}</span>`:''}</span>${r.error?`<p class="bad">${esc(r.error)}</p>`:`<div class="tb2">${bub(t.reply,true)}</div>${t.correction?`<p class="muted">Correctie: <b>${esc(t.correction.better_ph)}</b> ${esc(t.correction.better_ar||'')} · ${esc(t.correction.uitleg_nl||'')}</p>`:''}${t.explanation_nl?`<p class="muted">Uitleg: ${esc(t.explanation_nl)}</p>`:''}${t.needs_adult?'<p class="muted">⚠️ Verwijst naar een volwassene</p>':''}`}</div>`; }).join('')}</div>`; }).join('');
+    <p class="status ${st.configured?'on':''}">${AI.st===null?'Status wordt opgehaald…':st.configured?`✅ API-sleutel staat op de server (${esc(st.provider||'')})`:'⏸️ Nog geen API-sleutel ingesteld.'}</p>
+    ${st.configured?'':`<ol class="steps"><li>Maak een API-sleutel op <b>console.anthropic.com</b> (API Keys) en zet tegoed bij Billing.</li><li>Ga in Supabase naar je project → Edge Functions → Secrets.</li><li>Voeg toe: <code>ANTHROPIC_API_KEY</code> met de sleutel als waarde.</li><li>Tik hieronder op Status vernieuwen.</li></ol>`}
+    <button class="btn ghost" data-act="ai-refresh">Status vernieuwen</button></div>`;
+  if(!st.configured) return h;
+  h += `<div class="panel"><h3>1. Dialecttest</h3><p class="muted" style="margin-bottom:10px">Dezelfde 20 gesprekssituaties (volwassenen en kinderen, man en vrouw) gaan naar ${esc((cfg.test_models||[]).join(' en '))}. Je ziet de antwoorden blind als A en B. Beoordeel hoe natuurlijk Egyptisch elk antwoord is. Pas daarna zie je welk model wat was.</p>
+    <button class="btn" data-act="ai-test" ${AI.testing?'disabled':''}>${AI.testing?'Bezig, duurt ± 1 minuut…':R?'Nieuwe test starten':'Start de dialecttest'}</button>
+    ${R?`<p class="hint" style="margin-top:8px">Beoordeeld: <b>${done}/${total}</b>${allRated?' · klaar':''}</p>`:''}</div>`;
+  if(R){
+    if(allRated || AI.reveal){
+      h += `<div class="panel"><h3>Uitslag</h3><div class="tiles">${R.summary.map(x=>{ const s0 = stats[x.model]||{n:0,sum:0}; return `<div class="tile-n"><b>${s0.n?(s0.sum/s0.n).toFixed(1):'–'}</b><span>${blindLabel(R.id,x.model,models)} = ${esc(x.model)}<br>jouw gemiddelde (1–5) · ${x.msaHits} fusha-woorden · ${(x.avgMs/1000).toFixed(1)} s</span></div>`; }).join('')}</div></div>`;
+    }
+    const cases = [...new Set(R.results.map(r=>r.ti))].sort((x,y)=>x-y);
+    h += cases.map(ti=>{ const rs = R.results.filter(r=>r.ti===ti).sort((x,y)=>blindLabel(R.id,x.model,models).localeCompare(blindLabel(R.id,y.model,models))); const r0 = rs[0];
+      return `<div class="panel ttest"><h3>${ti+1}. ${esc(r0.note)}</h3><p class="muted">${r0.kind==='kids'?'Kind 7–9':'Volwassene, niveau '+r0.level} · ${r0.female?'vrouw/meisje':'man/jongen'} · leerling: “${esc(r0.msg)}”</p><p class="hint">Let op: ${esc(r0.check||'')}</p>
+      ${rs.map(r=>{ const t = r.turn && aiNorm(r.turn), rt = AI.ratings[r.idx];
+        return `<div class="tres"><span class="k">Antwoord ${blindLabel(R.id,r.model,models)}${(allRated||AI.reveal)?' · '+esc(r.model):''}${r.msa&&r.msa.length?` · <span class="bad">fusha: ${esc(r.msa.join(', '))}</span>`:''}</span>
+        ${r.error?`<p class="bad">${esc(r.error)}</p>`:`<div class="tb2">${bub(t.reply,true)}</div>
+        ${t.correction?`<div class="tcorr2"><span class="k">Correctie</span><b>${esc(t.correction.better_ph)}</b> <span class="ar" lang="ar">${esc(t.correction.better_ar||'')}</span>${t.correction.better_nl?` · ${esc(t.correction.better_nl)}`:''}<br><span class="muted">${esc(t.correction.uitleg_nl||'')}</span></div>`:'<p class="muted">Geen correctie</p>'}
+        ${t.explanation_nl?`<p class="muted">Uitleg: ${esc(t.explanation_nl)}</p>`:''}${t.needs_adult?'<p class="muted">⚠️ Verwijst naar een volwassene</p>':''}
+        <div class="rate"><span>Hoe Egyptisch?</span>${[1,2,3,4,5].map(n=>`<button class="${rt&&rt.score===n?'on':''}" data-act="ai-rate:${r.idx}:${n}" aria-label="${n}">${n}</button>`).join('')}</div>
+        <input class="inp sm" id="rn-${r.idx}" placeholder="Opmerking (optioneel), bv. zo zegt niemand het" value="${esc(rt&&rt.note||'')}" data-rnote="${r.idx}">`}</div>`; }).join('')}</div>`; }).join('');
   }
+  // activeren
+  const avg = mo => { const s0 = stats[mo]; return s0 && s0.n ? (s0.sum/s0.n).toFixed(1) : null; };
+  h += `<div class="panel"><h3>2. Activeren</h3>
+    ${allRated?'':'<p class="status">Beoordeel eerst alle antwoorden van de dialecttest. Daarna kun je activeren.</p>'}
+    <div class="setrow"><label>Model voor volwassenen</label><div class="seg">${(cfg.test_models||[]).map(mo=>`<button class="${cfg.model_adult===mo?'on':''}" data-act="ai-cfg:model_adult:${mo}" ${allRated?'':'disabled'}>${esc(mo)}${avg(mo)?` · ${avg(mo)}`:''}</button>`).join('')}</div></div>
+    <div class="setrow"><label>Model voor kinderen</label><div class="seg">${(cfg.test_models||[]).map(mo=>`<button class="${cfg.model_kids===mo?'on':''}" data-act="ai-cfg:model_kids:${mo}" ${allRated?'':'disabled'}>${esc(mo)}${avg(mo)?` · ${avg(mo)}`:''}</button>`).join('')}</div></div>
+    <div class="setrow"><label>Volwassenen en tieners</label><div class="seg"><button class="${!cfg.active_adult?'on':''}" data-act="ai-cfg:active_adult:0">Uit</button><button class="${cfg.active_adult?'on':''}" data-act="ai-cfg:active_adult:1" ${allRated?'':'disabled'}>Aan</button></div></div>
+    <div class="setrow"><label>Kinderen 7–9</label><div class="seg"><button class="${!cfg.active_kids?'on':''}" data-act="ai-cfg:active_kids:0">Uit</button><button class="${cfg.active_kids?'on':''}" data-act="ai-cfg:active_kids:1" ${allRated?'':'disabled'}>Aan</button></div>
+      <p class="hint">Ook als dit aan staat, moet een ouder het per kind toestaan in Instellingen.</p></div>
+    <p class="hint">Tot je activeert, kun alleen jij proefgesprekken voeren.</p></div>`;
+  // kosten
+  h += `<div class="panel"><h3>3. Kosten en limieten</h3>
+    <div class="tiles"><div class="tile-n"><b>${fmt(m.msgs)}</b><span>berichten deze maand</span></div><div class="tile-n"><b>${fmt(mt)}</b><span>tokens deze maand${lim?` van ${fmt(lim)}`:''}</span></div></div>
+    ${lim?`<div class="gbar" style="margin:10px 0"><i style="width:${Math.min(100, mt/lim*100)}%"></i></div>`:''}
+    <div class="setrow"><label>Maandbudget (tokens, hele app)</label><div class="seg">${[1000000,3000000,10000000].map(n=>`<button class="${lim===n?'on':''}" data-act="ai-cfg:monthly_token_limit:${n}">${n/1e6} mln</button>`).join('')}</div>
+      <p class="hint">Is het budget op, dan stopt de taalpartner tot de volgende maand. Wat een miljoen tokens kost, zie je bij Pricing op anthropic.com.</p></div>
+    <div class="setrow"><label>Berichten per gezin per dag</label><div class="seg">${[50,150,300].map(n=>`<button class="${Number(cfg.family_daily_msgs)===n?'on':''}" data-act="ai-cfg:family_daily_msgs:${n}">${n}</button>`).join('')}</div></div>
+    <p class="hint">Extra zekerheid: stel in de Anthropic Console bij Limits ook een maximaal bedrag per maand in.</p></div>`;
+  // spraak
+  h += speechPanel();
   return h;
+}
+/* ---------- spraaktest (per apparaat) ---------- */
+const SPEECH_SENTS = ['ahlan','izzayak','shukran','s_esmi','s_bekam_da','a_3ayez_akol','a_mesh_fahem','a_tetkallem_beraha'].filter(id=>ITEM[id]);
+const arNorm = t => String(t||'').replace(/[ً-ٰٟـ]/g,'').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[؟?!.,،]/g,'').trim();
+function wordScore(heard, want){ const h = arNorm(heard).split(/\s+/).filter(Boolean), w = arNorm(want).split(/\s+/).filter(Boolean); if(!w.length) return 0; return Math.round(w.filter(x=>h.includes(x)).length / w.length * 100); }
+const deviceName = () => { const u = navigator.userAgent; return (/iPhone|iPad/.test(u)?'iPhone/iPad':/Android/.test(u)?'Android':/Mac/.test(u)?'Mac':/Windows/.test(u)?'Windows':'Ander') + ' · ' + (/CriOS|Chrome/.test(u)&&!/Edg/.test(u)?'Chrome':/Safari/.test(u)?'Safari':/Firefox/.test(u)?'Firefox':/Edg/.test(u)?'Edge':'browser'); };
+function arVoices(){ try{ return speechSynthesis.getVoices().filter(v=>/^ar/i.test(v.lang)); }catch(e){ return []; } }
+function speechPanel(){
+  const sp = AI.sp, voices = 'speechSynthesis' in window ? arVoices() : [];
+  return `<div class="panel"><h3>4. Spraaktest op dit apparaat</h3><p class="muted">Spraak hangt af van de telefoon en browser. Doe deze test op het apparaat waarop gespeeld wordt. ${esc(deviceName())}</p></div>
+  <div class="panel"><h3>Spraakherkenning (Egyptisch inspreken)</h3>
+    ${STT?`<p class="muted" style="margin-bottom:8px">Tik op 🎙️ en zeg de zin zoals je hem normaal zegt. De app laat zien wat de browser verstond.</p>
+    ${SPEECH_SENTS.map((id,i)=>{ const r = sp.stt[i]; return `<div class="sprow"><button class="mic ${sp.on===i?'on':''}" data-act="sp-stt:${i}" aria-label="Inspreken">${sp.on===i?'■':'🎙️'}</button><div class="dmain"><b>${esc(ITEM[id].ph)}</b><span class="ar" lang="ar">${esc(ITEM[id].ar)}</span>${r?`<span class="dst">Verstaan: ${esc(r.heard||'(niets)')} · <b>${r.score}%</b></span>`:''}</div></div>`; }).join('')}
+    ${sp.stt.filter(Boolean).length?`<p style="margin-top:10px"><b>Gemiddeld ${Math.round(sp.stt.filter(Boolean).reduce((a,r)=>a+r.score,0)/sp.stt.filter(Boolean).length)}% van de woorden herkend</b></p><button class="btn ghost" data-act="sp-save:stt">Uitslag bewaren</button>`:''}`
+    :`<p class="status">Deze browser heeft geen spraakherkenning. Inspreken werkt hier dus niet. Probeer Chrome (Android) of Safari (iPhone).</p><button class="btn ghost" data-act="sp-save:stt">Bewaar: niet ondersteund op dit apparaat</button>`}
+  </div>
+  <div class="panel"><h3>Gesproken antwoorden (computerstem)</h3>
+    <p class="muted" style="margin-bottom:8px">Alleen om te testen. In de lessen blijven altijd jouw eigen opnames. Klinkt een stem hieronder echt Egyptisch?</p>
+    ${!('speechSynthesis' in window)?'<p class="status">Deze browser kan niet voorlezen.</p>':!voices.length?`<p class="status">Er staan geen Arabische stemmen op dit apparaat.</p><button class="btn ghost" data-act="sp-voices">Opnieuw zoeken</button>`:
+    voices.map((v,i)=>{ const r = sp.tts[v.name]; return `<div class="sprow"><button class="mini" data-act="sp-say:${i}">▶</button><div class="dmain"><b>${esc(v.name)}</b><span class="dst">${esc(v.lang)}${/EG/i.test(v.lang)?' · Egyptisch':' · geen Egyptische stem'}</span></div>
+      <div class="seg">${[['ja','Egyptisch'],['deels','Een beetje'],['nee','Niet']].map(([k,t])=>`<button class="${r===k?'on':''}" data-act="sp-rate:${i}:${k}">${t}</button>`).join('')}</div></div>`; }).join('') + `<button class="btn ghost" style="margin-top:10px" data-act="sp-save:tts">Uitslag bewaren</button>`}
+    <p class="hint" style="margin-top:10px">Voorbeeldzin: “${esc(ITEM.a_akhbarak ? ITEM.a_akhbarak.ph : '')}, ${esc(ITEM.a_eh_el_akhbar ? ITEM.a_eh_el_akhbar.ph : '')}” Telefoonstemmen spreken meestal standaard-Arabisch. Echte Egyptische stemmen (zoals die van Microsoft Azure) hebben een eigen API-sleutel nodig. Die kunnen we na deze test apart uitproberen.</p>
+  </div>`;
+}
+function spListen(i){
+  if(!STT) return;
+  if(REC2){ stopListen(); return; }
+  const want = ITEM[SPEECH_SENTS[i]].ar;
+  try{
+    REC2 = new STT(); REC2.lang = 'ar-EG'; REC2.interimResults = false; REC2.maxAlternatives = 1; AI.sp.on = i;
+    REC2.onresult = e=>{ const heard = [...e.results].map(r=>r[0].transcript).join(' '); AI.sp.stt[i] = {id:SPEECH_SENTS[i], heard, score:wordScore(heard, want)}; };
+    REC2.onerror = e=>{ AI.sp.stt[i] = {id:SPEECH_SENTS[i], heard:'', score:0, error:e.error}; if(e.error==='not-allowed') toast('Sta de microfoon toe voor deze website.'); };
+    REC2.onend = ()=>{ REC2 = null; AI.sp.on = null; render(); };
+    REC2.start(); render();
+  }catch(e){ REC2 = null; AI.sp.on = null; toast('Spraakherkenning lukte niet op dit apparaat.'); }
+}
+function spSay(i){ const v = arVoices()[i]; if(!v) return; try{ speechSynthesis.cancel(); const t = [ITEM.a_akhbarak, ITEM.a_eh_el_akhbar].filter(Boolean).map(x=>x.ar).join('، '); const u = new SpeechSynthesisUtterance(t); u.voice = v; u.lang = v.lang; u.rate = .95; speechSynthesis.speak(u); }catch(e){ toast('Voorlezen lukte niet.'); } }
+async function spSave(kind){
+  const results = kind==='stt' ? {supported:!!STT, items:AI.sp.stt.filter(Boolean)} : {supported:'speechSynthesis' in window, voices:arVoices().map(v=>({name:v.name, lang:v.lang, rating:AI.sp.tts[v.name]||null}))};
+  try{ const {error} = await sb.from('ai_speech_tests').insert({kind, device:deviceName(), results}); if(error) throw error; toast('Uitslag bewaard'); }catch(e){ toast('Bewaren lukte niet.'); }
+}
+async function aiLoadRatings(){ if(!AI.test || !AI.test.id) return; try{ const {data} = await sb.from('ai_ratings').select('idx,model,score,note').eq('test_id', AI.test.id); AI.ratings = {}; (data||[]).forEach(r=>{ AI.ratings[r.idx] = r; }); render(); }catch(e){} }
+async function aiRate(idx, score, note){
+  const R = AI.test, r = R && R.results.find(x=>x.idx===idx); if(!r) return;
+  const prev = AI.ratings[idx] || {};
+  const row = {test_id:R.id, idx, model:r.model, score: score || prev.score, note: note!==undefined ? note : (prev.note||null)};
+  if(!row.score){ toast('Kies eerst een cijfer.'); return; }
+  AI.ratings[idx] = row; render();
+  try{ const {error} = await sb.from('ai_ratings').upsert(row, {onConflict:'test_id,idx'}); if(error) throw error; }catch(e){ toast('Beoordeling bewaren lukte niet.'); }
+}
+async function aiSetCfg(key, val){
+  const v = key.startsWith('active_') ? val==='1' : /limit|msgs/.test(key) ? Number(val) : val;
+  try{ const {error} = await sb.from('ai_config').update({[key]:v, updated_at:new Date().toISOString()}).eq('id',1); if(error) throw error;
+    AI.st.config = {...AI.st.config, [key]:v}; if(key==='active_adult') AI.st.active_adult = v; if(key==='active_kids') AI.st.active_kids = v; toast('Opgeslagen'); }catch(e){ toast('Opslaan lukte niet.'); }
+  render();
 }
 async function aiRunTest(){
   AI.testing = true; render();
-  try{ AI.test = await aiCall({action:'dialect-test'}); }catch(e){ toast(e.message); }
+  try{ AI.test = await aiCall({action:'dialect-test'}); AI.ratings = {}; AI.reveal = false; aiStatus(); }catch(e){ toast(e.message); }
   AI.testing = false; render();
 }
-async function aiLoadLastTest(){ if(!sb || !AUTH.admin || AI.test) return; try{ const {data} = await sb.from('ai_tests').select('summary,results').order('created_at',{ascending:false}).limit(1).maybeSingle(); if(data){ AI.test = data; render(); } }catch(e){} }
+let AI_LOADED = false;
+async function aiLoadLastTest(){ if(!sb || !AUTH.admin || AI_LOADED) return; AI_LOADED = true; try{ const {data} = await sb.from('ai_tests').select('id,summary,results').order('created_at',{ascending:false}).limit(1).maybeSingle(); if(data){ AI.test = data; await aiLoadRatings(); render(); } }catch(e){} }
 
 /* ---------- scorebord ---------- */
 function daysLeft(){ return 7 - ((new Date().getDay()+6)%7); }
@@ -3621,11 +3735,19 @@ function contentPanel(){
     ${list.length>lim?`<button class="btn ghost wide" style="margin-top:12px" data-act="cmore">Toon meer (${list.length-lim})</button>`:''}
   </div>`;
 }
+function aiLogHTML(p){
+  if(p.track==='adult' || !(p.aiLog||[]).length) return '';
+  const today0 = AI.st && AI.st.today && AI.st.today.per_player ? (AI.st.today.per_player[p.id]||0) : null;
+  return `<div class="panel"><h3>💬 Gesprekken met Mishmish</h3><p class="muted" style="margin-bottom:8px">${p.ai?p.ai.sessions:0} gesprekken${today0!==null?` · vandaag ${today0} berichten (max ${p.aiDaily||20})`:''}</p>
+  ${[...p.aiLog].reverse().map((g,i)=>{ const sc = KID_SCENES.find(x=>x[0]===g.scene)||['','💬','Gesprek']; const flag = g.msgs.some(m=>m.adult);
+    return `<div class="ailog"><button class="lb ${flag?'warn':''}" data-act="ailog:${i}">${sc[1]} ${esc(sc[2])} · ${esc(g.d)} · ${g.msgs.filter(m=>m.r==='me').length} berichten${flag?' · ⚠️ even naar kijken':''}</button>
+    ${S.ailog===i?`<div class="ailog-t">${g.msgs.map(m=>`<p class="${m.r}"><b>${m.r==='me'?esc(p.name):'Mishmish'}:</b> ${esc(m.t)}${m.nl?` <span class="muted">(${esc(m.nl)})</span>`:''}${m.adult?' <span class="bad">· verwees naar een volwassene</span>':''}</p>`).join('')}</div>`:''}</div>`; }).join('')}</div>`;
+}
 function overviewPanel(p){
   const lw = learned(p);
   const hard = WORDS.concat(SENTENCES, DLINES).map(x=>({x, s:p.words[x.id]})).filter(o=>o.s && o.s.w>0).sort((a,b)=>(b.s.w-b.s.c*.5)-(a.s.w-a.s.c*.5)).slice(0,6);
   const best = ALL_LESSONS.filter(l=>p.best[l.id]).sort((a,b)=>p.best[a.id].mistakes-p.best[b.id].mistakes).slice(0,5);
-  return `<div class="panel"><h3>Samenvatting</h3><div class="tiles">
+  return aiLogHTML(p) + `<div class="panel"><h3>Samenvatting</h3><div class="tiles">
       <div class="tile-n"><b>${p.xp}</b><span>XP</span></div>
       <div class="tile-n"><b>${Object.keys(p.lessons).length}/${ALL_LESSONS.length}</b><span>lessen af</span></div>
       <div class="tile-n"><b>${lw.length}/${WORDS.length}</b><span>woorden geleerd</span></div>
@@ -3663,6 +3785,12 @@ function settingsPanel(p){
     <div class="setrow"><label>Jongen of meisje</label><div class="seg"><button class="${p.gender==='m'?'on':''}" data-act="setp-g:m">jongen</button><button class="${p.gender==='f'?'on':''}" data-act="setp-g:f">meisje</button></div></div>
     <label class="switch"><input type="checkbox" id="set-unlock" data-setp="unlockAll" ${p.unlockAll?'checked':''}> Alle werelden en lessen openzetten</label>
   </div>
+  ${p.track!=='adult' ? `<div class="panel"><h3>💬 Taalpartner Mishmish</h3>
+    ${aiKidAge(p) ? `<p class="muted" style="margin-bottom:10px">Een AI-gesprekspartner die alleen over taal praat, geen persoonlijke vragen stelt en verwijst naar een ouder als een kind iets moeilijks vertelt. Berichten met een adres, telefoonnummer of e-mail gaan niet naar de AI. Gesprekken kun je teruglezen bij Voortgang.</p>
+    <div class="setrow"><label>Toestaan voor ${esc(p.name)}</label><div class="seg"><button class="${p.aiAllowed?'':'on'}" data-act="setp-ai:0">Uit</button><button class="${p.aiAllowed?'on':''}" data-act="setp-ai:1">Aan</button></div></div>
+    <div class="setrow" ${p.aiAllowed?'':'hidden'}><label>Maximaal per dag</label><div class="seg">${[10,20,40].map(n=>`<button class="${(p.aiDaily||20)===n?'on':''}" data-act="setp-aid:${n}">${n} berichten</button>`).join('')}</div></div>
+    ${AI.st && !AI.st.active_kids ? '<p class="hint">De taalpartner voor kinderen is nog niet geactiveerd door de beheerder.</p>' : ''}` : '<p class="muted">Nog niet beschikbaar voor kinderen van 4 tot 6: zij kunnen nog niet lezen, en gesproken antwoorden zijn er nog niet.</p>'}
+  </div>` : ''}
   <div class="panel danger-zone"><h3>Profiel verwijderen</h3>
     ${S.confirmDel?`<p class="muted" style="margin-bottom:10px">Alle voortgang van ${esc(p.name)} verdwijnt. Weet je het zeker?</p><div class="seg"><button data-act="del-yes" style="color:var(--coral-d)">Ja, verwijderen</button><button data-act="del-no">Nee</button></div>`
       :`<button class="mini danger" data-act="del-ask">Verwijder ${esc(p.name)}</button>`}
@@ -3904,8 +4032,18 @@ document.addEventListener('click', e=>{
     case 'talk-nlall': S.talk.showNl = !S.talk.showNl; break;
     case 'talk-save': saveAiWord(+a); break;
     case 'talk-mic': listen(); return;
-    case 'ai-refresh': AI.enabled = null; render(); aiStatus(); return;
+    case 'ai-refresh': AI.enabled = null; AI.st = null; render(); aiStatus(); return;
     case 'ai-test': aiRunTest(); return;
+    case 'ai-rate': aiRate(+a, +b); return;
+    case 'ai-cfg': aiSetCfg(a, b); return;
+    case 'sp-stt': spListen(+a); return;
+    case 'sp-say': spSay(+a); return;
+    case 'sp-rate': { const v = arVoices()[+a]; if(v) AI.sp.tts[v.name] = b; break; }
+    case 'sp-voices': break;
+    case 'sp-save': spSave(a); return;
+    case 'setp-ai': { const k=DB.profiles.find(x=>x.id===S.pkid); k.aiAllowed = a==='1'; save(); flush(); break; }
+    case 'setp-aid': { const k=DB.profiles.find(x=>x.id===S.pkid); k.aiDaily = +a; save(); flush(); break; }
+    case 'ailog': S.ailog = S.ailog===+a ? null : +a; break;
     case 'ascn': startScenario(a); return;
     case 'atest': startAdultTest(a); return;
     case 'agram': S.sheet = 'gram:' + a; break;
@@ -4002,6 +4140,7 @@ document.addEventListener('change', async e=>{
   if(t.dataset.bassign!==undefined && S.bulk){ S.bulk.assign[+t.dataset.bassign] = t.value; S.bulk.status=[]; render(); return; }
   if(t.dataset.sets){ DB.settings[t.dataset.sets] = t.checked; save(); render(); return; }
   if(t.id==='cn-w' && S.cnew){ ['ar','ph','nl','pic'].forEach(k=>{ const el = $('#cn-'+k); if(el) S.cnew[k] = el.value; }); S.cnew.w = +t.value; render(); return; }
+  if(t.dataset.rnote!==undefined){ aiRate(+t.dataset.rnote, 0, t.value.trim()); return; }
   if(t.dataset.dq){ S.dq = t.value; S.dlimit = 50; render(); const el = $('#dq'); if(el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); } return; }
   if(t.dataset.cq){ S.cq = t.value; S.climit = 40; render(); const el = $('#cq'); if(el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); } return; }
   if(t.dataset.greward){ const k = byId(t.dataset.greward); if(!k) return; k.goal = k.goal||{}; k.goal.reward = t.value.trim().slice(0,40); if(!k.goal.emoji) k.goal.emoji='🎁'; save(); render(); return; }
