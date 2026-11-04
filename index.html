@@ -1026,6 +1026,13 @@ button,.opt,.mitem,.tile,.node{touch-action:manipulation;-webkit-user-select:non
 .ailog{margin-top:8px}.ailog .lb{width:100%;text-align:left}.ailog .lb.warn{border-color:#FFC2D0;background:#FFF1F4}
 .ailog-t{padding:10px 12px;border:2px solid var(--duo-line);border-top:0;border-radius:0 0 10px 10px;display:flex;flex-direction:column;gap:4px;font-size:14px}
 .ailog-t p.me b{color:var(--duo-sel-t)}
+.tagsh{font-size:11px;font-weight:900;color:var(--nile,#0F9488);background:#ECFAF8;border-radius:999px;padding:2px 8px}
+.pb-list{display:flex;flex-direction:column;max-height:420px;overflow:auto;border:2px solid var(--duo-line);border-radius:12px}
+.pb-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-bottom:1px solid var(--duo-line)}
+.pb-row img{width:44px;height:44px;border-radius:10px;object-fit:cover;flex:none;background:#f2f2f2}
+.pb-row.skip{opacity:.65}.pb-x{width:44px;height:44px;display:grid;place-items:center;flex:none;color:var(--duo-mute)}
+.pb-st{flex:none;font-size:12px;font-weight:900;padding:3px 8px;border-radius:999px;background:#F2F4F7;color:var(--duo-mute)}
+.pb-st.new{background:#ECFAF8;color:#0B6F66}.pb-st.replace{background:#FFF7E6;color:#9A6400}.pb-st.ok{background:#D8F3E6;color:#14733F}.pb-st.fail{background:#FFF1F0;color:#B3261E}
 /* snelheid: secties buiten beeld niet tekenen */
 .world,.mod,.drow2,.scn-grid,.panel{content-visibility:auto;contain-intrinsic-size:auto 420px}
 .drow2{contain-intrinsic-size:auto 72px}
@@ -1908,7 +1915,7 @@ async function checkAdmin(){
   const {data} = await sb.from('admins').select('user_id').eq('user_id', AUTH.user.id).maybeSingle();
   AUTH.admin = !!data;
 }
-function busyScreen(){ return S.screen==='talk' || S.screen==='lesson' || S.screen==='penalty' || !!REC.mr || !!(S.bulk && S.bulk.busy); }
+function busyScreen(){ return !!(S.pbulk && S.pbulk.busy) || S.screen==='talk' || S.screen==='lesson' || S.screen==='penalty' || !!REC.mr || !!(S.bulk && S.bulk.busy); }
 const me = () => DB.profiles.find(p=>p.id===DB.activeId);
 
 /* ---------- opnames en foto's (Supabase Storage) ---------- */
@@ -1930,17 +1937,18 @@ async function loadMedia(){
   if(!sb || !AUTH.user) return;
   const u = AUTH.user.id;
   const va = {}, vs = {};
-  const [a, sh, p] = await Promise.all([signFolder(u+'/audio', va), signFolder('shared/audio', vs), signFolder(u+'/pics')]);
+  const [a, sh, p, sp] = await Promise.all([signFolder(u+'/audio', va), signFolder('shared/audio', vs), signFolder(u+'/pics'), signFolder('shared/pics')]);
   MEDIA.audio = a; MEDIA.shared = sh; MEDIA.ver = {audio:va, shared:vs};
-  Object.keys(PICS).forEach(k=>delete PICS[k]); Object.assign(PICS, p);
+  Object.keys(PICF).forEach(k=>delete PICF[k]); Object.assign(PICF, p);
+  Object.keys(PICSH).forEach(k=>delete PICSH[k]); Object.assign(PICSH, sp); rebuildPics();
   persistMedia(Date.now());
 }
-function persistMedia(ts){ try{ const old = JSON.parse(localStorage.getItem(LSM)||'null'); localStorage.setItem(LSM, JSON.stringify({uid:AUTH.user.id, ts:ts || (old && old.ts) || Date.now(), audio:MEDIA.audio, shared:MEDIA.shared, ver:MEDIA.ver, pics:{...PICS}})); }catch(e){} }
+function persistMedia(ts){ try{ const old = JSON.parse(localStorage.getItem(LSM)||'null'); localStorage.setItem(LSM, JSON.stringify({uid:AUTH.user.id, ts:ts || (old && old.ts) || Date.now(), audio:MEDIA.audio, shared:MEDIA.shared, ver:MEDIA.ver, pics:{...PICF}, spics:{...PICSH}})); }catch(e){} }
 // Opnamelinks van de vorige keer meteen gebruiken (ze zijn een week geldig), op de achtergrond verversen.
 const LSM = 'masrikids_media';
 function restoreMedia(u){
   try{ const v = JSON.parse(localStorage.getItem(LSM)); if(!v || v.uid!==u || Date.now()-v.ts > 5*864e5) return false;
-    MEDIA.audio = v.audio||{}; MEDIA.shared = v.shared||{}; MEDIA.ver = v.ver||{audio:{},shared:{}}; Object.keys(PICS).forEach(k=>delete PICS[k]); Object.assign(PICS, v.pics||{}); return true; }catch(e){ return false; }
+    MEDIA.audio = v.audio||{}; MEDIA.shared = v.shared||{}; MEDIA.ver = v.ver||{audio:{},shared:{}}; Object.keys(PICF).forEach(k=>delete PICF[k]); Object.assign(PICF, v.pics||{}); Object.keys(PICSH).forEach(k=>delete PICSH[k]); Object.assign(PICSH, v.spics||{}); rebuildPics(); return true; }catch(e){ return false; }
 }
 /* ---------- opnames vooraf laden en bewaren op het apparaat ---------- */
 // Elke opname wordt één keer gedownload en in de browser bewaard. Daarna speelt hij direct af, ook na herstarten.
@@ -2019,15 +2027,21 @@ async function savePic(id, file){
   if(!sb || !AUTH.user){ LAST_ERR = 'niet ingelogd'; return 'fail'; }
   let blob; try{ blob = await shrinkImage(file); }catch(e){ blob = null; }
   if(!blob){ LAST_ERR = 'deze foto kon niet gelezen worden'; return 'fail'; }
-  const url = await uploadMedia(AUTH.user.id + '/pics/' + id, blob, 'image/jpeg');
+  // beheerder: voor alle gezinnen (shared/pics/<id>), anders alleen voor dit gezin
+  const shared = AUTH.admin;
+  const url = await uploadMedia((shared ? 'shared' : AUTH.user.id) + '/pics/' + id, blob, 'image/jpeg');
   if(!url) return 'fail';
-  PICS[id] = url; return 'ok';
+  (shared ? PICSH : PICF)[id] = url; rebuildPics(); persistMedia(); return 'ok';
 }
 async function removePic(id){
   if(!sb || !AUTH.user) return;
-  const {error} = await sb.storage.from('media').remove([AUTH.user.id + '/pics/' + id]);
+  const paths = [];
+  if(PICF[id]) paths.push(AUTH.user.id + '/pics/' + id);
+  if(AUTH.admin && PICSH[id]) paths.push('shared/pics/' + id);
+  if(!paths.length) return;
+  const {error} = await sb.storage.from('media').remove(paths);
   if(error){ toast('Wissen lukte niet. Probeer het later nog eens.'); return; }
-  delete PICS[id];
+  delete PICF[id]; if(AUTH.admin) delete PICSH[id]; rebuildPics(); persistMedia();
 }
 
 /* ---------- woordeditor: aanpassingen van de beheerder (Supabase tabel 'content') ---------- */
@@ -2180,7 +2194,9 @@ const CONCRETE = new Set(['mama','baba','akh','ukht','teeta','geddo','beebi','wa
   'boosa','hodn','hekaya','kahk','genena','shagara','warda','ahwa',
   'soo','feloos','geneh','ayskreem','leaba','hodoom','gazma','shanta2',
   'qahera','borg','taksi','metro','otobees','arabeyya','yemeen','shemal','alatool','mathaf','faraon','momya','dahab']);
-const PICS = {}, PICMETA = {};
+// PICS = wat de app toont: eerst de eigen foto van het gezin, anders de gedeelde foto van de beheerder (net als bij audio)
+const PICS = {}, PICMETA = {}, PICF = {}, PICSH = {};
+function rebuildPics(){ Object.keys(PICS).forEach(k=>delete PICS[k]); Object.assign(PICS, PICSH, PICF); }
 const isConcrete = id => CONCRETE.has(baseOf(id)) || !!PICS[baseOf(id)];
 function picOf(id){ const b = baseOf(id); return PICS[b] ? `<img src="${PICS[b]}" alt="" loading="lazy">` : (ITEM[id] ? ITEM[id].pic : ''); }
 // Niveau 1 begint met wat je kunt aanwijzen: dieren en familie eerst, begroetingen als laatste.
@@ -3440,6 +3456,57 @@ async function aiRunTest(){
 let AI_LOADED = false;
 async function aiLoadLastTest(){ if(!sb || !AUTH.admin || AI_LOADED) return; AI_LOADED = true; try{ const {data} = await sb.from('ai_tests').select('id,summary,results').order('created_at',{ascending:false}).limit(1).maybeSingle(); if(data){ AI.test = data; await aiLoadRatings(); render(); } }catch(e){} }
 
+
+/* ---------- foto's in één keer toevoegen (koppeling op exacte bestandsnaam = woord-code) ---------- */
+// otta.jpg → woord 'otta'. Alleen woorden krijgen een beeld; zinnen worden overgeslagen.
+// Audio en voortgang worden hier nooit aangeraakt.
+const IMG_EXT = /\.(jpe?g|png|webp|heic|heif|gif)$/i;
+function pbulkPlan(files){
+  const words = new Map(WORDS.map(w=>[w.id.toLowerCase(), w.id]));
+  const lines = new Set([...SENTENCES, ...DLINES].map(x=>x.id.toLowerCase()));
+  const seen = new Set();
+  return [...files].sort((a,b)=>a.name.localeCompare(b.name,'nl',{numeric:true})).map(f=>{
+    const base = f.name.replace(/\.[^.]+$/,'').trim().toLowerCase();
+    const row = {file:f, name:f.name, id:null, state:'skip', reason:'', url:null};
+    if(!IMG_EXT.test(f.name)) row.reason = 'Geen afbeelding';
+    else if(seen.has(base)) row.reason = 'Dubbel: dit woord staat al eerder in de lijst';
+    else if(words.has(base)){ row.id = words.get(base); row.state = PICS[row.id] ? 'replace' : 'new'; seen.add(base); }
+    else if(lines.has(base)) row.reason = 'Dit is een zin; daar is geen beeld nodig';
+    else row.reason = 'Geen woord met deze bestandsnaam';
+    if(row.id) row.url = URL.createObjectURL(f);
+    return row;
+  });
+}
+function pbulkClose(){ if(S.pbulk) S.pbulk.rows.forEach(r=>{ if(r.url) try{ URL.revokeObjectURL(r.url); }catch(e){} }); S.pbulk = null; }
+async function pbulkSave(){
+  const B = S.pbulk; if(!B || B.busy) return;
+  B.busy = true; B.done = 0; render();
+  for(const r of B.rows.filter(x=>x.id)){
+    const res = await savePic(r.id, r.file);
+    r.result = res==='ok' ? 'ok' : 'fail'; if(res!=='ok') r.err = LAST_ERR;
+    B.done++; render();
+  }
+  B.busy = false; B.finished = true;
+  const ok = B.rows.filter(r=>r.result==='ok').length, bad = B.rows.filter(r=>r.result==='fail').length;
+  toast(bad ? `${ok} foto's opgeslagen, ${bad} mislukt` : `${ok} foto's opgeslagen`); render();
+}
+function pbulkPanel(){
+  const B = S.pbulk;
+  if(!B) return `<div class="panel"><h3>🖼️ Foto's in één keer toevoegen</h3>
+    <p class="muted" style="margin-bottom:10px">Geef elke foto de bestandsnaam van het woord, precies zoals in de woordenlijst (bijvoorbeeld <b>otta.jpg</b> voor kat). De app koppelt ze automatisch en laat je eerst zien wat er gebeurt.</p>
+    ${AUTH.admin?'<p class="status on">⭐ Je bent beheerder: deze foto\'s worden zichtbaar voor alle gezinnen.</p>':''}
+    <label class="btn ghost wide" for="pbulk-in">Foto's kiezen<input type="file" id="pbulk-in" accept="image/*,.heic" multiple data-pbulk hidden></label></div>`;
+  const use = B.rows.filter(r=>r.id), skip = B.rows.filter(r=>!r.id), rep = use.filter(r=>r.state==='replace').length;
+  return `<div class="panel"><h3>🖼️ Controle vooraf (${B.rows.length} bestanden)</h3>
+    <div class="tiles" style="margin-bottom:10px"><div class="tile-n"><b>${use.length}</b><span>worden gekoppeld${rep?` (${rep} vervangen een bestaande foto)`:''}</span></div><div class="tile-n"><b>${skip.length}</b><span>worden overgeslagen</span></div></div>
+    <div class="pb-list">${B.rows.map(r=>`<div class="pb-row ${r.id?'':'skip'}">${r.url?`<img src="${r.url}" alt="">`:'<span class="pb-x">✕</span>'}
+      <div class="dmain"><b>${esc(r.name)}</b>${r.id?`<span class="dnl">→ ${esc(ITEM[r.id].ph)} · ${esc(ITEM[r.id].nl)}</span>`:`<span class="dnl">${esc(r.reason)}</span>`}</div>
+      <span class="pb-st ${r.result||r.state}">${r.result==='ok'?'✓ Opgeslagen':r.result==='fail'?'Mislukt':r.state==='replace'?'Vervangt':r.state==='new'?'Nieuw':'Overgeslagen'}</span></div>`).join('')}</div>
+    ${B.busy?`<p class="status" style="margin-top:10px">Bezig: ${B.done} van ${use.length}…</p>`:''}
+    <div class="brow-actions" style="margin-top:12px">${B.finished?`<button class="btn wide" data-act="pbulk-cancel">Klaar</button>`:`<button class="btn wide" data-act="pbulk-save" ${use.length&&!B.busy?'':'disabled'}>${use.length} foto's opslaan</button><button class="btn ghost wide" data-act="pbulk-cancel" ${B.busy?'disabled':''}>Annuleren</button>`}</div>
+    <p class="hint" style="margin-top:8px">Elke foto wordt vierkant gemaakt (480 × 480) en opgeslagen onder de code van het woord. Een nieuwe foto met dezelfde naam vervangt de oude; de koppeling blijft.</p></div>`;
+}
+
 /* ---------- scorebord ---------- */
 function daysLeft(){ return 7 - ((new Date().getDay()+6)%7); }
 function scoresHTML(){
@@ -3526,7 +3593,7 @@ async function onSession(session){
   const u = session && session.user || null;
   AUTH.user = u; AUTH.ready = true;
   if(!u){
-    loadedFor = null; DB = EMPTY_DB(); MEDIA.audio = {}; MEDIA.shared = {}; try{ localStorage.removeItem(LSM); }catch(e){} Object.keys(PICS).forEach(k=>delete PICS[k]); AUTH.admin = false;
+    loadedFor = null; DB = EMPTY_DB(); MEDIA.audio = {}; MEDIA.shared = {}; try{ localStorage.removeItem(LSM); }catch(e){} [PICS, PICF, PICSH].forEach(o=>Object.keys(o).forEach(k=>delete o[k])); AUTH.admin = false;
     if(S.screen!=='splash') S.screen = 'auth';
     render(); return;
   }
@@ -3872,6 +3939,7 @@ function audioPanel(){
     <label class="switch" style="margin-top:14px"><input type="checkbox" id="set-nlvoice" data-sets="nlVoice" ${DB.settings.nlVoice!==false?'checked':''}> Voorleesstem voor de opdrachten (niveau 1)</label>
     <p class="hint">Een Nederlandse computerstem leest de opdrachten voor ("Luister. Welk plaatje hoort erbij?") en zegt "Goed zo!". Egyptische woorden spreekt hij nooit uit; die komen alleen van jouw opnames.</p>
   </div>
+  ${pbulkPanel()}
   ${recSessionPanel()}
   ${S.recS||!recSupported()?'':`<div class="panel"><h3>🎙️ Inspreken in de app</h3>
     <p class="muted" style="margin-bottom:12px">De app laat je de woorden één voor één zien. Tik op de microfoon, zeg het woord, tik op stop. Hij slaat het op en gaat door naar het volgende woord.</p>
@@ -3909,7 +3977,7 @@ function audioPanel(){
         ${recSupported()?`<button class="mini ${live?'rec-on':''}" data-act="rec:${x.id}" ${REC.busy||(REC.mr&&!live)?'disabled':''}>${live?'■ Stop':hasAudio(x.id)?(S.confirmRec===x.id?'Zeker? Tik nog eens':'🎙️ Opnieuw'):'🎙️ Opnemen'}</button>`:''}
         <label class="mini">⬆ ${where?'Vervang':'Upload'}<input type="file" accept="audio/*,.m4a" data-upload="${x.id}" id="up-${x.id}"></label>
         ${canDel?`<button class="mini danger" data-act="delaudio:${x.id}">Wis</button>`:''}
-        ${ITEM[x.id].kind==='word'?`${PICS[x.id]?`<img class="thumb" src="${PICS[x.id]}" alt="Foto bij ${esc(x.ph)}">`:''}<label class="mini">📷 ${PICS[x.id]?'Andere foto':'Foto'}<input type="file" accept="image/*" data-pic="${x.id}" id="pic-${x.id}"></label>${PICS[x.id]?`<button class="mini danger" data-act="delpic:${x.id}">Wis foto</button>`:''}`:''}
+        ${ITEM[x.id].kind==='word'?`${PICS[x.id]?`<img class="thumb" src="${PICS[x.id]}" alt="Foto bij ${esc(x.ph)}">`:''}<label class="mini">📷 ${PICS[x.id]?'Andere foto':'Foto'}<input type="file" accept="image/*" data-pic="${x.id}" id="pic-${x.id}"></label>${(PICF[x.id] || (AUTH.admin && PICSH[x.id]))?`<button class="mini danger" data-act="delpic:${x.id}">Wis foto</button>`:''}${PICSH[x.id]&&!PICF[x.id]?'<span class="tagsh">voor alle gezinnen</span>':''}`:''}
         <button class="mini ${isVerified(x.id)?'on':''}" data-act="verify:${x.id}" aria-pressed="${isVerified(x.id)}">${isVerified(x.id)?'✓ Gecontroleerd':'Controleer'}</button>
       </div></div>`;}).join('')}
   </div>`;
@@ -4099,6 +4167,8 @@ document.addEventListener('click', e=>{
     case 'bulk-save': bulkSave(); return;
     case 'delpic': removePic(a).then(()=>{ toast('Foto gewist'); render(); }); return;
     case 'bulk-cancel': closeBulk(); break;
+    case 'pbulk-save': pbulkSave(); return;
+    case 'pbulk-cancel': pbulkClose(); break;
     default: return;
   }
   render();
@@ -4129,6 +4199,12 @@ document.addEventListener('change', async e=>{
     const r = await savePic(t.dataset.pic, f);
     toast(r==='ok' ? 'Foto opgeslagen bij "'+ITEM[t.dataset.pic].ph+'"' : 'Foto opslaan lukte niet ('+LAST_ERR+')');
     render(); return;
+  }
+  if(t.dataset.pbulk!==undefined){
+    const files = [...(t.files||[])]; t.value = '';
+    if(!files.length) return;
+    pbulkClose(); S.pbulk = {rows:pbulkPlan(files), busy:false, done:0};
+    render(); const el = $('.pb-list'); if(el) el.scrollIntoView({block:'center'}); return;
   }
   if(t.dataset.bulk!==undefined){
     const files = [...(t.files||[])].sort((x,y)=>x.name.localeCompare(y.name,'nl',{numeric:true}));
