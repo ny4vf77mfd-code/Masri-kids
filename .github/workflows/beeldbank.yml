@@ -1,0 +1,27 @@
+name: beeldbank-verwerking
+on:
+  push:
+    branches: [beeldbank-pipeline]
+    paths: ['jobs/*.json']
+permissions:
+  contents: write
+concurrency: beeldbank
+jobs:
+  verwerk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install pillow numpy scipy
+      - name: Verwerk nieuwe jobs
+        run: |
+          for j in jobs/*.json; do
+            b=$(python -c "import json;print(json.load(open('$j'))['batch'])")
+            if [ ! -f "out/$b/rapport.json" ]; then python tools/process.py "$j"; fi
+          done
+      - name: Resultaat terugzetten
+        run: |
+          git config user.name "beeldbank-bot"; git config user.email "noreply@github.com"
+          git add out; git commit -m "Verwerkt: $(ls out | tr '\n' ' ')" || echo "niets nieuw"
+          git push
