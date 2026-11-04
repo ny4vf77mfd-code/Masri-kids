@@ -1,0 +1,122 @@
+[
+ {
+  "name": "timsah.jpg",
+  "bron": "1264x1264",
+  "uit": "480x480",
+  "vulling": "80x60%",
+  "schaal": 0.32,
+  "hoek": [
+   251,
+   244,
+   234
+  ]
+ },
+ {
+  "name": "asad.jpg",
+  "bron": "1264x1264",
+  "uit": "480x480",
+  "vulling": "69x80%",
+  "schaal": 0.34,
+  "hoek": [
+   251,
+   244,
+   234
+  ]
+ },
+ {
+  "name": "erd.jpg",
+  "bron": "1264x1264",
+  "uit": "480x480",
+  "vulling": "64x80%",
+  "schaal": 0.34,
+  "hoek": [
+   251,
+   244,
+   234
+  ]
+ },
+ {
+  "name": "fiil.jpg",
+  "bron": "1264x1264",
+  "uit": "480x480",
+  "vulling": "76x80%",
+  "schaal": 0.35,
+  "hoek": [
+   251,
+   244,
+   234
+  ]
+ },
+ {
+  "name": "asfoora.jpg",
+  "bron": "1264x1264",
+  "uit": "480x480",
+  "vulling": "52x80%",
+  "schaal": 0.35,
+  "hoek": [
+   251,
+   244,
+   234
+  ]
+ },
+ {
+  "name": "farasha.jpg",
+  "bron": "1264x1264",
+  "uit": "480x480",
+  "vulling": "80x74%",
+  "schaal": 0.33,
+  "hoek": [
+   251,
+   244,
+   234
+  ]
+ },
+ {
+  "name": "selahfa.jpg",
+  "bron": "1264x1264",
+  "uit": "480x480",
+  "vulling": "80x71%",
+  "schaal": 0.36,
+  "hoek": [
+   251,
+   244,
+   234
+  ]
+ },
+ {
+  "name": "eesh.jpg",
+  "bron": "1264x1264",
+  "uit": "480x480",
+  "vulling": "80x56%",
+  "schaal": 0.33,
+  "hoek": [
+   251,
+   244,
+   234
+  ]
+ },
+ {
+  "name": "mooz.jpg",
+  "bron": "1264x1264",
+  "uit": "480x480",
+  "vulling": "78x80%",
+  "schaal": 0.4,
+  "hoek": [
+   251,
+   244,
+   234
+  ]
+ },
+ {
+  "name": "manga.jpg",
+  "bron": "1264x1264",
+  "uit": "480x480",
+  "vulling": "80x71%",
+  "schaal": 0.36,
+  "hoek": [
+   251,
+   244,
+   234
+  ]
+ }
+]
