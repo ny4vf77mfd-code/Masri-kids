@@ -1,9 +1,15 @@
 // Automatische basiscontroles voor Masri Kids. Draai met: node tests/check.mjs
 // Raakt geen database of gebruikersgegevens aan; leest alleen bestanden.
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { stripTypeScriptTypes } from 'node:module';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 
-const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const root = fileURLToPath(new URL('..', import.meta.url));
+const html = readFileSync(join(root, 'index.html'), 'utf8');
 let fails = 0;
 const ok = (cond, msg) => { console.log(`${cond ? 'OK  ' : 'FOUT'} ${msg}`); if (!cond) fails++; };
 
@@ -15,12 +21,43 @@ scripts.forEach((code, i) => {
   catch (e) { ok(false, `script ${i + 1}: ${e.message}`); }
 });
 
-// 2. Geen geheime sleutels in de frontend (alleen de publieke 'publishable' sleutel mag).
-const all = [html, ...['supabase/functions/ai-chat/index.ts', 'supabase/functions/ai-chat/prompts.ts', 'supabase/functions/ai-chat/providers.ts']
-  .map(f => readFileSync(new URL('../' + f, import.meta.url), 'utf8'))].join('\n');
-ok(!/sk-ant-[\w-]{10,}/.test(all), 'geen Anthropic API-sleutel in de code');
-ok(!/sb_secret_[\w-]{10,}/.test(all), 'geen geheime Supabase-sleutel in de code');
-ok(!/eyJhbGciOi[\w-]+\.eyJ[\w-]*cm9sZSI6InNlcnZpY2Vfcm9sZS[\w-]*/.test(all), 'geen service_role-sleutel in de code');
+// 2. Geen geheimen in welk bestand dan ook dat in de repository staat.
+//    (De publieke 'sb_publishable_'-sleutel mag wel: die is bedoeld voor de app.)
+const tracked = execFileSync('git', ['ls-files'], { cwd: root, encoding: 'utf8' }).split('\n').filter(Boolean)
+  .filter(f => f !== 'tests/check.mjs'); // dit bestand bevat de zoekpatronen zelf
+const SECRETS = [
+  ['Anthropic API-sleutel', /sk-ant-[\w-]{10,}/],
+  ['OpenAI-achtige API-sleutel', /\bsk-(proj-)?[A-Za-z0-9]{20,}/],
+  ['geheime Supabase-sleutel', /sb_secret_[\w-]{10,}/],
+  ['Supabase service_role-sleutel', /eyJhbGciOi[\w-]+\.eyJ[\w-]*cm9sZSI6InNlcnZpY2Vfcm9sZS[\w-]*/],
+  ['GitHub-token', /\b(ghp|gho|ghs|ghu)_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,}/],
+  ['privésleutel', /-----BEGIN [A-Z ]*PRIVATE KEY-----/],
+  ['database-wachtwoord in adres', /postgres(ql)?:\/\/[^:\s]+:[^@\s]+@/],
+];
+let scanned = 0, found = 0;
+for (const f of tracked) {
+  const buf = readFileSync(join(root, f));
+  if (buf.includes(0)) continue; // afbeeldingen e.d. overslaan
+  scanned++;
+  const txt = buf.toString('utf8');
+  for (const [name, re] of SECRETS) if (re.test(txt)) { found++; ok(false, `${name} gevonden in ${f}`); }
+}
+if (!found) ok(scanned > 0, `geen geheimen gevonden in ${scanned} tekstbestanden`);
+
+// 2b. De AI-functie (TypeScript) en manifest.json moeten geldig zijn.
+const tmp = mkdtempSync(join(tmpdir(), 'masri-check-'));
+for (const f of tracked.filter(f => f.endsWith('.ts'))) {
+  try {
+    const js = stripTypeScriptTypes(readFileSync(join(root, f), 'utf8'));
+    const out = join(tmp, f.replace(/[\/]/g, '_') + '.mjs');
+    writeFileSync(out, js);
+    execFileSync(process.execPath, ['--check', out], { stdio: 'pipe' });
+    ok(true, `${f} heeft geen syntaxfouten`);
+  } catch (e) { ok(false, `${f}: ${String(e.stderr || e.message).split('\n').slice(0, 5).join(' ')}`); }
+}
+rmSync(tmp, { recursive: true, force: true });
+try { JSON.parse(readFileSync(join(root, 'manifest.json'), 'utf8')); ok(true, 'manifest.json is geldig'); }
+catch (e) { ok(false, `manifest.json: ${e.message}`); }
 
 // 3. De veilige weergavefunctie bestaat en werkt.
 const escSrc = html.match(/const esc = s => [^\n]+/);
