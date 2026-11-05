@@ -34,5 +34,14 @@ if (escSrc) {
 // 4. Verbonden met het verwachte Supabase-project.
 ok(html.includes("const SB_URL = 'https://udiqtseewsifcmxsrwtu.supabase.co'"), 'Supabase-adres ongewijzigd');
 
+// 5. Inhoud uit de database wordt ontdaan van HTML voordat die in de app komt.
+const noHtmlSrc = html.match(/const noHtml = [^\n]+/);
+ok(!!noHtmlSrc, 'noHtml()-filter voor databaseinhoud aanwezig');
+if (noHtmlSrc) {
+  const noHtml = vm.runInNewContext('(' + noHtmlSrc[0].replace('const noHtml =', '').replace(/;\s*$/, '') + ')');
+  ok(noHtml('<img src=x onerror=alert(1)>كلب') === 'img src=x onerror=alert(1)كلب', 'noHtml() verwijdert < en >');
+  ok(noHtml('Saba7 El-Kheer') === 'Saba7 El-Kheer' && noHtml(3) === 3, 'noHtml() laat gewone tekst en getallen heel');
+}
+
 console.log(fails ? `\n${fails} controle(s) mislukt.` : '\nAlle controles geslaagd.');
 process.exit(fails ? 1 : 0);
