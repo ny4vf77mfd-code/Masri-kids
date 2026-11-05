@@ -13,7 +13,6 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Masri Kids">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="preconnect" href="https://udiqtseewsifcmxsrwtu.supabase.co" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1859,9 +1858,25 @@ const DAILY = [
 ];
 
 /* ---------- opslag: Supabase (één account per gezin) ---------- */
-const SB_URL = 'https://udiqtseewsifcmxsrwtu.supabase.co';
-const SB_KEY = 'sb_publishable_XZB277-h8EG1mKOVnylrVw_Di9lukPW';
-const sb = (window.supabase && window.supabase.createClient)
+// Welke database? ALLEEN op het exacte live adres de echte (live) database.
+// Elk ander adres (testversies, eigen computer, onbekend) gebruikt de testdatabase.
+// Nieuw live domein? Voeg het toe aan SB_LIVE_HOSTS (en aan tests/omgeving.mjs).
+const SB_ENVS = {
+  live: { url:'https://udiqtseewsifcmxsrwtu.supabase.co', key:'sb_publishable_XZB277-h8EG1mKOVnylrVw_Di9lukPW' },
+  test: { url:'', key:'' }, // wordt ingevuld zodra het testproject bestaat; leeg = geen database
+};
+const SB_LIVE_HOSTS = ['masri-kids.vercel.app'];
+const sbEnvFor = host => SB_LIVE_HOSTS.includes(host) ? 'live' : 'test';
+const SB_ENV = sbEnvFor(location.hostname);
+const SB_URL = SB_ENVS[SB_ENV].url;
+const SB_KEY = SB_ENVS[SB_ENV].key;
+if(SB_ENV === 'test') document.addEventListener('DOMContentLoaded', ()=>{
+  const b = document.createElement('div'); b.id = 'test-banner'; b.setAttribute('role','status');
+  b.textContent = SB_URL ? 'TESTOMGEVING · testdatabase, geen echte gezinnen' : 'TESTOMGEVING · nog geen testdatabase gekoppeld';
+  b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#e8590c;color:#fff;font:700 12px/22px system-ui,sans-serif;text-align:center;pointer-events:none;letter-spacing:.04em';
+  document.body.appendChild(b);
+});
+const sb = (SB_URL && SB_KEY && window.supabase && window.supabase.createClient)
   ? window.supabase.createClient(SB_URL, SB_KEY, {auth:{persistSession:true, autoRefreshToken:true, detectSessionInUrl:true}})
   : null;
 const AUTH = { user:null, ready:false, admin:false };
