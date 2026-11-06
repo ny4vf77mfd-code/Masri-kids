@@ -3234,10 +3234,11 @@ function aiSpeak(turn){ if(!AI_VOICE.enabled) return; /* aansluitpunt voor een s
 const STT = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 const KID_SCENES = [['animals','🐾','Dieren'],['food','🍞','Eten en drinken'],['football','⚽','Voetbal'],['family','👨‍👩‍👧','Familiewoorden'],['colors','🎨','Kleuren en cijfers']];
 const ADULT_SCENES = () => [['free','☕','Vrij gesprek'], ...SCENARIOS.map(x=>[x.id, x.who, x.title])];
-// toegang: sleutel ingesteld + (geactiveerd voor deze doelgroep of beheerder in proefmodus) + bij kinderen: 7-9 en toestemming van een ouder
+// toegang: sleutel ingesteld + (geactiveerd voor deze doelgroep of beheerder in proefmodus, als de server die toestaat) +bij kinderen: 7-9 en toestemming van een ouder
 const aiKidAge = p => p.kind ? p.kind==='k2' : p.level===2;
 const aiActiveFor = p => !!AI.st && (p.track==='adult' ? AI.st.active_adult : AI.st.active_kids);
-const aiCan = p => !!p && AI.enabled===true && (aiActiveFor(p) || AUTH.admin) && (p.track==='adult' || (aiKidAge(p) && p.aiAllowed===true));
+const aiPreview = () => !!AI.st && AI.st.admin_preview===true && AUTH.admin;   // proefmodus: alleen als de server het toestaat (AI_ADMIN_PREVIEW)
+const aiCan = p => !!p && AI.enabled===true && (aiActiveFor(p) || aiPreview()) &&(p.track==='adult' || (aiKidAge(p) && p.aiAllowed===true));
 const aiName = p => p.track==='adult' ? 'Salma' : 'Mishmish';
 async function aiCall(body){
   if(!sb) throw new Error('offline');
@@ -3369,7 +3370,7 @@ function aiPanel(){
     <button class="btn ghost" data-act="ai-refresh">Status vernieuwen</button></div>`;
   if(!st.configured) return h;
   h += `<div class="panel"><h3>1. Dialecttest</h3><p class="muted" style="margin-bottom:10px">Dezelfde 20 gesprekssituaties (volwassenen en kinderen, man en vrouw) gaan naar ${esc((cfg.test_models||[]).join(' en '))}. Je ziet de antwoorden blind als A en B. Beoordeel hoe natuurlijk Egyptisch elk antwoord is. Pas daarna zie je welk model wat was.</p>
-    <button class="btn" data-act="ai-test" ${AI.testing?'disabled':''}>${AI.testing?'Bezig, duurt ± 1 minuut…':R?'Nieuwe test starten':'Start de dialecttest'}</button>
+    ${aiPreview()?`<button class="btn" data-act="ai-test" ${AI.testing?'disabled':''}>${AI.testing?'Bezig, duurt ± 1 minuut…':R?'Nieuwe test starten':'Start de dialecttest'}</button>`:`<p class="status">De proefmodus staat uit. Zet op de server <code>AI_ADMIN_PREVIEW</code> op <code>aan</code> om de dialecttest en proefgesprekken te gebruiken.</p>`}
     ${R?`<p class="hint" style="margin-top:8px">Beoordeeld: <b>${done}/${total}</b>${allRated?' · klaar':''}</p>`:''}</div>`;
   if(R){
     if(allRated || AI.reveal){
@@ -3395,7 +3396,7 @@ function aiPanel(){
     <div class="setrow"><label>Volwassenen en tieners</label><div class="seg"><button class="${!cfg.active_adult?'on':''}" data-act="ai-cfg:active_adult:0">Uit</button><button class="${cfg.active_adult?'on':''}" data-act="ai-cfg:active_adult:1" ${allRated?'':'disabled'}>Aan</button></div></div>
     <div class="setrow"><label>Kinderen 7–9</label><div class="seg"><button class="${!cfg.active_kids?'on':''}" data-act="ai-cfg:active_kids:0">Uit</button><button class="${cfg.active_kids?'on':''}" data-act="ai-cfg:active_kids:1" ${allRated?'':'disabled'}>Aan</button></div>
       <p class="hint">Ook als dit aan staat, moet een ouder het per kind toestaan in Instellingen.</p></div>
-    <p class="hint">Tot je activeert, kun alleen jij proefgesprekken voeren.</p></div>`;
+    <p class="hint">Tot je activeert, kan niemand de taalpartner gebruiken. Alleen als de proefmodus aan staat, kun jij proefgesprekken voeren.</p></div>`;
   // kosten
   h += `<div class="panel"><h3>3. Kosten en limieten</h3>
     <div class="tiles"><div class="tile-n"><b>${fmt(m.msgs)}</b><span>berichten deze maand</span></div><div class="tile-n"><b>${fmt(mt)}</b><span>tokens deze maand${lim?` van ${fmt(lim)}`:''}</span></div></div>
@@ -3464,6 +3465,7 @@ async function aiSetCfg(key, val){
   render();
 }
 async function aiRunTest(){
+  if(!aiPreview()){ toast('De proefmodus staat uit.'); return; }
   AI.testing = true; render();
   try{ AI.test = await aiCall({action:'dialect-test'}); AI.ratings = {}; AI.reveal = false; aiStatus(); }catch(e){ toast(e.message); }
   AI.testing = false; render();
