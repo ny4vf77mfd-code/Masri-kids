@@ -54,6 +54,9 @@ Deno.serve(async (req) => {
   if (body.confirm !== "VERWIJDER") return json(req, { error: "Bevestiging ontbreekt" }, 400);
 
   const admin = createClient(SB_URL, SB_SERVICE);
+  // Volgorde: eerst bestanden, dan het account. Mislukt een stap, dan stopt de functie en blijft
+  // het account bestaan, zodat de ouder het later opnieuw kan proberen (opnieuw draaien is veilig).
+  let stap = "bestanden";
   try {
     // 1. eigen opnames en foto's
     const files = await listAll(admin, uid);
@@ -62,10 +65,14 @@ Deno.serve(async (req) => {
       if (error) throw error;
     }
     // 2. account (spelers, voortgang, instellingen en AI-gebruik gaan automatisch mee)
+    stap = "account";
     const { error } = await admin.auth.admin.deleteUser(uid);
     if (error) throw error;
     return json(req, { ok: true, files: files.length });
   } catch (e) {
-    return json(req, { error: "Verwijderen is niet gelukt. Probeer het later opnieuw of mail ons.", detail: String(e).slice(0, 200) }, 500);
+    // Geen e-mailadres, id of bestandsnamen in het logboek of in het antwoord.
+    const code = (e as { status?: number; name?: string })?.status ?? (e as { name?: string })?.name ?? "onbekend";
+    console.error(`delete-account mislukt bij stap '${stap}' (code ${code})`);
+    return json(req, { error: "Verwijderen is niet gelukt. Probeer het later opnieuw of mail ons." }, 500);
   }
 });

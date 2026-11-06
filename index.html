@@ -3583,6 +3583,7 @@ function authHTML(){
       ${np?'':`<div><label class="lb" for="a-email">E-mailadres</label><input class="inp" id="a-email" type="email" inputmode="email" autocomplete="email" value="${esc(A.email||'')}"></div>`}
       ${reset?'':`<div><label class="lb" for="a-pass">${np?'Nieuw wachtwoord':'Wachtwoord'}</label><input class="inp" id="a-pass" type="password" autocomplete="${signup||np?'new-password':'current-password'}">${signup||np?'<p class="hint">Minstens 8 tekens.</p>':''}</div>`}
       ${signup?`<label class="switch consent"><input type="checkbox" id="a-ok"> <span>Ik ben ouder of verzorger en geef toestemming om de namen en de voortgang van mijn kinderen in dit account te bewaren, zoals beschreven in de <a href="/privacy.html" target="_blank" rel="noopener">privacyverklaring</a>.</span></label>`:''}
+      ${A.ok?`<p class="status" role="status">${esc(A.ok)}</p>`:''}
       ${A.msg?`<p class="status err" role="alert">${esc(A.msg)}</p>`:''}
       <button class="btn wide" type="submit" id="a-go" ${A.busy?'disabled':''}>${A.busy?'Even geduld…':signup?'Account maken':reset?'Stuur de link':np?'Opslaan':'Inloggen'}</button>
     </form>
@@ -4053,8 +4054,10 @@ async function deleteAccount(){
     try{ localStorage.removeItem(LS); }catch(e){}
     try{ await sb.auth.signOut({scope:'local'}); }catch(e){}
     DB = EMPTY_DB(); S.delAcc = false; S.delAccBusy = false;
-    S.screen = 'auth'; S.auth = {mode:'login', msg:''};
-    render(); toast('Je account en alle gegevens zijn verwijderd.');
+    // De server heeft het account al verwijderd; Supabase antwoordt op het afmelden daarom
+    // met 403. Dat is verwacht en onschuldig: de sessie op dit apparaat wordt toch gewist.
+    S.screen = 'auth'; S.auth = {mode:'login', msg:'', ok:'Je account en alle gegevens van je gezin zijn verwijderd.'};
+    render();
   }catch(e){
     S.delAccBusy = false; S.delAccMsg = 'Verwijderen is niet gelukt. Probeer het later opnieuw, of mail ons via de privacyverklaring.'; render();
   }
@@ -4090,7 +4093,7 @@ document.addEventListener('click', e=>{
     case 'reload': location.reload(); return;
     case 'auth': S.auth = {mode:a, email:S.auth.email}; break;
     case 'logout': recRelease(); flush().finally(()=>sb.auth.signOut()); S.screen='auth'; S.auth={mode:'login'}; break;
-    case 'delacc-ask': S.delAcc = true; S.delAccMsg = ''; break;
+    case 'delacc-ask': S.delAcc = true; S.delAccMsg = ''; render(); setTimeout(()=>{ const i = $('#del-acc-txt'); if(i){ i.scrollIntoView({block:'center'}); i.focus({preventScroll:true}); } }, 0); return;
     case 'delacc-no': S.delAcc = false; S.delAccMsg = ''; break;
     case 'delacc-yes': deleteAccount(); return;
     case 'go': if(a==='talk'){ S.talk=null; } if(S.screen==='talk' && a!=='talk'){ stopListen(); S.talk=null; } if(S.screen==='penalty'){ penEndRestore(); PEN=null; } if(a==='gate') S.gate=null; if(a==='profiles') S.newP=null; if(S.recS && a!=='parent'){ S.recS=null; recRelease(); }
