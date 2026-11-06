@@ -112,5 +112,66 @@ ok(sbHash === '8596965fe918e656600a1b568d3a168f5c0d3d22a600886bb6f44a6555db01e7'
 const licences = ['fonts/OFL-baloo-bhaijaan-2.txt', 'fonts/OFL-nunito.txt', 'vendor/supabase-js-2.45.4/LICENSE'];
 ok(licences.every(f => { try { return readFileSync(join(root, f), 'utf8').length > 500; } catch { return false; } }), 'licentieteksten van lettertypen en bibliotheek aanwezig');
 
+// 8. AI-taalpartner: zolang de AI uit staat kan niemand hem gebruiken, ook de beheerder niet,
+//    tenzij de server-instelling AI_ADMIN_PREVIEW op "aan" staat. Test de regels zelf (access.ts),
+//    hoe de serverfunctie ze gebruikt, en wat de app laat zien. Geen database of AI nodig.
+const aiDir = join(root, 'supabase/functions/ai-chat');
+const aiSrc = readFileSync(join(aiDir, 'index.ts'), 'utf8');
+const tmpA = mkdtempSync(join(tmpdir(), 'masri-ai-'));
+let acc = null;
+try {
+  writeFileSync(join(tmpA, 'access.mjs'), stripTypeScriptTypes(readFileSync(join(aiDir, 'access.ts'), 'utf8')));
+  acc = await import(join(tmpA, 'access.mjs'));
+} catch (e) { ok(false, `access.ts laden: ${e.message}`); }
+rmSync(tmpA, { recursive: true, force: true });
+if (acc) {
+  const P = acc.previewAllowed;
+  ok(P(undefined) === false && P(null) === false && P('') === false, 'proefmodus staat uit als AI_ADMIN_PREVIEW niet is ingesteld');
+  ok(['uit', 'true', '1', 'yes', 'on', 'aan!', 'niet aan'].every(v => P(v) === false), 'proefmodus gaat alleen aan met precies "aan" (niet met true, 1, on, ...)');
+  ok(P('aan') === true && P(' AAN ') === true, 'proefmodus gaat aan met "aan"');
+  const C = (action, active, isAdmin, preview) => acc.canUseAi({ action, active, isAdmin, preview }).ok;
+  const combos = [];
+  for (const active of [false, true]) for (const isAdmin of [false, true]) for (const preview of [false, true]) combos.push([active, isAdmin, preview]);
+  ok(combos.filter(([a]) => !a).every(([a, ad, pr]) => C('chat', a, ad, pr) === (ad && pr)), 'chat met AI uit: alleen beheerder met proefmodus aan');
+  ok(combos.filter(([a, ad]) => !a && !ad).every(([a, ad, pr]) => !C('chat', a, ad, pr)), 'chat met AI uit: gewone gebruikers altijd geblokkeerd, ook met proefmodus aan');
+  ok(!C('chat', false, true, false), 'chat met AI uit: beheerder geblokkeerd als proefmodus uit staat');
+  ok(combos.filter(([a]) => a).every(([a, ad, pr]) => C('chat', a, ad, pr)), 'chat met AI aan: iedereen mag (zoals voorheen)');
+  ok(combos.every(([a, ad, pr]) => C('dialect-test', a, ad, pr) === (ad && pr)), 'dialecttest: alleen beheerder met proefmodus aan');
+  ok(!C('onbekend', true, true, true) && !C('', true, true, true), 'onbekende actie wordt geweigerd');
+  ok(!C('chat', 'true', 'true', 'true') && !C('dialect-test', 1, 1, 1), 'alleen echte ja/nee-waarden tellen (geen "true" of 1)');
+}
+// hoe de serverfunctie de regels gebruikt
+const aiHead = aiSrc.slice(aiSrc.indexOf('Deno.serve'));
+const at = s => aiHead.indexOf(s);
+ok(/const preview = previewAllowed\(Deno\.env\.get\("AI_ADMIN_PREVIEW"\)\)/.test(aiSrc), 'ai-chat leest proefmodus alleen uit de server-instelling AI_ADMIN_PREVIEW');
+ok(!/body\.(preview|admin|isAdmin|active|admin_preview)\b/.test(aiSrc), 'ai-chat gebruikt geen proefmodus, beheerder of activering uit het verzoek');
+ok(!/!active && !isAdmin/.test(aiSrc), 'oude beheerder-uitzondering is verwijderd');
+ok(/admin_preview: isAdmin && preview/.test(aiSrc), 'status meldt of proefmodus is toegestaan (alleen voor de beheerder)');
+const iAccess = at('canUseAi({ action, active, isAdmin, preview })');
+ok(iAccess > 0 && (aiHead.match(/canUseAi\(/g) || []).length === 1, 'ai-chat controleert de toegang op één plek');
+ok(iAccess > 0 && at('if (!provider.configured())') > iAccess && at('provider.turn(') > iAccess && at('await monthTokens(admin)') > iAccess,
+  'toegang wordt gecontroleerd vóór sleutel, budget en elke aanroep naar de AI');
+ok(at('if (action !== "chat" && action !== "dialect-test")') > 0 && at('if (action !== "chat" && action !== "dialect-test")') < iAccess,
+  'alleen de acties status, chat en dialect-test bestaan');
+ok(at('if (action === "status")') > 0 && !aiHead.slice(at('if (action === "status")'), iAccess).includes('provider.turn('), 'status stuurt niets naar de AI');
+// wat de app laat zien
+const appAi = (html.match(/const aiPreview = [^\n]+\n(?:const aiCan = [^\n]+)/) || [''])[0];
+ok(/AI\.st\.admin_preview===true && AUTH\.admin/.test(appAi) && /aiActiveFor\(p\) \|\| aiPreview\(\)/.test(appAi), 'app toont proefgesprekken alleen als de server proefmodus toestaat');
+ok(!/aiActiveFor\(p\) \|\| AUTH\.admin/.test(html), 'app laat de beheerder niet meer standaard chatten');
+ok(/\$\{aiPreview\(\)\?`<button class="btn" data-act="ai-test"/.test(html) && /async function aiRunTest\(\)\{\n  if\(!aiPreview\(\)\)/.test(html), 'app toont de dialecttest alleen als proefmodus is toegestaan');
+if (appAi) {
+  const ctx = { AI: {}, AUTH: {} };
+  const app = vm.runInNewContext(`const aiKidAge = p => p.kind ? p.kind==='k2' : p.level===2;
+const aiActiveFor = p => !!AI.st && (p.track==='adult' ? AI.st.active_adult : AI.st.active_kids);
+${appAi}; ({ aiCan, aiPreview })`, ctx);
+  const can = (st, admin, p) => { ctx.AI.enabled = true; ctx.AI.st = st; ctx.AUTH.admin = admin; return app.aiCan(p); };
+  const adult = { track: 'adult' }, kid = { kind: 'k2', aiAllowed: true };
+  const off = { active_adult: false, active_kids: false };
+  ok(!can({ ...off, admin_preview: false }, true, adult) && !can({ ...off, admin_preview: false }, true, kid), 'app: beheerder ziet geen chat als AI en proefmodus uit staan');
+  ok(!can({ ...off, admin_preview: true }, false, adult) && !can({ ...off, admin_preview: 'true' }, true, adult), 'app: gewone gebruiker ziet geen chat; alleen echte true telt');
+  ok(can({ ...off, admin_preview: true }, true, adult), 'app: beheerder ziet chat als proefmodus aan staat');
+  ok(can({ active_adult: true, active_kids: false }, false, adult) && !can({ active_adult: true, active_kids: false }, false, kid), 'app: met AI aan voor volwassenen ziet een gewone gebruiker alleen de chat voor volwassenen');
+}
+
 console.log(fails ? `\n${fails} controle(s) mislukt.` : '\nAlle controles geslaagd.');
 process.exit(fails ? 1 : 0);
