@@ -2,6 +2,7 @@
 // Raakt geen database of gebruikersgegevens aan; leest alleen bestanden.
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { stripTypeScriptTypes } from 'node:module';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -88,6 +89,28 @@ ok((html.match(/href="\/privacy\.html"/g) || []).length >= 3, 'privacyverklaring
 const open_ = (privacy.match(/\{\{[A-Z_]+\}\}/g) || []);
 ok(open_.length === 0, open_.length ? `privacyverklaring nog niet ingevuld: ${[...new Set(open_)].join(', ')}` : 'privacyverklaring volledig ingevuld');
 ok(/data-act="delacc-ask"/.test(html) && /functions\.invoke\('delete-account'/.test(html), 'knop "Account verwijderen" aanwezig');
+
+// 7. Bij het openen van de app geen verbindingen met Google Fonts, jsDelivr of andere CDN's:
+//    lettertypen en de Supabase-bibliotheek staan in de app zelf.
+const CDN = /fonts\.googleapis\.com|fonts\.gstatic\.com|cdn\.jsdelivr\.net|unpkg\.com|cdnjs\.cloudflare\.com/;
+ok(!CDN.test(html) && !CDN.test(privacy), 'geen verwijzingen naar Google Fonts of een CDN in index.html en privacy.html');
+const loads = [...html.matchAll(/<(?:script[^>]*\bsrc|link[^>]*\bhref)="([^"]+)"/g)].map(m => m[1]);
+const extern = loads.filter(u => /^(https?:)?\/\//.test(u));
+ok(extern.length === 0, extern.length ? `externe bestanden in index.html: ${extern.join(', ')}` : 'alle scripts en stijlbestanden in index.html zijn lokaal');
+let fontsCss = '';
+try { fontsCss = readFileSync(join(root, 'fonts/fonts.css'), 'utf8'); } catch { /* ontbreekt */ }
+const fontFiles = [...fontsCss.matchAll(/url\(([^)]+)\)/g)].map(m => m[1]);
+const missing = fontFiles.filter(u => { try { readFileSync(join(root, u)); return false; } catch { return true; } });
+ok(fontFiles.length > 0 && missing.length === 0 && !/https?:/.test(fontsCss),
+  missing.length ? `lettertypebestanden ontbreken: ${missing.join(', ')}` : `lettertypen lokaal aanwezig (${new Set(fontFiles).size} bestanden)`);
+const sbLib = 'vendor/supabase-js-2.45.4/supabase.js';
+ok(html.includes(`<script src="/${sbLib}"></script>`), 'Supabase-bibliotheek wordt lokaal geladen');
+let sbHash = '';
+try { sbHash = createHash('sha256').update(readFileSync(join(root, sbLib))).digest('hex'); } catch { /* ontbreekt */ }
+// Vingerafdruk van dist/umd/supabase.js uit het officiële npm-pakket @supabase/supabase-js@2.45.4
+ok(sbHash === '8596965fe918e656600a1b568d3a168f5c0d3d22a600886bb6f44a6555db01e7', 'Supabase-bibliotheek is ongewijzigd (gelijk aan npm 2.45.4)');
+const licences = ['fonts/OFL-baloo-bhaijaan-2.txt', 'fonts/OFL-nunito.txt', 'vendor/supabase-js-2.45.4/LICENSE'];
+ok(licences.every(f => { try { return readFileSync(join(root, f), 'utf8').length > 500; } catch { return false; } }), 'licentieteksten van lettertypen en bibliotheek aanwezig');
 
 console.log(fails ? `\n${fails} controle(s) mislukt.` : '\nAlle controles geslaagd.');
 process.exit(fails ? 1 : 0);
