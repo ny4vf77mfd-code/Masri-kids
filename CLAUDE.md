@@ -4,15 +4,17 @@ De eigenaar is geen programmeur. Communiceer in eenvoudig Nederlands, geef maxim
 
 ## Werkwijze (altijd)
 1. Nooit rechtstreeks committen of pushen naar `main`. Elke push naar `main` gaat direct live (Vercel productie).
-2. Elke wijziging: eigen branch (`fix/...`, `feat/...`, `workflow/...`) → zo klein mogelijk → `node tests/check.mjs` draaien → pull request met korte uitleg.
+2. Elke wijziging: eigen branch (`fix/...`, `feat/...`, `workflow/...`) → zo klein mogelijk → `node tests/check.mjs` en `node tests/omgeving.mjs` draaien → pull request met korte uitleg.
 3. Een PR geeft automatisch een Vercel-testversie (Preview). De eigenaar test die en keurt goed; pas daarna samenvoegen naar `main`.
 4. Vraag eerst toestemming voor: live zetten (samenvoegen naar `main`), Edge Functions deployen, databasestructuur of policies wijzigen, gegevens verwijderen, git-geschiedenis herschrijven, iets dat geld kost.
 
-## Let op: testversies gebruiken de échte database
-Preview-versies praten met hetzelfde Supabase-project als de live app (`udiqtseewsifcmxsrwtu`).
-- Test alleen met testaccounts, nooit met het beheerdersaccount van de eigenaar.
-- Wijzig in een testversie geen woorden, beelden of audio in Ouders → Woorden/Audio: dat geldt meteen voor alle gezinnen.
-- Database-tests via SQL alleen binnen een transactie die wordt teruggedraaid (`rollback`).
+## Twee databases: live en test
+- **Live:** Supabase-project `udiqtseewsifcmxsrwtu` (organisatie "Nowiewise"). Alleen gebruikt op exact `masri-kids.vercel.app`.
+- **Test:** Supabase-project `jiqzpxkrztjnpathtcvl` (`masri-kids-test`, organisatie "Masri Kids Test", ander Supabase-account). Gebruikt door alle testversies en `localhost`. Alleen fictieve gegevens (`…@example.test`).
+- De keuze staat in `SB_ENVS` / `SB_LIVE_HOSTS` in `index.html`. Nieuw live domein? Toevoegen in beide én in `tests/omgeving.mjs`.
+- Databasewijzigingen: eerst op het testproject (+ `tests/rls_test.sql`), pas daarna, met toestemming, op live. Houd `supabase/migrations/` bij.
+- Nooit echte gezinsgegevens, opnames of foto's naar het testproject kopiëren.
+- SQL-tests op live alleen alleen-lezen, of binnen een blok dat altijd wordt teruggedraaid.
 
 ## Niet veranderen zonder overleg
 - Woord-id's (opnames hangen eraan: `shared/audio/<id>`).

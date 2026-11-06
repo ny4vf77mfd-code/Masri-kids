@@ -12,3 +12,4 @@ jobs:
         with:
           node-version: 24
       - run: node tests/check.mjs
+      - run: node tests/omgeving.mjs

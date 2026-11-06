@@ -68,8 +68,8 @@ if (escSrc) {
   ok(esc('"\'&') === '&quot;&#39;&amp;', 'esc() behandelt aanhalingstekens en &');
 }
 
-// 4. Verbonden met het verwachte Supabase-project.
-ok(html.includes("const SB_URL = 'https://udiqtseewsifcmxsrwtu.supabase.co'"), 'Supabase-adres ongewijzigd');
+// 4. Welke database bij welk adres hoort, controleert tests/omgeving.mjs (draait ook automatisch).
+ok(html.includes("live: { url:'https://udiqtseewsifcmxsrwtu.supabase.co'"), 'live Supabase-adres ongewijzigd');
 
 // 5. Inhoud uit de database wordt ontdaan van HTML voordat die in de app komt.
 const noHtmlSrc = html.match(/const noHtml = [^\n]+/);
