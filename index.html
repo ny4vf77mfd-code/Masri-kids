@@ -1922,7 +1922,7 @@ async function loadFamily(){
   saveLocal();
 }
 async function checkAdmin(){
-  AUTH.admin = false;
+  AUTH.admin = false; TESTMODE_ON = false;
   if(!sb || !AUTH.user) return;
   const {data} = await sb.from('admins').select('user_id').eq('user_id', AUTH.user.id).maybeSingle();
   AUTH.admin = !!data;
@@ -2218,8 +2218,17 @@ function picOf(id){ const b = baseOf(id); return PICS[b] ? `<img src="${PICS[b]}
 function worldOrder(p){ const byId = ids => ids.map(id=>WORLDS.findIndex(w=>w.id===id)).filter(i=>i>=0);
   return p && p.level===1 ? byId([3,2,5,6,7,8,11,9,4,1,10,12,13]) : byId([1,2,3,5,6,7,8,9,10,11,12,13,4]); }
 function prevWorld(p,wi){ const o = worldOrder(p).filter(i=>!WORLDS[i].bonus); const k = o.indexOf(wi); return k>0 ? o[k-1] : -1; }
-function worldUnlocked(p,wi){ if(p.unlockAll||WORLDS[wi].bonus) return true; const pv = prevWorld(p,wi); if(pv<0) return true; return WORLDS[pv].lessons.filter(l=>p.lessons[l.id]).length>=3; }
-function lessonUnlocked(p,wi,li){ if(!worldUnlocked(p,wi)) return false; if(p.unlockAll||li===0) return true; return !!p.lessons[WORLDS[wi].lessons[li-1].id]; }
+// TESTMODUS: alleen in de testomgeving (niet op masri-kids.vercel.app) en alleen voor de beheerder.
+// Zet voor deze sessie alle werelden en lessen open, zonder het profiel of de voortgang te veranderen.
+// Wordt nergens bewaard: na herladen of uitloggen staat hij weer uit.
+let TESTMODE_ON = false;
+const testModeAllowed = () => SB_ENV === 'test' && AUTH.admin === true;
+const testMode = () => TESTMODE_ON === true && testModeAllowed();
+function testModeBanner(){ const b = document.getElementById('test-banner'); if(!b) return;
+  const base = SB_URL ? 'TESTOMGEVING · testdatabase, geen echte gezinnen' : 'TESTOMGEVING · nog geen testdatabase gekoppeld';
+  b.textContent = testMode() ? 'TESTMODUS · alle lessen open · testdatabase' : base; b.style.background = testMode() ? '#7b2cbf' : '#e8590c'; }
+function worldUnlocked(p,wi){ if(p.unlockAll||testMode()||WORLDS[wi].bonus) return true; const pv = prevWorld(p,wi); if(pv<0) return true; return WORLDS[pv].lessons.filter(l=>p.lessons[l.id]).length>=3; }
+function lessonUnlocked(p,wi,li){ if(!worldUnlocked(p,wi)) return false; if(p.unlockAll||testMode()||li===0) return true; return !!p.lessons[WORLDS[wi].lessons[li-1].id]; }
 
 /* ---------- iconen ---------- */
 const ICON_SPK = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 9.5v5c0 .6.4 1 1 1h3.3l4.4 3.7c.6.5 1.6.1 1.6-.8V5.6c0-.9-1-1.3-1.6-.8L7.3 8.5H4c-.6 0-1 .4-1 1z"/><path d="M16 8.2a5 5 0 0 1 0 7.6" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M18.6 5.6a8.6 8.6 0 0 1 0 12.8" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>';
@@ -3859,7 +3868,10 @@ function overviewPanel(p){
   <div class="panel"><h3>Beste resultaten</h3>${best.length?`<div class="wlist">${best.map(l=>`<div class="wrow"><span class="pic">${l.icon}</span><div class="mid"><div class="ph">${esc(l.title)}</div><div class="nl">${esc(WORLDS[l.wi].name)} · ${p.best[l.id].mistakes} foutjes</div></div><span class="nstars">${[1,2,3].map(n=>STAR(n<=p.lessons[l.id],16)).join('')}</span></div>`).join('')}</div>`:'<p class="muted">Nog geen lessen gespeeld.</p>'}</div>`;
 }
 function settingsPanel(p){
-  return `<div class="panel"><h3>Profiel van ${esc(p.name)}</h3>
+  return `${testModeAllowed() ? `<div class="panel" id="testmode-panel"><h3>🧪 Testmodus</h3>
+    <p class="muted" style="margin-bottom:10px">Alleen voor de beheerder en alleen in de testomgeving. Opent alle werelden en lessen voor deze sessie. Het profiel en de voortgang veranderen niet; na herladen staat hij weer uit.</p>
+    <label class="switch"><input type="checkbox" id="set-testmode" data-act="testmode" ${testMode()?'checked':''}> TESTMODUS: alle lessen open</label></div>` : ''}
+  <div class="panel"><h3>Profiel van ${esc(p.name)}</h3>
     <div class="setrow"><label for="set-name">Naam</label><input class="inp" id="set-name" maxlength="20" value="${esc(p.name)}" data-setp="name"></div>
     <div class="setrow"><label>Leeromgeving</label><div class="seg">${Object.entries(KINDS).map(([k,t])=>`<button class="${kindOf(p)===k?'on':''}" data-act="setp-kind:${k}">${t}</button>`).join('')}</div>
       <p class="hint">Wisselen kan altijd. Voortgang in de kinder- en volwassen omgeving blijft allebei bewaard.</p></div>
@@ -4022,6 +4034,7 @@ function genderLabels(){ const ad = isAdult(); if(GLBL===ad) return; GLBL = ad;
     it.nl = ad ? it.nl.replace(' (tegen een meisje)',' (tegen een vrouw)').replace(' (meisje)',' (vrouw)') : it.nl.replace(' (tegen een vrouw)',' (tegen een meisje)').replace(' (vrouw)',' (meisje)'); }); }
 function render(){
   genderLabels();
+  testModeBanner();
   if(L && !L._w && S.screen==='lesson'){ L._w = 1; try{ warmMany(lessonAudioIds(L), true); }catch(e){} }
   const app = $('#app');
   const scr = S.screen;
@@ -4135,6 +4148,7 @@ document.addEventListener('click', e=>{
     case 'pen-next': penNext(); return;
     case 'pen-again': { const opp = PEN && PEN.players.length>1 ? PEN.players.find(x=>x!==PEN.home) : null; penEndRestore(); startPenalty(opp); return; }
     case 'locked': toast('Speel eerst de les ervoor!'); return;
+    case 'testmode': if(testModeAllowed()){ TESTMODE_ON = !TESTMODE_ON; toast(TESTMODE_ON ? 'TESTMODUS aan: alle lessen open' : 'TESTMODUS uit'); } else TESTMODE_ON = false; break;
     case 'aopt': if(L.state!=='answer') return; L.sel=a; play(a); break;
     case 'fopt': if(L.state!=='answer') return; L.sel=+a; break;
     case 'ml': matchTap('l', a); return;

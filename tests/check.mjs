@@ -173,5 +173,32 @@ ${appAi}; ({ aiCan, aiPreview })`, ctx);
   ok(can({ active_adult: true, active_kids: false }, false, adult) && !can({ active_adult: true, active_kids: false }, false, kid), 'app: met AI aan voor volwassenen ziet een gewone gebruiker alleen de chat voor volwassenen');
 }
 
+// 9. TESTMODUS: alleen in de testomgeving en alleen voor de beheerder; wordt nergens bewaard
+//    en verandert de spelregels voor gewone gebruikers niet.
+const tmSrc = ['let TESTMODE_ON', 'const testModeAllowed', 'const testMode ', 'function worldUnlocked', 'function lessonUnlocked']
+  .map(k => (html.match(new RegExp('^' + k.replace(/[()]/g, '\\$&') + '[^\\n]*', 'm')) || [''])[0]);
+ok(tmSrc.every(Boolean), 'testmodus-code gevonden');
+ok(/const testModeAllowed = \(\) => SB_ENV === 'test' && AUTH\.admin === true;/.test(html), 'testmodus alleen toegestaan in de testomgeving én voor de beheerder');
+ok(/const testMode = \(\) => TESTMODE_ON === true && testModeAllowed\(\);/.test(html), 'testmodus werkt alleen als hij toegestaan is (ook als hij per ongeluk aan staat)');
+ok(!/unlockAll\s*=\s*.*TESTMODE|TESTMODE[^\n]*(localStorage|sessionStorage|save\(\)|\.upsert|\.update\()/.test(html), 'testmodus wordt nergens bewaard en verandert geen profiel');
+ok(/AUTH\.admin = false; TESTMODE_ON = false;/.test(html), 'testmodus gaat uit bij opnieuw inloggen of uitloggen');
+if (tmSrc.every(Boolean)) {
+  const env = { SB_ENV: 'test', AUTH: { admin: false }, WORLDS: [{ id: 1, lessons: [{ id: 'a' }, { id: 'b' }] }, { id: 2, lessons: [{ id: 'c' }, { id: 'd' }] }],
+    prevWorld: (p, wi) => wi - 1 };
+  vm.createContext(env);
+  vm.runInContext(tmSrc.join('\n') + '\nthis.api = { worldUnlocked, lessonUnlocked, testMode, setOn: v => { TESTMODE_ON = v; } };', env);
+  const { api } = env;
+  const kid = { unlockAll: false, lessons: {} };
+  const open = () => api.worldUnlocked(kid, 1) && api.lessonUnlocked(kid, 0, 1);
+  const zet = (envName, admin, on) => { env.SB_ENV = envName; env.AUTH.admin = admin; api.setOn(on); };
+  zet('test', false, false); ok(!open(), 'testmodus uit: lessen blijven op slot (gewone spelregels)');
+  zet('test', true, true); ok(open() && api.testMode(), 'beheerder in testomgeving met testmodus aan: alles open');
+  zet('test', false, true); ok(!open(), 'gewone gebruiker in testomgeving: testmodus werkt niet');
+  zet('live', true, true); ok(!open() && !api.testMode(), 'live (masri-kids.vercel.app): testmodus werkt nooit, ook niet voor de beheerder');
+  zet('test', true, false); ok(!open(), 'beheerder met testmodus uit: gewone spelregels');
+  zet('test', true, true); kid.lessons = {}; api.lessonUnlocked(kid, 0, 1); ok(Object.keys(kid.lessons).length === 0 && kid.unlockAll === false, 'testmodus verandert de voortgang en het profiel niet');
+}
+ok(/\$\{testModeAllowed\(\) \? `<div class="panel" id="testmode-panel">/.test(html) && /case 'testmode': if\(testModeAllowed\(\)\)/.test(html), 'schakelaar alleen zichtbaar en bruikbaar als testmodus toegestaan is');
+
 console.log(fails ? `\n${fails} controle(s) mislukt.` : '\nAlle controles geslaagd.');
 process.exit(fails ? 1 : 0);
