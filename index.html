@@ -2353,9 +2353,12 @@ function sfx(kind){
 }
 const INSTR = {intro:'Luister goed, en zeg het na!', listen:'Luister. Welk plaatje hoort erbij?', memory:'Zoek twee kaartjes die bij elkaar horen.', say:'Luister, en zeg het dan hard op!', picword:'Kijk naar het plaatje. Luister naar de knoppen. Welke hoort erbij?'};
 const PRAISE_NL = ['Goed zo!','Super!','Knap hoor!','Wauw, goed gedaan!'];
-// Koppelen: nooit twee woorden met dezelfde Nederlandse betekenis in één opdracht (bijv. twee keer 'hallo').
-const meaningKey = id => String((ITEM[id] && ITEM[id].nl) || id).toLowerCase().replace(/\([^)]*\)/g,'').replace(/[!?.,]/g,'').trim();
-function matchIds(ids, n){ const seen = new Set(), out = []; for(const id of shuffle(ids)){ const k = meaningKey(id); if(seen.has(k)) continue; seen.add(k); out.push(id); if(out.length>=n) break; } return out; }
+// Koppelen: geen twee woorden waarvan het ene Nederlandse label ook bij het andere past
+// (bijv. 'hallo' en 'hallo (vrede zij met jullie)'). 'oom (broer van mama)' en 'oom (broer van papa)' mogen wel samen.
+const nlLabel = id => String((ITEM[id] && ITEM[id].nl) || id).toLowerCase().replace(/[!?.,]/g,'').replace(/\s+/g,' ').trim();
+const nlBare = id => nlLabel(id).replace(/\([^)]*\)/g,'').replace(/\s+/g,' ').trim();
+const meaningClash = (a, b) => nlLabel(a)===nlLabel(b) || nlBare(a)===nlLabel(b) || nlLabel(a)===nlBare(b);
+function matchIds(ids, n){ const out = []; for(const id of shuffle(ids)){ if(out.some(o=>meaningClash(o, id))) continue; out.push(id); if(out.length>=n) break; } return out; }
 const isKid = () => { const p = me(); return !!p && p.level===1; };
 
 /* ---------- UI-status ---------- */
@@ -2436,7 +2439,7 @@ function buildSteps(wi, li, p){
     if(con.length>=2) body.push({type:'memory', ids:sample(con, Math.min(4, con.length))});
   } else {
     ids.forEach((id,i)=>body.push({type:wordTypeL2(id,i), id}));
-    if(ids.length>=3) body.push({type:'match', ids:matchIds(ids, 4)});
+    if(ids.length>=3){ const m = matchIds(ids, 4); if(m.length>=3) body.push({type:'match', ids:m}); }
     const sn = sample(sents, (lesson.review||lesson.sentencesOnly) ? 3 : 2);
     sn.forEach((sid,i)=>body.push({type: (i%2===1 && !(acc!==null && acc<0.6)) ? 'fill' : 'build', id:sid}));
     if(!sn.length && ids.length>=2) body.push({type:'memory', ids:sample(ids, Math.min(4, ids.length))});
@@ -2472,7 +2475,7 @@ function startReview(){
   ids.forEach((id,i)=>steps.push(p.level===1 ? {type: isConcrete(id) ? 'listen' : 'say', id} : {type:wordTypeL2(id,i), id}));
   const con = ids.filter(isConcrete);
   if(p.level===1 && con.length>=2) steps.splice(3, 0, {type:'memory', ids:sample(con, Math.min(4, con.length))});
-  if(p.level!==1 && ids.length>=3) steps.splice(3, 0, {type:'match', ids:matchIds(ids, 4)});
+  if(p.level!==1 && ids.length>=3){ const m = matchIds(ids, 4); if(m.length>=3) steps.splice(3, 0, {type:'match', ids:m}); }
   L = { wi:null, li:null, lesson:{id:'srs', title:'Herhalen', icon:'🔁', srs:true}, steps, i:0, mistakes:0, xp:0, state:'answer', sel:null, ok:null, retried:new Set(), t0:Date.now(), answered:0, correct:0 };
   S.screen='lesson'; window.scrollTo(0,0); render(); autoPlay();
 }
@@ -3099,7 +3102,7 @@ function startAdultLesson(mid, k){
   if(k===0 && GRAMMAR[m.id]) steps.push({type:'grammar', mod:m.id});
   fresh.forEach(id=>steps.push({type:'intro', id}));
   const body = ids.map((id,i)=>adultStepFor(id,i));
-  if(ids.length>=3) body.push({type:'match', ids:matchIds(ids, 4)});
+  if(ids.length>=3){ const m = matchIds(ids, 4); if(m.length>=3) body.push({type:'match', ids:m}); }
   const multi = ids.filter(id=>ITEM[id].ph.split(' ').length>=2);
   if(multi.length) body.push({type:'fill', id:pick(multi)});
   body.push({type:'speak', id:pick(ids)});

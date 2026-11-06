@@ -209,21 +209,25 @@ ok(/<div class="mid"><div class="ar" lang="ar" dir="rtl">\$\{x\.ar\}<\/div><div 
 const sunAfter = (html.match(/\.sun-disc::after\{[^}]*\}/) || [''])[0];
 ok(sunAfter && !/linear-gradient\(var\(--sand-2\)/.test(sunAfter), 'startscherm: geen grijze balk onder Mishmish');
 // 10c. Koppelen: nooit twee woorden met dezelfde betekenis.
-const mkSrc = ['const meaningKey', 'function matchIds'].map(k => (html.match(new RegExp('^' + k + '[^\\n]*', 'm')) || [''])[0]);
-ok(mkSrc.every(Boolean) && (html.match(/type:'match', ids:matchIds\(ids, 4\)/g) || []).length === 3 && !/type:'match', ids:sample\(/.test(html),
-  'koppelopdrachten gebruiken overal matchIds');
+const mkSrc = ['const nlLabel', 'const nlBare', 'const meaningClash', 'function matchIds'].map(k => (html.match(new RegExp('^' + k + '[^\\n]*', 'm')) || [''])[0]);
+ok(mkSrc.every(Boolean) && (html.match(/const m = matchIds\(ids, 4\); if\(m\.length>=3\)/g) || []).length === 3 && !/type:'match', ids:sample\(/.test(html),
+  'koppelopdrachten gebruiken overal matchIds, en alleen met minstens 3 paren');
 if (mkSrc.every(Boolean)) {
-  const ITEMS = { ahlan:{nl:'hallo'}, salam:{nl:'hallo (vrede zij met jullie)'}, aywa:{nl:'ja'}, la:{nl:'nee'}, bye:{nl:'doei!'}, shukran:{nl:'dank je wel'} };
-  const ctx = vm.createContext({ ITEM: ITEMS, shuffle: a => [...a] });
+  const ITEMS = { ahlan:{nl:'hallo'}, salam:{nl:'hallo (vrede zij met jullie)'}, aywa:{nl:'ja'}, la:{nl:'nee'}, bye:{nl:'doei!'}, shukran:{nl:'dank je wel'},
+    khalo:{nl:'oom (broer van mama)'}, ammo:{nl:'oom (broer van papa)'}, khalto:{nl:'tante (zus van mama)'}, ammeto:{nl:'tante (zus van papa)'},
+    sabah:{nl:'goedemorgen'}, sabahnoor:{nl:'Goedemorgen! (antwoord)'} };
+  const ctx = vm.createContext({ ITEM: ITEMS, shuffle: a => [...a].sort(() => Math.random() - 0.5) });
   vm.runInContext(mkSrc.join('\n') + '\nthis.m = matchIds;', ctx);
-  let alleUniek = true;
-  for (let i = 0; i < 20; i++) {
-    ctx.shuffle = a => [...a].sort(() => Math.random() - 0.5);
-    const r = ctx.m(Object.keys(ITEMS), 4);
-    if (r.includes('ahlan') && r.includes('salam')) alleUniek = false;
-    if (r.length !== 4) alleUniek = false;
+  let ok1 = true, ok2 = true, ok3 = true;
+  for (let i = 0; i < 30; i++) {
+    const r = ctx.m(['ahlan', 'salam', 'aywa', 'la', 'bye', 'shukran'], 4);
+    if ((r.includes('ahlan') && r.includes('salam')) || r.length !== 4) ok1 = false;
+    if (ctx.m(['khalo', 'ammo', 'khalto', 'ammeto'], 4).length !== 4) ok2 = false;
+    if (ctx.m(['ahlan', 'salam', 'sabah', 'sabahnoor'], 4).length !== 2) ok3 = false;
   }
-  ok(alleUniek, 'koppelen: Ahlan en Es-Salamo 3aleekom (beide "hallo") nooit samen; toch 4 paren');
+  ok(ok1, 'koppelen: "hallo" en "hallo (vrede zij met jullie)" nooit samen; toch 4 paren');
+  ok(ok2, 'koppelen: oom/tante van mama en van papa mogen wel samen (dat verschil is juist de les)');
+  ok(ok3, 'koppelen: als er te weinig verschillende betekenissen zijn, wordt de opdracht kleiner (en dan overgeslagen)');
 }
 // 10d. Ouderslot: getallen in woorden, tweecijferige som.
 const nlNumSrc = (html.match(/function nlNum\(n\)\{[\s\S]*?\n[^\n]*return u\[e\][^\n]*\}/) || [''])[0];
