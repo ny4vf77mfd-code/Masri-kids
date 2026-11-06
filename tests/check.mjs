@@ -200,5 +200,41 @@ if (tmSrc.every(Boolean)) {
 }
 ok(/\$\{testModeAllowed\(\) \? `<div class="panel" id="testmode-panel">/.test(html) && /case 'testmode': if\(testModeAllowed\(\)\)/.test(html), 'schakelaar alleen zichtbaar en bruikbaar als testmodus toegestaan is');
 
+// 10. Snelle reparaties (ontwerpaudit november 2026)
+// 10a. Mijn woordjes: Arabisch staat op een eigen regel in de middenkolom, zodat het de uitspraak niet overlapt.
+const wordsFn = (html.match(/function wordsHTML\(\)\{[\s\S]*?\n\}/) || [''])[0];
+ok(/<div class="mid"><div class="ar" lang="ar" dir="rtl">\$\{x\.ar\}<\/div><div class="ph">/.test(wordsFn) && !/<\/div><\/div><span class="ar" lang="ar">\$\{x\.ar\}/.test(wordsFn),
+  'Mijn woordjes: Arabisch op eigen regel, niet meer naast de uitspraak');
+// 10b. Startscherm: geen effen grijze balk onder Mishmish.
+const sunAfter = (html.match(/\.sun-disc::after\{[^}]*\}/) || [''])[0];
+ok(sunAfter && !/linear-gradient\(var\(--sand-2\)/.test(sunAfter), 'startscherm: geen grijze balk onder Mishmish');
+// 10c. Koppelen: nooit twee woorden met dezelfde betekenis.
+const mkSrc = ['const meaningKey', 'function matchIds'].map(k => (html.match(new RegExp('^' + k + '[^\\n]*', 'm')) || [''])[0]);
+ok(mkSrc.every(Boolean) && (html.match(/type:'match', ids:matchIds\(ids, 4\)/g) || []).length === 3 && !/type:'match', ids:sample\(/.test(html),
+  'koppelopdrachten gebruiken overal matchIds');
+if (mkSrc.every(Boolean)) {
+  const ITEMS = { ahlan:{nl:'hallo'}, salam:{nl:'hallo (vrede zij met jullie)'}, aywa:{nl:'ja'}, la:{nl:'nee'}, bye:{nl:'doei!'}, shukran:{nl:'dank je wel'} };
+  const ctx = vm.createContext({ ITEM: ITEMS, shuffle: a => [...a] });
+  vm.runInContext(mkSrc.join('\n') + '\nthis.m = matchIds;', ctx);
+  let alleUniek = true;
+  for (let i = 0; i < 20; i++) {
+    ctx.shuffle = a => [...a].sort(() => Math.random() - 0.5);
+    const r = ctx.m(Object.keys(ITEMS), 4);
+    if (r.includes('ahlan') && r.includes('salam')) alleUniek = false;
+    if (r.length !== 4) alleUniek = false;
+  }
+  ok(alleUniek, 'koppelen: Ahlan en Es-Salamo 3aleekom (beide "hallo") nooit samen; toch 4 paren');
+}
+// 10d. Ouderslot: getallen in woorden, tweecijferige som.
+const nlNumSrc = (html.match(/function nlNum\(n\)\{[\s\S]*?\n[^\n]*return u\[e\][^\n]*\}/) || [''])[0];
+ok(!!nlNumSrc && /function newGate\(\)\{ const a=21\+/.test(html) && /\$\{nlNum\(g\.a\)\} \+ \$\{nlNum\(g\.b\)\}/.test(html), 'ouderslot: twee getallen in woorden (21–49 plus 12–29)');
+if (nlNumSrc) {
+  const c = vm.createContext({}); vm.runInContext(nlNumSrc + '\nthis.f = nlNum;', c);
+  const want = { 21:'eenentwintig', 22:'tweeëntwintig', 23:'drieëntwintig', 30:'dertig', 37:'zevenendertig', 48:'achtenveertig', 12:'twaalf', 19:'negentien', 29:'negenentwintig' };
+  ok(Object.entries(want).every(([n, w]) => c.f(+n) === w), 'ouderslot: Nederlandse getallen goed gespeld (o.a. tweeëntwintig, achtenveertig)');
+}
+// 10e. Kinderen 4–6: begroeting in het Nederlands, niet in Franco.
+ok(/<b>\$\{p\.level===1 \? 'Hoi' : g\[1\]\}, \$\{esc\(p\.name\)\}!<\/b>/.test(html), 'dashboard 4–6 jaar: begroeting "Hoi" in plaats van Franco');
+
 console.log(fails ? `\n${fails} controle(s) mislukt.` : '\nAlle controles geslaagd.');
 process.exit(fails ? 1 : 0);

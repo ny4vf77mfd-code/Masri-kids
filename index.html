@@ -81,8 +81,7 @@ p{margin:0}
 .splash .lead{font-size:18px;max-width:30ch;color:var(--muted);font-weight:700}
 .sun-disc{position:relative;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle at 50% 45%,#FFE08A 0 55%,var(--sun) 56% 100%);display:grid;place-items:center}
 .sun-disc::after{content:"";position:absolute;left:-30px;right:-30px;bottom:-6px;height:60px;
-  background:linear-gradient(var(--sand-2),var(--sand-2)) bottom/100% 22px no-repeat,
-  conic-gradient(from 135deg at 30% 100%, transparent 0 90deg, transparent 90deg) ;}
+  background:radial-gradient(ellipse 50% 100% at 50% 100%, rgba(40,54,124,.12), transparent 70%) bottom/100% 22px no-repeat;}
 .pyr{position:absolute;bottom:0;width:100%;height:70px;pointer-events:none}
 .splash .feat{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
 .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--card);border:2px solid var(--line);font-weight:800;font-size:14px}
@@ -285,6 +284,8 @@ p{margin:0}
 .wrow .ph{font-weight:900;font-size:17px}
 .wrow .nl{font-size:14px;font-weight:700;color:var(--muted)}
 .wrow .ar{font-size:22px;font-weight:700}
+.wrow .mid .ar{display:block;text-align:left;line-height:1.3}
+.wrow .ph,.wrow .nl{overflow-wrap:anywhere}
 .wrow.unseen{opacity:.5}
 .badge{font-size:11px;font-weight:900;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok-d);white-space:nowrap}
 .badge.new{background:var(--sand-2);color:var(--muted)}
@@ -2352,6 +2353,9 @@ function sfx(kind){
 }
 const INSTR = {intro:'Luister goed, en zeg het na!', listen:'Luister. Welk plaatje hoort erbij?', memory:'Zoek twee kaartjes die bij elkaar horen.', say:'Luister, en zeg het dan hard op!', picword:'Kijk naar het plaatje. Luister naar de knoppen. Welke hoort erbij?'};
 const PRAISE_NL = ['Goed zo!','Super!','Knap hoor!','Wauw, goed gedaan!'];
+// Koppelen: nooit twee woorden met dezelfde Nederlandse betekenis in één opdracht (bijv. twee keer 'hallo').
+const meaningKey = id => String((ITEM[id] && ITEM[id].nl) || id).toLowerCase().replace(/\([^)]*\)/g,'').replace(/[!?.,]/g,'').trim();
+function matchIds(ids, n){ const seen = new Set(), out = []; for(const id of shuffle(ids)){ const k = meaningKey(id); if(seen.has(k)) continue; seen.add(k); out.push(id); if(out.length>=n) break; } return out; }
 const isKid = () => { const p = me(); return !!p && p.level===1; };
 
 /* ---------- UI-status ---------- */
@@ -2432,7 +2436,7 @@ function buildSteps(wi, li, p){
     if(con.length>=2) body.push({type:'memory', ids:sample(con, Math.min(4, con.length))});
   } else {
     ids.forEach((id,i)=>body.push({type:wordTypeL2(id,i), id}));
-    if(ids.length>=3) body.push({type:'match', ids:sample(ids, Math.min(4, ids.length))});
+    if(ids.length>=3) body.push({type:'match', ids:matchIds(ids, 4)});
     const sn = sample(sents, (lesson.review||lesson.sentencesOnly) ? 3 : 2);
     sn.forEach((sid,i)=>body.push({type: (i%2===1 && !(acc!==null && acc<0.6)) ? 'fill' : 'build', id:sid}));
     if(!sn.length && ids.length>=2) body.push({type:'memory', ids:sample(ids, Math.min(4, ids.length))});
@@ -2468,7 +2472,7 @@ function startReview(){
   ids.forEach((id,i)=>steps.push(p.level===1 ? {type: isConcrete(id) ? 'listen' : 'say', id} : {type:wordTypeL2(id,i), id}));
   const con = ids.filter(isConcrete);
   if(p.level===1 && con.length>=2) steps.splice(3, 0, {type:'memory', ids:sample(con, Math.min(4, con.length))});
-  if(p.level!==1 && ids.length>=3) steps.splice(3, 0, {type:'match', ids:sample(ids, Math.min(4, ids.length))});
+  if(p.level!==1 && ids.length>=3) steps.splice(3, 0, {type:'match', ids:matchIds(ids, 4)});
   L = { wi:null, li:null, lesson:{id:'srs', title:'Herhalen', icon:'🔁', srs:true}, steps, i:0, mistakes:0, xp:0, state:'answer', sel:null, ok:null, retried:new Set(), t0:Date.now(), answered:0, correct:0 };
   S.screen='lesson'; window.scrollTo(0,0); render(); autoPlay();
 }
@@ -3095,7 +3099,7 @@ function startAdultLesson(mid, k){
   if(k===0 && GRAMMAR[m.id]) steps.push({type:'grammar', mod:m.id});
   fresh.forEach(id=>steps.push({type:'intro', id}));
   const body = ids.map((id,i)=>adultStepFor(id,i));
-  if(ids.length>=3) body.push({type:'match', ids:sample(ids, Math.min(4, ids.length))});
+  if(ids.length>=3) body.push({type:'match', ids:matchIds(ids, 4)});
   const multi = ids.filter(id=>ITEM[id].ph.split(' ').length>=2);
   if(multi.length) body.push({type:'fill', id:pick(multi)});
   body.push({type:'speak', id:pick(ids)});
@@ -3699,7 +3703,7 @@ function greetHTML(p, missed){
   const msg = due>=3 ? `Je hebt ${due} woordjes om te herhalen. Dan vergeet je ze niet!`
     : missed ? 'Fijn dat je er weer bent! Zullen we verder spelen?'
     : Object.keys(p.lessons||{}).length ? 'Klaar voor je volgende les?' : 'Welkom! Tik op START om te beginnen.';
-  return `<div class="greet">${mascot(76, due>=3?'think':'happy','bob')}<div class="bubble"><b>${g[1]}, ${esc(p.name)}!</b>${hasAudio(g[0])?playBtn(g[0],'sm',false):''}<br>${msg}</div></div>`
+  return `<div class="greet">${mascot(76, due>=3?'think':'happy','bob')}<div class="bubble"><b>${p.level===1 ? 'Hoi' : g[1]}, ${esc(p.name)}!</b>${hasAudio(g[0])?playBtn(g[0],'sm',false):''}<br>${msg}</div></div>`
     + (due>=3 ? `<button class="review-card" data-act="review"><span class="ic">🔁</span><span><b>Herhalen</b><span>${due} woordjes · ongeveer 2 minuten</span></span><span class="go">›</span></button>` : '');
 }
 function homeHTML(){
@@ -3760,17 +3764,22 @@ function wordsHTML(){
   return topbarHTML(p) + `<h1 class="page-h">Mijn woordjes</h1><p class="page-sub">${learned(p).length} geleerd · tik op de luidspreker om te luisteren</p>
   ${worldOrder(p).filter(i=>worldUnlocked(p,i)).map(i=>WORLDS[i]).map(w=>`<div class="wgroup"><h2>${w.emoji} ${w.name}</h2><div class="wlist">${wordsOfWorld(w.id).map(x=>{
       const s = p.words[x.id]; const l = (s?.c||0)>=2;
-      return `<div class="wrow ${s?'':'unseen'}"><span class="pic">${picOf(x.id)}</span><div class="mid"><div class="ph">${esc(x.ph)}</div><div class="nl">${esc(x.nl)}</div></div><span class="ar" lang="ar">${x.ar}</span>${l?'<span class="badge">✓</span>':''}${playBtn(x.id,'sm')}</div>`;
+      return `<div class="wrow ${s?'':'unseen'}"><span class="pic">${picOf(x.id)}</span><div class="mid"><div class="ar" lang="ar" dir="rtl">${x.ar}</div><div class="ph">${esc(x.ph)}</div><div class="nl">${esc(x.nl)}</div></div>${l?'<span class="badge">✓</span>':''}${playBtn(x.id,'sm')}</div>`;
     }).join('')}</div></div>`).join('')}`;
 }
 
 /* ---------- ouders ---------- */
+// Ouderslot: twee getallen in woorden optellen (lastig voor kinderen tot 9 jaar, makkelijk voor ouders).
+function nlNum(n){ const u=['','een','twee','drie','vier','vijf','zes','zeven','acht','negen'], t=['','tien','twintig','dertig','veertig','vijftig','zestig','zeventig','tachtig','negentig'],
+  x=['tien','elf','twaalf','dertien','veertien','vijftien','zestien','zeventien','achttien','negentien'];
+  if(n<10) return u[n]; if(n<20) return x[n-10]; const e=n%10, d=Math.floor(n/10); if(!e) return t[d]; return u[e] + (/e$/.test(u[e]) ? 'ën' : 'en') + t[d]; }
+function newGate(){ const a=21+Math.floor(Math.random()*29), b=12+Math.floor(Math.random()*18), s=a+b; return {a,b,opts:shuffle([s,s+10,s-10,s+1])}; }
 function gateHTML(){
-  if(!S.gate){ const a=4+Math.floor(Math.random()*5), b=3+Math.floor(Math.random()*6); S.gate={a,b,opts:shuffle([a+b,a+b+1,a+b-2,a+b+3])}; }
+  if(!S.gate) S.gate = newGate();
   const g = S.gate;
   return `<div class="gate">
-    <h1 class="page-h">Alleen voor ouders</h1><p class="muted">Beantwoord deze som om verder te gaan.</p>
-    <div class="q">${g.a} + ${g.b} = ?</div>
+    <h1 class="page-h">Alleen voor ouders</h1><p class="muted">Tel deze twee getallen op om verder te gaan.</p>
+    <div class="q" style="font-size:26px;line-height:1.3">${nlNum(g.a)} + ${nlNum(g.b)} = ?</div>
     <div class="seg">${g.opts.map(o=>`<button data-act="gate:${o}">${o}</button>`).join('')}</div>
     <button class="btn ghost" data-act="go:${DB.activeId?'home':'profiles'}">Terug</button>
   </div>`;
