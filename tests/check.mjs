@@ -80,5 +80,14 @@ if (noHtmlSrc) {
   ok(noHtml('Saba7 El-Kheer') === 'Saba7 El-Kheer' && noHtml(3) === 3, 'noHtml() laat gewone tekst en getallen heel');
 }
 
+// 6. Privacy: verklaring bestaat, is vanuit de app bereikbaar, en is volledig ingevuld.
+let privacy = '';
+try { privacy = readFileSync(join(root, 'privacy.html'), 'utf8'); } catch { /* ontbreekt */ }
+ok(!!privacy, 'privacy.html bestaat');
+ok((html.match(/href="\/privacy\.html"/g) || []).length >= 3, 'privacyverklaring gelinkt bij aanmelden, inloggen en in Ouders → Account');
+const open_ = (privacy.match(/\{\{[A-Z_]+\}\}/g) || []);
+ok(open_.length === 0, open_.length ? `privacyverklaring nog niet ingevuld: ${[...new Set(open_)].join(', ')}` : 'privacyverklaring volledig ingevuld');
+ok(/data-act="delacc-ask"/.test(html) && /functions\.invoke\('delete-account'/.test(html), 'knop "Account verwijderen" aanwezig');
+
 console.log(fails ? `\n${fails} controle(s) mislukt.` : '\nAlle controles geslaagd.');
 process.exit(fails ? 1 : 0);

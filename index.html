@@ -3582,11 +3582,11 @@ function authHTML(){
       <p class="muted">${signup?'Voor ouders en verzorgers. Je kinderen spelen onder jouw account; zij hebben geen eigen e-mail nodig.':reset?'We sturen je een link om een nieuw wachtwoord te kiezen.':np?'Kies een nieuw wachtwoord voor je account.':'Log in met je ouderaccount.'}</p>
       ${np?'':`<div><label class="lb" for="a-email">E-mailadres</label><input class="inp" id="a-email" type="email" inputmode="email" autocomplete="email" value="${esc(A.email||'')}"></div>`}
       ${reset?'':`<div><label class="lb" for="a-pass">${np?'Nieuw wachtwoord':'Wachtwoord'}</label><input class="inp" id="a-pass" type="password" autocomplete="${signup||np?'new-password':'current-password'}">${signup||np?'<p class="hint">Minstens 8 tekens.</p>':''}</div>`}
-      ${signup?`<label class="switch consent"><input type="checkbox" id="a-ok"> <span>Ik ben ouder of verzorger en geef toestemming om de namen en de voortgang van mijn kinderen in dit account te bewaren.</span></label>`:''}
+      ${signup?`<label class="switch consent"><input type="checkbox" id="a-ok"> <span>Ik ben ouder of verzorger en geef toestemming om de namen en de voortgang van mijn kinderen in dit account te bewaren, zoals beschreven in de <a href="/privacy.html" target="_blank" rel="noopener">privacyverklaring</a>.</span></label>`:''}
       ${A.msg?`<p class="status err" role="alert">${esc(A.msg)}</p>`:''}
       <button class="btn wide" type="submit" id="a-go" ${A.busy?'disabled':''}>${A.busy?'Even geduld…':signup?'Account maken':reset?'Stuur de link':np?'Opslaan':'Inloggen'}</button>
     </form>
-    <div class="auth-links">${signup||reset?`<button class="link" data-act="auth:login">Ik heb al een account</button>`:np?'':`<button class="link" data-act="auth:signup">Nieuw hier? Maak een account</button><button class="link" data-act="auth:reset">Wachtwoord vergeten?</button>`}</div>
+    <div class="auth-links">${signup||reset?`<button class="link" data-act="auth:login">Ik heb al een account</button>`:np?'':`<button class="link" data-act="auth:signup">Nieuw hier? Maak een account</button><button class="link" data-act="auth:reset">Wachtwoord vergeten?</button>`}<a class="link" href="/privacy.html" target="_blank" rel="noopener">Privacyverklaring</a></div>
   </div>`;
 }
 async function authSubmit(){
@@ -3883,6 +3883,14 @@ function settingsPanel(p){
   <div class="panel"><h3>Account</h3>
     <p class="muted" style="margin-bottom:12px">Ingelogd als <b>${esc(AUTH.user&&AUTH.user.email||'')}</b>. Op elk apparaat waar je met dit account inlogt, zie je dezelfde spelers, scores, opnames en foto's.</p>
     <button class="btn ghost wide" data-act="logout">Uitloggen</button>
+    <p class="hint" style="margin-top:12px"><a href="/privacy.html" target="_blank" rel="noopener">Privacyverklaring</a></p>
+  </div>
+  <div class="panel danger-zone"><h3>Account verwijderen</h3>
+    ${S.delAcc ? `<p class="muted" style="margin-bottom:10px">Dit verwijdert <b>direct en voorgoed</b> je account, alle spelers, alle voortgang, je instellingen en je eigen opnames en foto's. Dit kan niet ongedaan worden gemaakt. Typ <b>VERWIJDER</b> om te bevestigen.</p>
+      <input class="inp" id="del-acc-txt" autocomplete="off" autocapitalize="characters" placeholder="VERWIJDER" style="margin-bottom:10px">
+      ${S.delAccMsg?`<p class="status err" role="alert">${esc(S.delAccMsg)}</p>`:''}
+      <div class="seg"><button data-act="delacc-yes" style="color:var(--coral-d)" ${S.delAccBusy?'disabled':''}>${S.delAccBusy?'Bezig…':'Alles verwijderen'}</button><button data-act="delacc-no">Annuleren</button></div>`
+      : `<p class="muted" style="margin-bottom:10px">Verwijder je account en alle gegevens van je gezin.</p><button class="mini danger" data-act="delacc-ask">Account verwijderen</button>`}
   </div>`;
 }
 const STATUS_LABEL = {cloud:'☁️ opgeslagen', fail:'mislukt', too_large:'te groot'};
@@ -4032,6 +4040,25 @@ function render(){
   if(scr==='auth'){ const f = $('#aform'); if(f) f.addEventListener('submit', e=>{ e.preventDefault(); authSubmit(); }); }
 }
 let toastT;
+// Account en alle gegevens van dit gezin verwijderen (server: Edge Function 'delete-account')
+async function deleteAccount(){
+  const t = $('#del-acc-txt');
+  if(!t || t.value.trim().toUpperCase() !== 'VERWIJDER'){ S.delAccMsg = 'Typ VERWIJDER om te bevestigen.'; render(); return; }
+  if(!sb || !AUTH.user || S.delAccBusy) return;
+  S.delAccBusy = true; S.delAccMsg = ''; render();
+  try{
+    clearTimeout(SYNC.t); SYNC.t = null;
+    const {data, error} = await sb.functions.invoke('delete-account', {body:{confirm:'VERWIJDER'}});
+    if(error || !data || !data.ok) throw error || new Error('mislukt');
+    try{ localStorage.removeItem(LS); }catch(e){}
+    try{ await sb.auth.signOut({scope:'local'}); }catch(e){}
+    DB = EMPTY_DB(); S.delAcc = false; S.delAccBusy = false;
+    S.screen = 'auth'; S.auth = {mode:'login', msg:''};
+    render(); toast('Je account en alle gegevens zijn verwijderd.');
+  }catch(e){
+    S.delAccBusy = false; S.delAccMsg = 'Verwijderen is niet gelukt. Probeer het later opnieuw, of mail ons via de privacyverklaring.'; render();
+  }
+}
 function toast(msg){
   document.querySelectorAll('.toast').forEach(t=>t.remove());
   const t = document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t);
@@ -4063,8 +4090,11 @@ document.addEventListener('click', e=>{
     case 'reload': location.reload(); return;
     case 'auth': S.auth = {mode:a, email:S.auth.email}; break;
     case 'logout': recRelease(); flush().finally(()=>sb.auth.signOut()); S.screen='auth'; S.auth={mode:'login'}; break;
+    case 'delacc-ask': S.delAcc = true; S.delAccMsg = ''; break;
+    case 'delacc-no': S.delAcc = false; S.delAccMsg = ''; break;
+    case 'delacc-yes': deleteAccount(); return;
     case 'go': if(a==='talk'){ S.talk=null; } if(S.screen==='talk' && a!=='talk'){ stopListen(); S.talk=null; } if(S.screen==='penalty'){ penEndRestore(); PEN=null; } if(a==='gate') S.gate=null; if(a==='profiles') S.newP=null; if(S.recS && a!=='parent'){ S.recS=null; recRelease(); }
-      S.screen=a; S.confirmDel=false; window.scrollTo(0,0); break;
+      S.screen=a; S.confirmDel=false; S.delAcc=false; window.scrollTo(0,0); break;
     case 'duel': startPenalty(a); return;
     case 'pen-ready': if(PEN){ PEN.state='q'; render(); penAuto(); } return;
     case 'rec': if(hasAudio(a) && !REC.mr && S.confirmRec!==a){ S.confirmRec = a; toast('Er is al een opname. Tik nog een keer om hem te vervangen.'); break; } S.confirmRec = null; recToggle(a); return;
@@ -4161,7 +4191,7 @@ document.addEventListener('click', e=>{
     case 'quit-no': S.sheet=null; break;
     case 'quit-yes': hush(); S.sheet=null; addTime(me(), L && L.t0); save(); selfRelease(); L=null; S.screen='home'; break;
     case 'gate': if(+a===S.gate.a+S.gate.b){ S.screen='parent'; S.ptab='overview'; } else { toast('Dat klopt niet. Probeer het nog eens.'); S.gate=null; } break;
-    case 'ptab': S.ptab=a; S.confirmDel=false; if(a!=='audio' && S.recS){ S.recS=null; recRelease(); } break;
+    case 'ptab': S.ptab=a; S.confirmDel=false; S.delAcc=false; if(a!=='audio' && S.recS){ S.recS=null; recRelease(); } break;
     case 'pkid': S.pkid=a; S.confirmDel=false; break;
     case 'fw': S.filterW = isNaN(+a) ? a : +a; break;
     case 'setp-kind': { const k=DB.profiles.find(x=>x.id===S.pkid); applyKind(k, a); save(); break; }
