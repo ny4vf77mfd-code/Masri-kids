@@ -2070,8 +2070,11 @@ async function loadContent(){
   data.forEach(r=>{ CONTENT[r.id] = r.data || {}; });
   applyContent();
 }
+// Woorden uit de database mogen geen HTML bevatten (bescherming tegen scriptinjectie).
+const noHtml = v => typeof v === 'string' ? v.replace(/[<>]/g, '') : v;
 function applyContent(){
-  Object.entries(CONTENT).forEach(([id, d])=>{
+  Object.entries(CONTENT).forEach(([id, raw])=>{
+    const d = Object.fromEntries(Object.entries(raw || {}).map(([k, v])=>[k, noHtml(v)]));
     if(d.new && !ITEM[id]){
       const w = {id, w:+d.w, ar:d.ar||'', ph:translit(d.ph||'', d.ar||''), nl:d.nl||'', pic:d.pic||'🆕'};
       WORDS.push(w); ITEM[id] = {...w, kind:'word'};
