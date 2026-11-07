@@ -2182,6 +2182,8 @@ function recNext(){ if(!S.recS) return; S.recS.i++; if(S.recS.i >= S.recS.queue.
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+// Nederlandse vertaling altijd met een hoofdletter tonen ('kat' → 'Kat'). Alleen weergave: opgeslagen woorden blijven gelijk.
+const nlc = s => { s = String(s ?? ''); return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; };
 const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
 const sample = (a,n) => shuffle(a).slice(0,n);
 const pick = a => a[Math.floor(Math.random()*a.length)];
@@ -2576,7 +2578,7 @@ function exHTML(st){
         <div class="pic">${picOf(it.id)}</div>
         <div class="ar" lang="ar">${it.ar}</div>
         <div class="ph">${esc(it.ph)}</div>
-        <div class="nl">${esc(it.nl)}</div>
+        <div class="nl">${esc(nlc(it.nl))}</div>
         ${playBtn(st.id,'big')}
         ${formsHTML(it)}
         ${isAdult()?favBtn(st.id):''}
@@ -2586,25 +2588,25 @@ function exHTML(st){
       const kidOnly = isKid() && hasAudio(st.id);
       return `${chips(st)}<p class="ex-k">Luister en kies het plaatje</p>
       <div class="prompt ${kidOnly?'kid':''}">${playBtn(st.id,'big')}<div class="meta">${kidOnly?'':`<div class="ar" lang="ar">${it.ar}</div><div class="ph">${esc(it.ph)}</div>${isKid()?'<div class="parent-hint">Voor papa of mama om voor te lezen</div>':''}`}</div></div>
-      <div class="grid2">${vis(st).map(o=>`<button class="opt ${optCls(st,o)}" data-act="opt:${o}"><span class="pic">${picOf(o)}</span><span class="lbl">${esc(ITEM[o].nl)}</span></button>`).join('')}</div>`;
+      <div class="grid2">${vis(st).map(o=>`<button class="opt ${optCls(st,o)}" data-act="opt:${o}"><span class="pic">${picOf(o)}</span><span class="lbl">${esc(nlc(ITEM[o].nl))}</span></button>`).join('')}</div>`;
     }
     case 'meaning': {
       st.opts = st.opts || optsFor(st.id, optN(me(), false));
       return `${chips(st)}<p class="ex-k">Wat betekent dit?</p>
       <div class="prompt">${playBtn(st.id,'big')}<div class="meta"><div class="ar" lang="ar">${it.ar}</div><div class="ph">${esc(it.ph)}</div></div></div>
-      <div class="grid2">${vis(st).map(o=>`<button class="opt ${optCls(st,o)}" data-act="opt:${o}"><span class="pic">${picOf(o)}</span><span class="lbl">${esc(ITEM[o].nl)}</span></button>`).join('')}</div>`;
+      <div class="grid2">${vis(st).map(o=>`<button class="opt ${optCls(st,o)}" data-act="opt:${o}"><span class="pic">${picOf(o)}</span><span class="lbl">${esc(nlc(ITEM[o].nl))}</span></button>`).join('')}</div>`;
     }
     case 'eg-nl': {
       st.opts = st.opts || optsFor(st.id, 4);
       return `${chips(st)}<p class="ex-k">Wat betekent dit?</p>
       <div class="prompt">${playBtn(st.id,'big')}<div class="meta"><div class="ar" lang="ar">${it.ar}</div><div class="ph">${esc(it.ph)}</div></div></div>
-      <div class="list1">${vis(st).map(o=>`<button class="opt row ${optCls(st,o)}" data-act="opt:${o}"><span class="ph nlopt">${esc(ITEM[o].nl)}</span></button>`).join('')}</div>`;
+      <div class="list1">${vis(st).map(o=>`<button class="opt row ${optCls(st,o)}" data-act="opt:${o}"><span class="ph nlopt">${esc(nlc(ITEM[o].nl))}</span></button>`).join('')}</div>`;
     }
     case 'grammar': { const m = ADULT_MODS.find(x=>x.id===st.mod);
       return `<div class="gram"><span class="gk">📘 Uitleg</span><h2>${esc(m.title)}</h2>${GRAMMAR[st.mod]}</div>`; }
     case 'speak': return `${chips(st)}<p class="ex-k">Uitspraak oefenen<small>Luister, neem jezelf op en vergelijk.</small></p>
       <div class="wordcard">
-        <div class="ar" lang="ar">${it.ar}</div><div class="ph">${esc(it.ph)}</div><div class="nl">${esc(it.nl)}</div>
+        <div class="ar" lang="ar">${it.ar}</div><div class="ph">${esc(it.ph)}</div><div class="nl">${esc(nlc(it.nl))}</div>
         ${playBtn(st.id,'big')}
         <div class="self-rec">${recSupported()?`<button class="btn ${SELF.mr?'coral':'ghost'}" data-act="selfrec">${SELF.mr?'■ Stop':'🎙️ Neem jezelf op'}</button><button class="btn ghost" data-act="selfplay" ${SELF.url?'':'disabled'}>▶ Luister naar jezelf</button>`:'<p class="hint">Opnemen werkt niet in deze browser. Zeg het hardop na.</p>'}</div>
       </div>`;
@@ -2612,7 +2614,7 @@ function exHTML(st){
       st.opts = st.opts || optsFor(st.id, optN(me(), true));
       return `${chips(st)}<p class="ex-k">Wat hoor je?<small>Luister en kies de Nederlandse betekenis.</small></p>
       <div class="prompt kid">${playBtn(st.id,'big')}</div>
-      <div class="list1">${vis(st).map(o=>`<button class="opt row ${optCls(st,o)}" data-act="opt:${o}"><span class="ph nlopt">${esc(ITEM[o].nl)}</span></button>`).join('')}</div>`;
+      <div class="list1">${vis(st).map(o=>`<button class="opt row ${optCls(st,o)}" data-act="opt:${o}"><span class="ph nlopt">${esc(nlc(ITEM[o].nl))}</span></button>`).join('')}</div>`;
     }
     case 'picword': {
       if(isKid()){
@@ -2629,13 +2631,13 @@ function exHTML(st){
     case 'translate': {
       st.opts = st.opts || optsFor(st.id, optN(me(), true));
       return `${chips(st)}<p class="ex-k">Hoe zeg je dit in het Egyptisch?</p>
-      <div class="prompt"><span class="pic">${picOf(it.id)}</span><div class="meta"><div class="nl">${esc(it.nl)}</div></div></div>
+      <div class="prompt"><span class="pic">${picOf(it.id)}</span><div class="meta"><div class="nl">${esc(nlc(it.nl))}</div></div></div>
       <div class="list1">${vis(st).map(o=>`<button class="opt row ${optCls(st,o)}" data-act="opt:${o}"><span class="ph">${esc(ITEM[o].ph)}</span><span class="ar" lang="ar">${ITEM[o].ar}</span></button>`).join('')}</div>`;
     }
     case 'match': {
       if(!st.left){ st.left = shuffle(st.ids); st.right = shuffle(st.ids); st.done = []; st.selL = null; st.bad = null; }
       return `${chips(st)}<p class="ex-k">Koppel de woorden<small>Tik een Nederlands woord en daarna het Egyptische woord.</small></p>
-      <div class="match"><div class="mcol">${st.left.map(id=>`<button class="mitem ${st.done.includes(id)?'done':st.selL===id?'sel':''} ${st.bad&&st.bad[0]===id?'bad':''}" data-act="ml:${id}" ${st.done.includes(id)?'disabled':''}>${esc(ITEM[id].nl)}</button>`).join('')}</div>
+      <div class="match"><div class="mcol">${st.left.map(id=>`<button class="mitem ${st.done.includes(id)?'done':st.selL===id?'sel':''} ${st.bad&&st.bad[0]===id?'bad':''}" data-act="ml:${id}" ${st.done.includes(id)?'disabled':''}>${esc(nlc(ITEM[id].nl))}</button>`).join('')}</div>
       <div class="mcol">${st.right.map(id=>`<button class="mitem ${st.done.includes(id)?'done':''} ${st.bad&&st.bad[1]===id?'bad':''}" data-act="mr:${id}" ${st.done.includes(id)?'disabled':''}><b>${esc(ITEM[id].ph)}</b><span class="ar" lang="ar">${ITEM[id].ar}</span></button>`).join('')}</div></div>`;
     }
     case 'fill': {
@@ -2648,7 +2650,7 @@ function exHTML(st){
       }
       const shown = L.sel!==null ? st.choices[L.sel] : '';
       return `${chips(st)}<p class="ex-k">Vul het ontbrekende woord in</p>
-      <div class="bubble-row">${mascot(64,'think','')}<div class="bubble">${esc(it.nl)}</div></div>
+      <div class="bubble-row">${mascot(64,'think','')}<div class="bubble">${esc(nlc(it.nl))}</div></div>
       <div class="fill-line">${st.parts.map((w,i)=>i===st.gap?`<span class="gap ${shown?'filled':''}">${shown?esc(shown):'&nbsp;'}</span>`:`<span>${esc(w)}</span>`).join(' ')}</div>
       <div class="list1">${st.choices.map((c,k)=>(st.hiddenK||[]).includes(k)?'':`<button class="opt row ${fillCls(st,k)}" data-act="fopt:${k}"><span class="ph">${esc(c)}</span></button>`).join('')}</div>`;
     }
@@ -2659,7 +2661,7 @@ function exHTML(st){
       const who = sz => st.who ? `<span class="cav who">${st.who}</span>` : `<span class="cav">${mascot(sz,'happy','')}</span>`;
       const hist = st.turns.slice(0, st.t).map(x=>`<div class="cmsg mm">${who(30)}<div class="cb">${esc(ITEM[res(x.q)].ph)}</div></div><div class="cmsg me"><div class="cb">${esc(ITEM[res(x.a)].ph)}</div><span class="cav">${me().avatar}</span></div>`).join('');
       return `${chips(st)}<p class="ex-k">${st.who?esc(st.stitle||'Gesprek'):'Gesprekje met Mishmish'}<small>${st.t===0&&st.intro?esc(st.intro)+' ':''}Wat zeg jij terug?</small></p>
-      <div class="chat">${hist}<div class="cmsg mm now">${who(42)}<div class="cb"><b>${esc(ITEM[q].ph)}</b><span class="ar" lang="ar">${ITEM[q].ar}</span><small>${esc(ITEM[q].nl)}</small></div>${playBtn(q,'sm',false)}</div></div>
+      <div class="chat">${hist}<div class="cmsg mm now">${who(42)}<div class="cb"><b>${esc(ITEM[q].ph)}</b><span class="ar" lang="ar">${ITEM[q].ar}</span><small>${esc(nlc(ITEM[q].nl))}</small></div>${playBtn(q,'sm',false)}</div></div>
       <div class="list1">${vis(st).map(o=>`<button class="opt row ${optCls(st,o)}" data-act="opt:${o}"><span class="ph">${esc(ITEM[o].ph)}</span><span class="ar" lang="ar">${ITEM[o].ar}</span></button>`).join('')}</div>`;
     }
     case 'build': {
@@ -2673,7 +2675,7 @@ function exHTML(st){
         st.ans = [];
       }
       return `${chips(st)}<p class="ex-k">Maak de zin<small>Tik de woorden in de goede volgorde.</small></p>
-      <div class="bubble-row">${mascot(72,'happy','')}<div class="bubble">${esc(it.nl)}</div></div>
+      <div class="bubble-row">${mascot(72,'happy','')}<div class="bubble">${esc(nlc(it.nl))}</div></div>
       <div class="answer-line" aria-label="Jouw zin">${st.ans.map((ti,pos)=>`<button class="tile" data-act="untile:${pos}"><span>${esc(st.tiles[ti].ph)}</span><span class="ar" lang="ar">${st.tiles[ti].ar}</span></button>`).join('')}</div>
       <div class="bank">${st.tiles.map((t,ti)=>`<button class="tile ${st.ans.includes(ti)?'used':''}" data-act="tile:${ti}" ${st.ans.includes(ti)||L.state!=='answer'?'disabled':''}><span>${esc(t.ph)}</span><span class="ar" lang="ar">${t.ar}</span></button>`).join('')}</div>`;
     }
@@ -2690,14 +2692,14 @@ function exHTML(st){
     case 'recall': {
       const kid = isKid();
       if(!st.shown) return `${chips(st)}<p class="ex-k">Weet je het nog?<small>Zeg het eerst hardop. Kijk daarna pas.</small></p>
-      <div class="wordcard saycard pop"><div class="pic">${picOf(it.id)}</div>${kid?'':`<div class="nl">${esc(it.nl)}</div>`}</div>
+      <div class="wordcard saycard pop"><div class="pic">${picOf(it.id)}</div>${kid?'':`<div class="nl">${esc(nlc(it.nl))}</div>`}</div>
       <div class="bubble-row">${mascot(64,'think','')}<div class="bubble">${kid?'Hoe zeg je dit?':RECALL_NL.ask}</div></div>`;
       return `${chips(st)}<p class="ex-k">Zo zeg je het</p>
-      <div class="wordcard saycard pop"><div class="pic">${picOf(it.id)}</div><div class="ar" lang="ar">${it.ar}</div><div class="ph">${esc(it.ph)}</div><div class="nl">${esc(it.nl)}</div>${playBtn(st.id,'big')}</div>
+      <div class="wordcard saycard pop"><div class="pic">${picOf(it.id)}</div><div class="ar" lang="ar">${it.ar}</div><div class="ph">${esc(it.ph)}</div><div class="nl">${esc(nlc(it.nl))}</div>${playBtn(st.id,'big')}</div>
       <div class="bubble-row">${mascot(64,'happy','')}<div class="bubble">${kid?'Wist je het?':'Wist je het? Wees eerlijk, dan komt het op het goede moment terug.'}</div></div>`;
     }
     case 'type': return `${chips(st)}<p class="ex-k">Typ het in het Egyptisch<small>Typ de uitspraak, zoals je die in de app ziet.</small></p>
-      <div class="prompt"><span class="pic">${picOf(it.id)}</span><div class="meta"><div class="nl">${esc(it.nl)}</div></div></div>
+      <div class="prompt"><span class="pic">${picOf(it.id)}</span><div class="meta"><div class="nl">${esc(nlc(it.nl))}</div></div></div>
       <form id="type-form" autocomplete="off"><input class="inp" id="type-in" maxlength="60" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Bijv. Ahlan" value="${esc(st.typed||'')}" ${L.state!=='answer'?'disabled':''} aria-label="Jouw antwoord"></form>`;
     case 'say': return `${chips(st)}
       <p class="ex-k">Zeg het hardop!<small>Luister eerst, en zeg het dan zelf na.</small></p>
@@ -2705,7 +2707,7 @@ function exHTML(st){
         <div class="pic">${picOf(it.id)}</div>
         <div class="ar" lang="ar">${it.ar}</div>
         <div class="ph">${esc(it.ph)}</div>
-        <div class="nl">${esc(it.nl)}</div>
+        <div class="nl">${esc(nlc(it.nl))}</div>
         ${playBtn(st.id,'big')}
       </div>
       <div class="bubble-row">${mascot(64,'wow','')}<div class="bubble">Ik luister mee! Zeg het lekker hard 🎤</div></div>`;
@@ -2749,7 +2751,7 @@ function footHTML(st){
   if(L.state==='feedback'){
     if(L.ok){ const [a,b] = L.praise; return `<div class="fb pop">${mascot(70,'cheer','')}<div><div class="big">${a}</div><div class="sm">${b}</div></div></div><button class="btn ok wide" data-act="next" aria-label="Verder">${nextLbl}</button>`; }
     const it = ITEM[st.id];
-    const msg = st.type==='chat' ? `Je kunt zeggen: <b>${esc(it.ph)}</b> (${esc(it.nl)})` : `Het goede antwoord: <b>${esc(it.ph)}</b> = ${esc(it.nl)}.${st.type!=='chat'?' We oefenen het straks nog een keer.':''}`;
+    const msg = st.type==='chat' ? `Je kunt zeggen: <b>${esc(it.ph)}</b> (${esc(nlc(it.nl))})` : `Het goede antwoord: <b>${esc(it.ph)}</b> = ${esc(nlc(it.nl))}.${st.type!=='chat'?' We oefenen het straks nog een keer.':''}`;
     return `<div class="fb pop">${mascot(70,'encourage','')}<div><div class="big">Bijna!</div><div class="sm">${msg}</div></div></div><button class="btn try wide" data-act="next" aria-label="Verder">${nextLbl}</button>`;
   }
   if(st.type==='memory') return `<p class="muted" style="text-align:center">Draai twee kaarten om.</p>`;
@@ -3025,9 +3027,9 @@ function penHTML(){
   const q = lvl===1
     ? `<p class="ex-k">Penalty ${n}: wat hoor je?</p>
        <div class="prompt ${hasAudio(id)?'kid':''}">${playBtn(id,'big')}<div class="meta">${hasAudio(id)?'':`<div class="ar" lang="ar">${it.ar}</div><div class="ph">${esc(it.ph)}</div><div class="parent-hint">Voor papa of mama om voor te lezen</div>`}</div></div>
-       <div class="grid2">${PEN.opts.map(o=>`<button class="opt ${cls(o)}" data-act="pen:${o}" ${answered?'disabled':''}><span class="pic">${picOf(o)}</span><span class="lbl">${esc(ITEM[o].nl)}</span></button>`).join('')}</div>`
+       <div class="grid2">${PEN.opts.map(o=>`<button class="opt ${cls(o)}" data-act="pen:${o}" ${answered?'disabled':''}><span class="pic">${picOf(o)}</span><span class="lbl">${esc(nlc(ITEM[o].nl))}</span></button>`).join('')}</div>`
     : `<p class="ex-k">Penalty ${n}: hoe zeg je dit?</p>
-       <div class="prompt"><span class="pic">${picOf(it.id)}</span><div class="meta"><div class="nl">${esc(it.nl)}</div></div></div>
+       <div class="prompt"><span class="pic">${picOf(it.id)}</span><div class="meta"><div class="nl">${esc(nlc(it.nl))}</div></div></div>
        <div class="list1">${PEN.opts.map(o=>`<button class="opt row ${cls(o)}" data-act="pen:${o}" ${answered?'disabled':''}><span class="ph">${esc(ITEM[o].ph)}</span><span class="ar" lang="ar">${ITEM[o].ar}</span></button>`).join('')}</div>`;
   const ok = PEN.res[PEN.i];
   const last = PEN.i >= PEN.order.length-1;
@@ -3037,8 +3039,8 @@ function penHTML(){
       <div class="callout" id="pen-call">${ok?'GOOOON!<small>Doelpunt!</small>':'Gered!<small>De keeper had hem</small>'}</div></div>
     <div class="pen-q">${q}</div>
     <div class="lfoot ${answered?(ok?'ok':'bad'):''}"><div class="pen-fb" id="pen-fb">
-      ${ok?`<div class="fb">${mascot(64,'cheer','')}<div><div class="big">Goooon!</div><div class="sm">${esc(it.ph)} = ${esc(it.nl)}</div></div></div>`
-          :`<div class="fb">${mascot(64,'encourage','')}<div><div class="big">Bijna!</div><div class="sm">Het goede antwoord: <b>${esc(it.ph)}</b> = ${esc(it.nl)}</div></div></div>`}
+      ${ok?`<div class="fb">${mascot(64,'cheer','')}<div><div class="big">Goooon!</div><div class="sm">${esc(it.ph)} = ${esc(nlc(it.nl))}</div></div></div>`
+          :`<div class="fb">${mascot(64,'encourage','')}<div><div class="big">Bijna!</div><div class="sm">Het goede antwoord: <b>${esc(it.ph)}</b> = ${esc(nlc(it.nl))}</div></div></div>`}
       <button class="btn ${ok?'ok':'try'} wide" data-act="pen-next" aria-label="Verder">${isKid()?'<span class="big-ic" aria-hidden="true">➜</span>':last?'Uitslag':isDuel()?'Volgende speler':'Volgende penalty'}</button></div>
       ${answered?'':'<p class="muted" style="text-align:center">Kies het goede antwoord om te schieten!</p>'}</div>
   </div>`;
@@ -3304,12 +3306,12 @@ function dictHTML(){
     return topbarHTML(p) + `<h1 class="page-h">Mijn woordenboek</h1><p class="page-sub">${aw.length} woorden bewaard uit gesprekken met Salma</p>
     <input class="inp" id="dq" type="search" placeholder="Zoek in het Nederlands, Egyptisch of Arabisch" value="${esc(S.dq||'')}" data-dq="1">
     <div class="ptabs" style="margin-top:10px">${[['mine','Mijn woorden'],['fav','★ Favorieten'],['err','Fouten'],['ai','💬 Uit gesprekken'],['all','Alles']].map(([k,t])=>`<button class="${f===k?'on':''}" data-act="df:${k}">${t}</button>`).join('')}</div>
-    <div class="dict">${aw.map(w=>`<div class="drow2"><div class="dmain"><span class="ar" lang="ar">${esc(w.ar)}</span><b>${esc(w.ph)}</b><span class="dnl">${esc(w.nl)}</span><span class="dst">uit gesprek · geen opname</span></div></div>`).join('')}</div>`; }
+    <div class="dict">${aw.map(w=>`<div class="drow2"><div class="dmain"><span class="ar" lang="ar">${esc(w.ar)}</span><b>${esc(w.ph)}</b><span class="dnl">${esc(nlc(w.nl))}</span><span class="dst">uit gesprek · geen opname</span></div></div>`).join('')}</div>`; }
   return topbarHTML(p) + `<h1 class="page-h">Mijn woordenboek</h1><p class="page-sub">${adultLearned(p)} van ${adultTotal()} woorden en zinnen geleerd · ${favs.size} favorieten</p>
   <input class="inp" id="dq" type="search" placeholder="Zoek in het Nederlands, Egyptisch of Arabisch" value="${esc(S.dq||'')}" data-dq="1">
   <div class="ptabs" style="margin-top:10px">${[['mine','Mijn woorden'],['fav','★ Favorieten'],['err','Fouten'],...((p.aiWords||[]).length?[['ai','💬 Uit gesprekken']]:[]),['all','Alles']].map(([k,t])=>`<button class="${f===k?'on':''}" data-act="df:${k}">${t}</button>`).join('')}</div>
   <div class="dict">${ids.slice(0,lim).map(id=>{ const it = ITEM[id], x = (p.words||{})[id]||{}, sid = lid(id);
-    return `<div class="drow2"><div class="dmain"><span class="ar" lang="ar">${ITEM[sid].ar}</span><b>${esc(ITEM[sid].ph)}</b><span class="dnl">${esc(it.nl)}</span>${(x.c||x.w)?`<span class="dst">${(x.c||0)>=2?'✓ geleerd':'geoefend'}${x.w?` · ${x.w}× fout`:''}</span>`:''}</div>
+    return `<div class="drow2"><div class="dmain"><span class="ar" lang="ar">${ITEM[sid].ar}</span><b>${esc(ITEM[sid].ph)}</b><span class="dnl">${esc(nlc(it.nl))}</span>${(x.c||x.w)?`<span class="dst">${(x.c||0)>=2?'✓ geleerd':'geoefend'}${x.w?` · ${x.w}× fout`:''}</span>`:''}</div>
       <div class="dact">${playBtn(sid,'sm',false)}${hasAudio(sid)?`<button class="slowbtn" data-play-slow="${sid}" aria-label="Langzaam">🐢</button>`:''}<button class="favbtn sm ${favs.has(baseOf(id))?'on':''}" data-act="fav:${baseOf(id)}" aria-label="Favoriet">${favs.has(baseOf(id))?'★':'☆'}</button></div></div>`; }).join('') || `<p class="muted" style="margin-top:14px">${f==='fav'?'Nog geen favorieten. Tik op ☆ bij een woord.':f==='err'?'Nog geen fouten gemaakt.':'Nog niets. Speel een les, dan komen je woorden hier.'}</p>`}</div>
   ${ids.length>lim?`<button class="btn ghost wide" style="margin-top:12px" data-act="dmore">Toon meer (${ids.length-lim})</button>`:''}`;
 }
@@ -3329,7 +3331,7 @@ function aprogHTML(){
     <div class="setrow"><label>Ik begin op</label><div class="seg">${ADULT_LEVELS.map(L0=>`<button class="${(p.alevel||1)===L0.n?'on':''}" data-act="alevel:${L0.n}">${L0.n} · ${esc(L0.title)}</button>`).join('')}</div></div>
     <div class="setrow"><label>Dagdoel</label><div class="seg">${[10,20,30,50].map(n=>`<button class="${(p.dgoal||20)===n?'on':''}" data-act="dgoal:${n}">${n} XP</button>`).join('')}</div><p class="hint">Een les levert ongeveer 20 tot 30 XP op.</p></div></div>
   <div class="panel"><h3>📝 Toetsresultaten</h3>${Object.keys(p.atests||{}).length ? `<div class="chips">${ADULT_MODS.filter(m=>(p.atests||{})[m.id]!==undefined).map(m=>`<span class="chip">${m.icon} ${esc(m.title)} · <b>${p.atests[m.id]}%</b></span>`).join('')}</div>` : '<p class="muted">Nog geen toetsen gemaakt. Je vindt ze bij elke module en onder Oefenen.</p>'}</div>
-  <div class="panel"><h3>❌ Overzicht van fouten</h3>${errs.length ? `<div class="dict">${errs.map(id=>{ const sid = lid(id); return `<div class="drow2"><div class="dmain"><b>${esc(ITEM[sid].ph)}</b><span class="dnl">${esc(ITEM[id].nl)}</span><span class="dst">${p.words[id].w}× fout · ${p.words[id].c||0}× goed</span></div><div class="dact">${playBtn(sid,'sm',false)}</div></div>`; }).join('')}</div><button class="btn ghost wide" style="margin-top:12px" data-act="prac:mistakes">Oefen deze fouten</button>` : '<p class="muted">Nog geen fouten. Mooi!</p>'}</div>
+  <div class="panel"><h3>❌ Overzicht van fouten</h3>${errs.length ? `<div class="dict">${errs.map(id=>{ const sid = lid(id); return `<div class="drow2"><div class="dmain"><b>${esc(ITEM[sid].ph)}</b><span class="dnl">${esc(nlc(ITEM[id].nl))}</span><span class="dst">${p.words[id].w}× fout · ${p.words[id].c||0}× goed</span></div><div class="dact">${playBtn(sid,'sm',false)}</div></div>`; }).join('')}</div><button class="btn ghost wide" style="margin-top:12px" data-act="prac:mistakes">Oefen deze fouten</button>` : '<p class="muted">Nog geen fouten. Mooi!</p>'}</div>
   <button class="btn ghost wide" data-act="go:scores">🏆 Scorebord van je gezin</button>`;
 }
 
@@ -3429,7 +3431,7 @@ function talkCardHTML(p, cls=''){
   const ad = p.track==='adult';
   return `<button class="talk-card ${cls}" data-act="go:talk"><span class="ic">${ad?'💬':mascot(44,'happy','')}</span><span><b>Praat met ${aiName(p)}</b><span>${ad?'Oefen echte gesprekken in het Egyptisch':'Kletsen in het Egyptisch met Mishmish'}</span></span><em>Nieuw</em></button>`;
 }
-function bub(x, showNl){ return `<b class="tph">${esc(x.ph)}</b><span class="ar" lang="ar">${esc(x.ar)}</span>${showNl?`<small>${esc(x.nl)}</small>`:''}`; }
+function bub(x, showNl){ return `<b class="tph">${esc(x.ph)}</b><span class="ar" lang="ar">${esc(x.ar)}</span>${showNl?`<small>${esc(nlc(x.nl))}</small>`:''}`; }
 function talkHTML(){
   const p = me(), T = S.talk, ad = p.track==='adult';
   if(!aiCan(p)) return `<div class="panel"><h3>Taalpartner</h3><p class="muted">${AI.enabled===false?'De taalpartner is nog niet beschikbaar.':'Even laden…'}</p><button class="btn ghost wide" style="margin-top:12px" data-act="go:home">Terug</button></div>`;
@@ -3448,14 +3450,14 @@ function talkHTML(){
     const t = m.turn, open = T.showNl || m.open;
     return `<div class="tmsg ai">${ad?'<span class="ava sm">S</span>':`<span class="tav">${mascot(34,'happy','')}</span>`}<div class="tb">${bub(t.reply, open)}${!T.showNl&&!m.open?`<button class="tnl" data-act="talk-nl:${i}">Vertaling</button>`:''}</div></div>
       ${t.needs_adult?`<div class="tadult">💛 ${esc(t.explanation_nl||'Praat hierover met papa, mama of een andere volwassene die je vertrouwt.')}</div>`:t.explanation_nl?`<div class="texpl"><span class="k">Uitleg</span><p>${esc(t.explanation_nl)}</p></div>`:''}
-      ${(t.new_words||[]).length?`<div class="twords"><span class="k">Nieuw woord${t.new_words.length>1?'en':''}</span>${t.new_words.map(w=>{ const k = T.words.findIndex(x=>x.ar===w.ar); const saved = (p.aiWords||[]).some(x=>x.ar===w.ar); return `<span class="tw"><b class="tph">${esc(w.ph)}</b> <span class="ar" lang="ar">${esc(w.ar)}</span> = ${esc(w.nl)}${ad?`<button class="favbtn sm ${saved?'on':''}" data-act="talk-save:${k}" aria-label="Bewaar">${saved?'★':'☆'}</button>`:''}</span>`; }).join('')}</div>`:''}`;
+      ${(t.new_words||[]).length?`<div class="twords"><span class="k">Nieuw woord${t.new_words.length>1?'en':''}</span>${t.new_words.map(w=>{ const k = T.words.findIndex(x=>x.ar===w.ar); const saved = (p.aiWords||[]).some(x=>x.ar===w.ar); return `<span class="tw"><b class="tph">${esc(w.ph)}</b> <span class="ar" lang="ar">${esc(w.ar)}</span> = ${esc(nlc(w.nl))}${ad?`<button class="favbtn sm ${saved?'on':''}" data-act="talk-save:${k}" aria-label="Bewaar">${saved?'★':'☆'}</button>`:''}</span>`; }).join('')}</div>`:''}`;
   }).join('');
   const sug = !T.busy && lastAi && !lastAi.turn.needs_adult ? (lastAi.turn.suggestions||[]) : [];
   return `<div class="talk-top"><button class="x" data-act="talk-end" aria-label="Stoppen">✕</button><b>${scene[1]} ${esc(scene[2])}</b>${ad?`<button class="tgl ${T.showNl?'on':''}" data-act="talk-nlall">NL</button>`:'<span></span>'}</div>
   <div class="talk-log">${log}${T.busy?`<div class="tmsg ai"><span class="ava sm ${ad?'':'kid'}">${ad?'S':'🐱'}</span><div class="tb typing"><i></i><i></i><i></i></div></div>`:''}
   ${T.err?`<div class="terr">${esc(T.err)} <button class="btn ghost" data-act="talk-retry">Opnieuw</button></div>`:''}</div>
   <div class="talk-foot">
-    ${sug.length?`<div class="tsug">${sug.map((x,i)=>`<button class="chip" data-act="talk-sug:${i}"><b>${esc(x.ph)}</b> <span class="muted">${esc(x.nl)}</span></button>`).join('')}</div>`:''}
+    ${sug.length?`<div class="tsug">${sug.map((x,i)=>`<button class="chip" data-act="talk-sug:${i}"><b>${esc(x.ph)}</b> <span class="muted">${esc(nlc(x.nl))}</span></button>`).join('')}</div>`:''}
     <form class="tin" id="talk-form" autocomplete="off">
       ${STT?`<button type="button" class="mic ${REC2?'on':''}" data-act="talk-mic" aria-label="${REC2?'Stop met luisteren':'Inspreken'}">${REC2?'■':'🎙️'}</button>`:''}
       <input class="inp" id="talk-in" maxlength="300" placeholder="${ad?'Typ in het Egyptisch (of Nederlands)':'Typ of praat…'}" ${T.busy?'disabled':''}>
@@ -3630,7 +3632,7 @@ function pbulkPanel(){
   return `<div class="panel"><h3>🖼️ Controle vooraf (${B.rows.length} bestanden)</h3>
     <div class="tiles" style="margin-bottom:10px"><div class="tile-n"><b>${use.length}</b><span>worden gekoppeld${rep?` (${rep} vervangen een bestaande foto)`:''}</span></div><div class="tile-n"><b>${skip.length}</b><span>worden overgeslagen</span></div></div>
     <div class="pb-list">${B.rows.map(r=>`<div class="pb-row ${r.id?'':'skip'}">${r.url?`<img src="${r.url}" alt="">`:'<span class="pb-x">✕</span>'}
-      <div class="dmain"><b>${esc(r.name)}</b>${r.id?`<span class="dnl">→ ${esc(ITEM[r.id].ph)} · ${esc(ITEM[r.id].nl)}</span>`:`<span class="dnl">${esc(r.reason)}</span>`}</div>
+      <div class="dmain"><b>${esc(r.name)}</b>${r.id?`<span class="dnl">→ ${esc(ITEM[r.id].ph)} · ${esc(nlc(ITEM[r.id].nl))}</span>`:`<span class="dnl">${esc(r.reason)}</span>`}</div>
       <span class="pb-st ${r.result||r.state}">${r.result==='ok'?'✓ Opgeslagen':r.result==='fail'?'Mislukt':r.state==='replace'?'Vervangt':r.state==='new'?'Nieuw':'Overgeslagen'}</span></div>`).join('')}</div>
     ${B.busy?`<p class="status" style="margin-top:10px">Bezig: ${B.done} van ${use.length}…</p>`:''}
     <div class="brow-actions" style="margin-top:12px">${B.finished?`<button class="btn wide" data-act="pbulk-cancel">Klaar</button>`:`<button class="btn wide" data-act="pbulk-save" ${use.length&&!B.busy?'':'disabled'}>${use.length} foto's opslaan</button><button class="btn ghost wide" data-act="pbulk-cancel" ${B.busy?'disabled':''}>Annuleren</button>`}</div>
@@ -3855,7 +3857,7 @@ function wordsHTML(){
   return topbarHTML(p) + `<h1 class="page-h">Mijn woordjes</h1><p class="page-sub">${learned(p).length} geleerd${(Object.keys(MEDIA.shared).length||Object.keys(MEDIA.audio).length) ? ' · tik op de luidspreker om te luisteren' : ''}</p>
   ${worldOrder(p).filter(i=>worldUnlocked(p,i)).map(i=>WORLDS[i]).map(w=>`<div class="wgroup"><h2>${w.emoji} ${w.name}</h2><div class="wlist">${wordsOfWorld(w.id).map(x=>{
       const s = p.words[x.id]; const l = (s?.c||0)>=2;
-      return `<div class="wrow ${s?'':'unseen'}"><span class="pic">${picOf(x.id)}</span><div class="mid"><div class="ar" lang="ar" dir="rtl">${x.ar}</div><div class="ph">${esc(x.ph)}</div><div class="nl">${esc(x.nl)}</div></div>${l?'<span class="badge">✓</span>':''}${playBtn(x.id,'sm')}</div>`;
+      return `<div class="wrow ${s?'':'unseen'}"><span class="pic">${picOf(x.id)}</span><div class="mid"><div class="ar" lang="ar" dir="rtl">${x.ar}</div><div class="ph">${esc(x.ph)}</div><div class="nl">${esc(nlc(x.nl))}</div></div>${l?'<span class="badge">✓</span>':''}${playBtn(x.id,'sm')}</div>`;
     }).join('')}</div></div>`).join('')}`;
 }
 
@@ -3932,7 +3934,7 @@ function contentPanel(){
         <label class="switch"><input type="checkbox" id="ce-ok" ${v?'checked':''}> Gecontroleerd: dit is correct Egyptisch</label>
         <p class="hint">Het id <b>${esc(x.id)}</b> verandert niet, dus de opname blijft gekoppeld.</p>
         <div class="brow-actions"><button class="btn wide" data-act="csave:${x.id}">Opslaan</button>${changed?`<button class="btn ghost wide" data-act="creset:${x.id}">Origineel terugzetten</button>`:''}<button class="btn ghost wide" data-act="cedit-cancel">Annuleren</button></div></div>`;
-      return `<div class="crow"><span class="ar" lang="ar">${x.ar}</span><div class="mid"><div class="ph">${esc(x.ph)}</div><div class="nl">${esc(x.nl)}</div>${note?`<div class="cnote">⚠️ ${esc(note)}</div>`:''}</div>
+      return `<div class="crow"><span class="ar" lang="ar">${x.ar}</span><div class="mid"><div class="ph">${esc(x.ph)}</div><div class="nl">${esc(nlc(x.nl))}</div>${note?`<div class="cnote">⚠️ ${esc(note)}</div>`:''}</div>
         <div class="acts">${playBtn(x.id,'sm',false)}<span class="badge ${v?'':'warn'}">${v?'✓ gecontroleerd':'controleren'}</span>${AUTH.admin?`<button class="mini" data-act="cedit:${x.id}">Bewerk</button>${v?'':`<button class="mini on" data-act="cok:${x.id}">✓ Klopt</button>`}`:''}</div></div>`;
     }).join('') || '<p class="muted" style="margin-top:12px">Niets gevonden.</p>'}
     ${list.length>lim?`<button class="btn ghost wide" style="margin-top:12px" data-act="cmore">Toon meer (${list.length-lim})</button>`:''}
@@ -3944,7 +3946,7 @@ function aiLogHTML(p){
   return `<div class="panel"><h3>💬 Gesprekken met Mishmish</h3><p class="muted" style="margin-bottom:8px">${p.ai?p.ai.sessions:0} gesprekken${today0!==null?` · vandaag ${today0} berichten (max ${p.aiDaily||20})`:''}</p>
   ${[...p.aiLog].reverse().map((g,i)=>{ const sc = KID_SCENES.find(x=>x[0]===g.scene)||['','💬','Gesprek']; const flag = g.msgs.some(m=>m.adult);
     return `<div class="ailog"><button class="lb ${flag?'warn':''}" data-act="ailog:${i}">${sc[1]} ${esc(sc[2])} · ${esc(g.d)} · ${g.msgs.filter(m=>m.r==='me').length} berichten${flag?' · ⚠️ even naar kijken':''}</button>
-    ${S.ailog===i?`<div class="ailog-t">${g.msgs.map(m=>`<p class="${m.r}"><b>${m.r==='me'?esc(p.name):'Mishmish'}:</b> ${esc(m.t)}${m.nl?` <span class="muted">(${esc(m.nl)})</span>`:''}${m.adult?' <span class="bad">· verwees naar een volwassene</span>':''}</p>`).join('')}</div>`:''}</div>`; }).join('')}</div>`;
+    ${S.ailog===i?`<div class="ailog-t">${g.msgs.map(m=>`<p class="${m.r}"><b>${m.r==='me'?esc(p.name):'Mishmish'}:</b> ${esc(m.t)}${m.nl?` <span class="muted">(${esc(nlc(m.nl))})</span>`:''}${m.adult?' <span class="bad">· verwees naar een volwassene</span>':''}</p>`).join('')}</div>`:''}</div>`; }).join('')}</div>`;
 }
 function overviewPanel(p){
   const lw = learned(p);
@@ -3964,15 +3966,15 @@ function overviewPanel(p){
   ${p.track==='adult' ? adultLevelsHTML(p) : ''}
   <div class="panel" ${p.track==='adult'?'hidden':''}><h3>Voortgang per wereld</h3>${WORLDS.map(w=>{const d=w.lessons.filter(l=>p.lessons[l.id]).length;
       return `<div class="prog-row"><span>${w.emoji} ${w.name}</span><span class="pb"><i style="width:${d/5*100}%"></i></span><span>${d}/5</span></div>`;}).join('')}</div>
-  <div class="panel"><h3>Geleerde woorden</h3>${lw.length?`<div class="chips">${lw.map(w=>`<span class="chip">${w.pic} ${esc(w.ph)} <span class="muted">${esc(w.nl)}</span></span>`).join('')}</div>`:'<p class="muted">Een woord telt als geleerd als het twee keer goed is gegaan.</p>'}</div>
-  <div class="panel"><h3>Hier kan je kind hulp bij gebruiken</h3>${hard.length?`<div class="wlist">${hard.map(o=>`<div class="wrow"><span class="pic">${picOf(o.x.id)}</span><div class="mid"><div class="ph">${esc(o.x.ph)}</div><div class="nl">${esc(o.x.nl)}</div></div><span class="badge warn">${o.s.w}× lastig</span><span class="badge">${o.s.c}× goed</span>${playBtn(o.x.id,'sm')}</div>`).join('')}</div>`:'<p class="muted">Nog niets opvallends. Fijn!</p>'}</div>
+  <div class="panel"><h3>Geleerde woorden</h3>${lw.length?`<div class="chips">${lw.map(w=>`<span class="chip">${w.pic} ${esc(w.ph)} <span class="muted">${esc(nlc(w.nl))}</span></span>`).join('')}</div>`:'<p class="muted">Een woord telt als geleerd als het twee keer goed is gegaan.</p>'}</div>
+  <div class="panel"><h3>Hier kan je kind hulp bij gebruiken</h3>${hard.length?`<div class="wlist">${hard.map(o=>`<div class="wrow"><span class="pic">${picOf(o.x.id)}</span><div class="mid"><div class="ph">${esc(o.x.ph)}</div><div class="nl">${esc(nlc(o.x.nl))}</div></div><span class="badge warn">${o.s.w}× lastig</span><span class="badge">${o.s.c}× goed</span>${playBtn(o.x.id,'sm')}</div>`).join('')}</div>`:'<p class="muted">Nog niets opvallends. Fijn!</p>'}</div>
   <div class="panel"><h3>⏱️ Leertijd</h3><div class="tiles">
       <div class="tile-n"><b>${fmtMin((p.time||{})[today()]||0)}</b><span>min. vandaag</span></div>
       <div class="tile-n"><b>${fmtMin(weekTime(p))}</b><span>min. deze week</span></div>
       <div class="tile-n"><b>${fmtMin(totalTime(p))}</b><span>min. totaal</span></div>
       <div class="tile-n"><b>${accuracy(p)===null?'–':Math.round(accuracy(p)*100)+'%'}</b><span>goed (laatste 30)</span></div></div>
     ${levelAdvice(p)}</div>
-  <div class="panel"><h3>🔁 Te herhalen</h3>${(()=>{ const due = dueWords(p, 0); return due.length ? `<p class="muted" style="margin-bottom:10px">Deze woorden komen terug in de volgende lessen en bij <b>Herhalen</b>. Woorden die vaak fout gaan komen vaker terug.</p><div class="chips">${due.slice(0,20).map(id=>`<span class="chip">${picOf(id)} ${esc(ITEM[id].ph)} <span class="muted">${esc(ITEM[id].nl)}</span></span>`).join('')}</div>${due.length>20?`<p class="hint">en nog ${due.length-20} andere</p>`:''}` : '<p class="muted">Niets om te herhalen vandaag.</p>'; })()}</div>
+  <div class="panel"><h3>🔁 Te herhalen</h3>${(()=>{ const due = dueWords(p, 0); return due.length ? `<p class="muted" style="margin-bottom:10px">Deze woorden komen terug in de volgende lessen en bij <b>Herhalen</b>. Woorden die vaak fout gaan komen vaker terug.</p><div class="chips">${due.slice(0,20).map(id=>`<span class="chip">${picOf(id)} ${esc(ITEM[id].ph)} <span class="muted">${esc(nlc(ITEM[id].nl))}</span></span>`).join('')}</div>${due.length>20?`<p class="hint">en nog ${due.length-20} andere</p>`:''}` : '<p class="muted">Niets om te herhalen vandaag.</p>'; })()}</div>
   <div class="panel"><h3>📝 Resultaten van lessen en quizzen</h3>${(p.hist||[]).length ? `<div class="hist">${(p.hist||[]).slice(-10).reverse().map(h=>`<div class="hrow"><span class="hd">${h.d.slice(8,10)}-${h.d.slice(5,7)}</span><div class="mid"><b>${esc(h.t)}</b><span>${esc(h.w)} · ${h.s?fmtMin(h.s)+' min':''}</span></div><span class="hs">${h.n?Math.round(h.ok/h.n*100)+'%':'–'}</span><span class="nstars">${[1,2,3].map(n=>STAR(n<=h.st,14)).join('')}</span></div>`).join('')}</div>` : '<p class="muted">Nog geen resultaten. Na de volgende les zie je hier hoe het ging.</p>'}</div>
   <div class="panel"><h3>Beste resultaten</h3>${best.length?`<div class="wlist">${best.map(l=>`<div class="wrow"><span class="pic">${l.icon}</span><div class="mid"><div class="ph">${esc(l.title)}</div><div class="nl">${esc(WORLDS[l.wi].name)} · ${p.best[l.id].mistakes} foutjes</div></div><span class="nstars">${[1,2,3].map(n=>STAR(n<=p.lessons[l.id],16)).join('')}</span></div>`).join('')}</div>`:'<p class="muted">Nog geen lessen gespeeld.</p>'}</div>`;
 }
@@ -4017,7 +4019,7 @@ function settingsPanel(p){
 const STATUS_LABEL = {cloud:'☁️ opgeslagen', fail:'mislukt', too_large:'te groot'};
 function itemOptions(sel){
   return WORLDS.map(w=>`<optgroup label="${esc(w.name)}">${[...WORDS.filter(x=>x.w===w.id),...SENTENCES.filter(x=>x.w===w.id)]
-    .map(x=>`<option value="${x.id}" ${x.id===sel?'selected':''}>${esc(x.ph)} – ${esc(x.nl)}${hasAudio(x.id)?' ✓':''}</option>`).join('')}</optgroup>`).join('');
+    .map(x=>`<option value="${x.id}" ${x.id===sel?'selected':''}>${esc(x.ph)} – ${esc(nlc(x.nl))}${hasAudio(x.id)?' ✓':''}</option>`).join('')}</optgroup>`).join('');
 }
 function bulkPanel(){
   const B = S.bulk; if(!B) return '';
@@ -4064,7 +4066,7 @@ function recSessionPanel(){
   return `<div class="panel rec-panel"><h3>🎙️ Opnamesessie · ${R.i+1} van ${R.queue.length}</h3>
     <div class="wordcard">
       <div class="pic">${picOf(id)}</div>
-      <div class="ar" lang="ar">${x.ar}</div><div class="ph">${esc(x.ph)}</div><div class="nl">${esc(x.nl)}</div>
+      <div class="ar" lang="ar">${x.ar}</div><div class="ph">${esc(x.ph)}</div><div class="nl">${esc(nlc(x.nl))}</div>
       ${x.tip?`<p class="tip">💡 ${esc(x.tip)}</p>`:''}
     </div>
     <button class="recbig ${live?'live':''}" data-act="rec:${id}" ${REC.busy?'disabled':''} aria-label="${live?'Stop opname':'Start opname'}">${REC.busy?'…':live?'■':'🎙️'}</button>
@@ -4119,7 +4121,7 @@ function audioPanel(){
       const canDel = !!MEDIA.audio[x.id] || (AUTH.admin && !!MEDIA.shared[x.id]);
       const live = REC.id===x.id;
       const kindL = x.kind==='line' ? '💬 gesprekje · ' : x.kind==='variant' ? '♀ meisjesvorm · ' : '';
-      return `<div class="arow"><span class="ar" lang="ar">${x.ar}</span><div style="min-width:0"><div class="ph">${n+1}. ${esc(x.ph)}</div><div class="nl">${kindL}${esc(x.nl)}${where?` · <b style="color:var(--ok-d)">${where}</b>`:''}</div></div>
+      return `<div class="arow"><span class="ar" lang="ar">${x.ar}</span><div style="min-width:0"><div class="ph">${n+1}. ${esc(x.ph)}</div><div class="nl">${kindL}${esc(nlc(x.nl))}${where?` · <b style="color:var(--ok-d)">${where}</b>`:''}</div></div>
       <div class="acts">${playBtn(x.id,'sm')}
         ${recSupported()?`<button class="mini ${live?'rec-on':''}" data-act="rec:${x.id}" ${REC.busy||(REC.mr&&!live)?'disabled':''}>${live?'■ Stop':hasAudio(x.id)?(S.confirmRec===x.id?'Zeker? Tik nog eens':'🎙️ Opnieuw'):'🎙️ Opnemen'}</button>`:''}
         <label class="mini">⬆ ${where?'Vervang':'Upload'}<input type="file" accept="audio/*,.m4a" data-upload="${x.id}" id="up-${x.id}"></label>
