@@ -240,5 +240,26 @@ if (nlNumSrc) {
 // 10e. Kinderen 4–6: begroeting in het Nederlands, niet in Franco.
 ok(/<b>\$\{p\.level===1 \? 'Hoi' : g\[1\]\}, \$\{esc\(p\.name\)\}!<\/b>/.test(html), 'dashboard 4–6 jaar: begroeting "Hoi" in plaats van Franco');
 
+// 11. Design system fase 1: één kleurenset, geen Duolingo-kleuren, leesbaar contrast.
+const cssAll = (html.match(/<style>([\s\S]*?)<\/style>/) || ['', ''])[1];
+const roots = [...cssAll.matchAll(/:root\{[^}]*\}/g)];
+const mkRoot = roots.map(m => m[0]).find(r => r.includes('--mk-nile:')) || '';
+ok(!!mkRoot && cssAll.lastIndexOf(mkRoot) > cssAll.lastIndexOf('--duo-line:#'), 'één merk-kleurenset (--mk-…) staat ná de oude lagen en wint dus');
+const rules = roots.reduce((t, m) => t.replace(m[0], ''), cssAll);
+const DUO = ['#1CB0F6', '#1899D6', '#84D8FF', '#DDF4FF', '#58CC02', '#58A700', '#89E219', '#A5ED6E', '#D7FFB8', '#FFC800', '#E0A800', '#FF4B4B', '#CE82FF', '#FF9600', '#3FBF48'];
+const duoLeft = DUO.filter(c => new RegExp(c + '\\b', 'i').test(rules) || new RegExp(`color:'${c}'`, 'i').test(html));
+ok(duoLeft.length === 0, duoLeft.length ? `nog Duolingo-kleuren in gebruik: ${duoLeft.join(', ')}` : 'geen Duolingo-kleuren meer in stijlregels en werelden');
+const hexInRules = new Set((rules.match(/#[0-9A-Fa-f]{6}\b/g) || []).map(x => x.toUpperCase())).size;
+ok(hexInRules <= 60, `aantal losse kleuren in stijlregels blijft beperkt (${hexInRules}, max 60)`);
+const tok = n => ((mkRoot.match(new RegExp(`--mk-${n}:(#[0-9A-Fa-f]{6})`)) || [])[1]);
+const lumi = h => { const v = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(c => c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4); return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
+const contrast = (a, b) => { const [x, y] = [lumi(a), lumi(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+const pairs = [['ink', 'papyrus', 4.5], ['lapis', 'papyrus', 4.5], ['mute', 'white', 4.5], ['mute', 'papyrus', 4.5], ['nile-d', 'white', 4.5], ['nile-d', 'nile-soft', 4.5],
+  ['saffron-t', 'saffron-soft', 4.5], ['ok-t', 'ok-bg', 4.5], ['ink', 'saffron', 4.5], ['white', 'nile', 3], ['white', 'clay', 3], ['white', 'ok', 3], ['white', 'lapis', 4.5]];
+const weak = pairs.filter(([f, b, min]) => !(tok(f) && tok(b) && contrast(tok(f), tok(b)) >= min)).map(([f, b, min]) => `${f} op ${b} (<${min})`);
+ok(weak.length === 0, weak.length ? `te weinig contrast: ${weak.join(', ')}` : 'contrast van alle tekstcombinaties voldoet (4,5 gewoon, 3 groot en vet)');
+const worldCols = [...html.matchAll(/\{id:\d+, name:'[^']+',[^\n]*?color:'(#[0-9A-Fa-f]{6})'/g)].map(m => m[1]);
+ok(worldCols.length === 13 && worldCols.every(c => contrast('#FFFFFF', c) >= 3), 'witte titels op alle 13 wereldkleuren minstens 3:1');
+
 console.log(fails ? `\n${fails} controle(s) mislukt.` : '\nAlle controles geslaagd.');
 process.exit(fails ? 1 : 0);
