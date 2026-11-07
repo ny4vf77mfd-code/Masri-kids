@@ -1059,6 +1059,63 @@ button,.opt,.mitem,.tile,.node{touch-action:manipulation;-webkit-user-select:non
 /* knoppen met witte tekst: alleen groot en vet; saffraan-knoppen met donkere tekst */
 .btn.sun,.btn.sun:hover{color:var(--mk-ink)}
 .play,.mcard .f{color:#fff}
+
+/* ---------- design fase 2: kinderdashboard (klei-stijl) ---------- */
+:root{--kd-c1:#1D5BC0;--kd-c2:#1F2A55;--kd-c3:#3B2A1A;--kd-c4:#3E9B46;--kd-c5:#4A2E14;--kd-c6:#4A3F35;--kd-c7:#5B5048;--kd-c8:#5DBB63;--kd-c9:#7FC4F0;--kd-c10:#8A6A2E;--kd-c11:#B63E26;--kd-c12:#B98546;--kd-c13:#B9E6CB;--kd-c14:#D5F2E1;--kd-c15:#D7A866;--kd-c16:#D9C6F2;--kd-c17:#E2563B;--kd-c18:#E9C48B;--kd-c19:#EADCF8;--kd-c20:#EDE3D3;--kd-c21:#F07A5E;--kd-c22:#F3E3CB;--kd-c23:#F6E3C8;--kd-c24:#F9C4BA;--kd-c25:#FBE09A;--kd-c26:#FFDCD6;--kd-c27:#FFF0C2;--kd-c28:#FFF3E6;--kd-c29:#FFF8EE}
+body:has(#test-banner) .kd-hero{padding-top:calc(32px + env(safe-area-inset-top,0px))}
+.kd-hero{position:relative;margin:-12px calc(-1 * max(16px,env(safe-area-inset-left,0px))) 0;padding:calc(10px + env(safe-area-inset-top,0px)) 16px 54px;
+  background:var(--kd-c23) url('img/ui/achtergrond-nijl.jpg') center 78%/cover no-repeat;border-radius:0 0 32px 32px;min-height:440px;overflow:hidden}
+.kd-hero::after{content:"";position:absolute;inset:auto 0 0 0;height:90px;background:linear-gradient(180deg,rgba(251,244,234,0),rgba(251,244,234,.85));pointer-events:none}
+.kd-top{position:relative;z-index:2;display:grid;grid-template-columns:64px 1fr 64px;align-items:start;gap:8px}
+.kd-av{width:64px;height:64px;border-radius:50%;background:var(--kd-c9);border:4px solid #fff;box-shadow:0 6px 16px rgba(80,50,20,.22);display:grid;place-items:center;font-size:36px}
+.kd-logo{text-align:center;padding-top:4px}
+.kd-logo b{display:block;font-family:var(--f-display);font-weight:800;font-size:clamp(34px,10vw,46px);line-height:1;letter-spacing:-.01em;
+  color:var(--kd-c1);text-shadow:0 3px 0 #fff,0 6px 12px rgba(30,60,120,.25)}
+.kd-logo b span{color:var(--kd-c17)}
+.kd-logo small{display:inline-block;margin-top:6px;padding:4px 12px;border-radius:10px;background:rgba(255,236,190,.92);font-weight:900;font-size:12px;color:var(--kd-c3);box-shadow:0 2px 6px rgba(80,50,20,.12);white-space:nowrap}
+.kd-stage{position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:center;margin-top:6px;min-height:270px}
+.kd-cat{width:min(60vw,250px);height:auto;filter:drop-shadow(0 12px 14px rgba(80,50,20,.25));animation:kdbob 3.2s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes kdbob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-6px) rotate(-1.5deg)}}
+@media (prefers-reduced-motion:reduce){.kd-cat{animation:none}}
+.kd-bub{position:absolute;right:0;top:4px;max-width:46%;background:#fff;border-radius:24px;padding:12px 14px;box-shadow:0 8px 20px rgba(80,50,20,.18);font-weight:800;font-size:15px;line-height:1.25;color:var(--kd-c2);text-align:center}
+.kd-bub::after{content:"";position:absolute;left:-10px;bottom:22px;border:10px solid transparent;border-right-color:#fff;border-left:0}
+.kd-bub b{display:block;font-family:var(--f-display);font-size:20px;margin-bottom:2px;hyphens:none;overflow-wrap:normal}
+.kd-bub .play{margin:6px auto 0}
+.kd-sign{position:absolute;left:0;bottom:18px;background:linear-gradient(180deg,var(--kd-c18),var(--kd-c15));border:3px solid var(--kd-c12);border-radius:14px;padding:6px 10px;
+  font-weight:900;font-size:13px;line-height:1.15;color:var(--kd-c5);text-align:center;transform:rotate(-4deg);box-shadow:0 6px 12px rgba(80,50,20,.22)}
+.kd-sign b{display:block;font-family:var(--f-display);font-size:16px}
+.kd-cta{position:relative;z-index:3;display:flex;align-items:center;justify-content:center;gap:14px;width:100%;margin:-40px 0 16px;min-height:76px;padding:12px 22px;border-radius:999px;
+  background:linear-gradient(180deg,var(--kd-c21),var(--kd-c17));color:#fff;font-family:var(--f-display);font-weight:800;font-size:clamp(24px,7vw,32px);
+  border:4px solid var(--kd-c28);box-shadow:0 6px 0 var(--kd-c11),0 16px 28px rgba(182,62,38,.3);transition:transform .12s}
+.kd-cta:active{transform:translateY(4px);box-shadow:0 2px 0 var(--kd-c11),0 8px 16px rgba(182,62,38,.3)}
+.kd-cta svg{flex:none;width:34px;height:34px}
+.kd-cta small{display:block;font-family:var(--f-body);font-size:13px;font-weight:800;opacity:.92}
+.kd-journey{display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:16px;border-radius:26px;background:var(--kd-c29);box-shadow:0 8px 22px rgba(120,80,40,.12),inset 0 0 0 2px var(--kd-c22)}
+.kd-journey img{flex:none;width:62px;height:62px;object-fit:contain;mix-blend-mode:multiply;-webkit-mask-image:radial-gradient(circle,#000 55%,transparent 71%);mask-image:radial-gradient(circle,#000 55%,transparent 71%)}
+.kd-journey .tx{flex:1;min-width:0}
+.kd-journey h3{font-size:20px;color:var(--kd-c2)}
+.kd-journey .bar{height:14px;border-radius:999px;background:var(--kd-c20);margin:6px 0 4px;overflow:hidden}
+.kd-journey .bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(180deg,var(--kd-c8),var(--kd-c4))}
+.kd-journey .n{font-weight:800;font-size:14px;color:var(--kd-c6)}
+.kd-lvl{flex:none;display:flex;flex-direction:column;align-items:center;gap:0}
+.kd-lvl svg{width:46px;height:46px;filter:drop-shadow(0 3px 4px rgba(160,110,0,.3))}
+.kd-lvl span{margin-top:-6px;padding:2px 8px;border-radius:8px;background:var(--kd-c17);color:#fff;font-weight:900;font-size:12px;white-space:nowrap}
+.kd-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.kd-tile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;min-height:132px;padding:8px 4px 10px;border-radius:24px;
+  font-family:var(--f-display);font-weight:800;font-size:14px;line-height:1.1;color:var(--kd-c2);text-align:center;box-shadow:0 6px 0 rgba(0,0,0,.07),0 10px 18px rgba(120,80,40,.12);transition:transform .12s}
+.kd-tile:active{transform:translateY(3px)}
+.kd-tile img{width:72px;height:72px;object-fit:contain;margin-bottom:auto;mix-blend-mode:multiply;-webkit-mask-image:radial-gradient(circle,#000 55%,transparent 71%);mask-image:radial-gradient(circle,#000 55%,transparent 71%)}
+.kd-tile.t1{background:linear-gradient(180deg,var(--kd-c19),var(--kd-c16))}.kd-tile.t2{background:linear-gradient(180deg,var(--kd-c27),var(--kd-c25))}
+.kd-tile.t3{background:linear-gradient(180deg,var(--kd-c14),var(--kd-c13))}.kd-tile.t4{background:linear-gradient(180deg,var(--kd-c26),var(--kd-c24))}
+.kd-tile .soon{position:absolute;top:6px;right:6px;padding:1px 6px;border-radius:8px;background:#fff;font-family:var(--f-body);font-size:10px;font-weight:900;color:var(--kd-c10)}
+@media (max-width:359px){.kd-tiles{grid-template-columns:repeat(2,1fr)}}
+.kd-more{margin-top:4px}
+.kd-head{font-family:var(--f-display);font-size:22px;color:var(--kd-c2);margin:6px 0 10px}
+/* kindermenu */
+.nav.kid .nav-in{grid-template-columns:repeat(5,1fr);background:rgba(255,248,238,.94);border-radius:30px;box-shadow:0 10px 30px rgba(120,80,40,.2)}
+.nav.kid button{gap:2px;padding:8px 0 6px;border-radius:22px;font-size:12px;text-transform:none;letter-spacing:0;border:0;color:var(--kd-c7);outline:0}
+.nav.kid button svg{width:28px;height:28px}
+.nav.kid button.on{background:linear-gradient(180deg,var(--kd-c21),var(--kd-c17));color:#fff;box-shadow:0 4px 0 var(--kd-c11)}
 </style>
 
 </head>
@@ -3789,28 +3846,77 @@ function topbarHTML(p){
     <div class="stats"><span class="stat st-fire ${curStreak(p)?'':'off'}" title="Dagen op rij">🔥 ${curStreak(p)}</span><span class="stat st-star" title="Sterren">⭐ ${totalStars(p)}</span><span class="stat st-xp" title="XP">⚡ ${p.xp}</span></div>
   </div>`;
 }
-function greetHTML(p, missed){
-  const hr = new Date().getHours();
-  const g = hr<12 ? ['sabah',ITEM.sabah.ph] : hr<18 ? ['ahlan',ITEM.ahlan.ph] : ['masa',ITEM.masa.ph];
-  const due = dueWords(p, p.level).length;
-  const msg = due>=3 ? `Je hebt ${due} woordjes om te herhalen. Dan vergeet je ze niet!`
-    : missed ? 'Fijn dat je er weer bent! Zullen we verder spelen?'
-    : Object.keys(p.lessons||{}).length ? 'Klaar voor je volgende les?' : 'Welkom! Tik op START om te beginnen.';
-  return `<div class="greet">${mascot(76, due>=3?'think':'happy','bob')}<div class="bubble"><b>${p.level===1 ? 'Hoi' : g[1]}, ${esc(p.name)}!</b>${hasAudio(g[0])?playBtn(g[0],'sm',false):''}<br>${msg}</div></div>`
-    + (due>=3 ? `<button class="review-card" data-act="review"><span class="ic">🔁</span><span><b>Herhalen</b><span>${due} woordjes · ongeveer 2 minuten</span></span><span class="go">›</span></button>` : '');
+// Klei-illustraties (design fase 2). Ontbreekt een bestand, dan verdwijnt alleen het plaatje.
+const UI_IMG = n => `img/ui/${n}`;
+const IMG_HIDE = `onerror="this.style.visibility='hidden'"`;
+function curWorldIdx(p){
+  for(const wi of worldOrder(p)){ if(!worldUnlocked(p,wi)) continue; if(WORLDS[wi].lessons.some(l=>!p.lessons[l.id])) return wi; }
+  return worldOrder(p)[0];
 }
+function firstOpenLesson(p){
+  for(const wi of worldOrder(p)){ for(let li=0; li<WORLDS[wi].lessons.length; li++){ const l = WORLDS[wi].lessons[li]; if(lessonUnlocked(p,wi,li) && !p.lessons[l.id]) return {wi,li,id:l.id,title:l.title}; } }
+  return null;
+}
+function greetMsg(p, missed){
+  const due = dueWords(p, p.level).length;
+  return due>=3 ? `Je hebt ${due} woordjes om te herhalen.`
+    : missed ? 'Fijn dat je er weer bent!'
+    : Object.keys(p.lessons||{}).length ? 'Klaar voor een nieuw avontuur?' : 'Zullen we samen beginnen?';
+}
+const ICO = {
+  play:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.4-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z" fill="#fff"/></svg>',
+  star:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 3l6.2 12.6 13.9 2-10 9.8 2.4 13.8L24 34.7l-12.5 6.5 2.4-13.8-10-9.8 13.9-2z" fill="#FFC531" stroke="#E8A200" stroke-width="2.5" stroke-linejoin="round"/><path d="M24 13l3.2 6.6 7.2 1-5.2 5.1 1.2 7.2L24 29.5l-6.4 3.4 1.2-7.2-5.2-5.1 7.2-1z" fill="#FFE07A"/></svg>',
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11L12 4l8.5 7"/><path d="M5.5 9.5V20h4.5v-5.5h4V20h4.5V9.5"/></svg>',
+  book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10 5 7 4.5 3.5 5v13.5C7 18 10 18.5 12 20c2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5V20"/></svg>',
+  bars:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3.5" y="13" width="4.5" height="7" rx="1.3"/><rect x="9.75" y="8.5" width="4.5" height="11.5" rx="1.3"/><rect x="16" y="4" width="4.5" height="16" rx="1.3"/></svg>',
+  compass:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z" fill="currentColor"/></svg>',
+  gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.4M12 18.8v2.4M4.2 7.5l2.1 1.2M17.7 15.3l2.1 1.2M4.2 16.5l2.1-1.2M17.7 8.7l2.1-1.2"/><circle cx="12" cy="12" r="6.6"/></svg>',
+};
 function homeHTML(){
   const p = me();
-  const d = daily(p);
   const missed = p.last && p.last!==today() && p.last!==yesterday();
-  let firstOpen = null;
-  for(const wi of worldOrder(p)){ for(const l of WORLDS[wi].lessons.map((l,li)=>({...l,wi,li}))){ if(!firstOpen && lessonUnlocked(p,l.wi,l.li) && !p.lessons[l.id]) firstOpen=l.id; } }
-  let h = topbarHTML(p);
-  h += greetHTML(p, missed);
-  h += `<div class="daily"><span class="ic">${p.today.claimed?'✅':d.e}</span><div class="tx"><div class="k">Uitdaging van vandaag</div><div class="t">${d.t}</div>
+  const hr = new Date().getHours();
+  const g = p.level===1 ? null : hr<12 ? 'sabah' : hr<18 ? 'ahlan' : 'masa';
+  const due = dueWords(p, p.level).length;
+  const nxt = firstOpenLesson(p);
+  const cta = due>=3 ? {act:'review', sub:`${due} woordjes herhalen`} : nxt ? {act:`lesson:${nxt.wi}:${nxt.li}`, sub:nxt.title} : {act:'go:lessons', sub:'Kies een les'};
+  const cw = WORLDS[curWorldIdx(p)];
+  const ww = wordsOfWorld(cw.id), wl = ww.filter(w=>(p.words[w.id]?.c||0)>=2).length;
+  let h = `<section class="kd-hero">
+    <div class="kd-top">
+      <button class="kd-av" data-act="go:profiles" aria-label="Wissel van speler (${esc(p.name)})">${p.avatar}</button>
+      <div class="kd-logo"><b>Masri <span>Kids</span></b><small>Leer Egyptisch Arabisch (Masri)</small></div>
+      <span></span>
+    </div>
+    <div class="kd-stage">
+      <img class="kd-cat" src="${UI_IMG('mishmish-zwaait.png')}" alt="Mishmish de kat zwaait" width="500" height="500" ${IMG_HIDE}>
+      <div class="kd-bub"><b>${g ? esc(ITEM[g].ph).replace(/-/g,'\u2011') : 'Hoi'}, ${esc(p.name)}!</b>${esc(greetMsg(p, missed))}${g && hasAudio(g) ? playBtn(g,'sm',false) : ''}</div>
+      <div class="kd-sign"><b>Mishmish</b>jouw gids</div>
+    </div>
+  </section>
+  <button class="kd-cta" data-act="${cta.act}">${ICO.play}<span>Vandaag leren<small>${esc(cta.sub)}</small></span></button>
+  <div class="kd-journey"><img src="${UI_IMG('kaart.png')}" alt="" ${IMG_HIDE}>
+    <div class="tx"><h3>Mijn leerreis</h3><div class="bar"><i style="width:${ww.length?Math.round(wl/ww.length*100):0}%"></i></div><div class="n">${wl} van ${ww.length} woorden · ${esc(cw.name)}</div></div>
+    <div class="kd-lvl">${ICO.star}<span>Niveau ${p.level}</span></div></div>
+  <div class="kd-tiles">
+    <button class="kd-tile t1" data-act="go:lessons"><img src="${UI_IMG('tegel-luisteren.png')}" alt="" ${IMG_HIDE}>Spreken &amp; Luisteren</button>
+    <button class="kd-tile t2" data-act="soon:lezen"><span class="soon">Binnenkort</span><img src="${UI_IMG('tegel-lezen.png')}" alt="" ${IMG_HIDE}>Lezen &amp; Schrijven</button>
+    <button class="kd-tile t3" data-act="go:stickers"><img src="${UI_IMG('tegel-prijzen.png')}" alt="" ${IMG_HIDE}>Mijn Prijzen</button>
+    <button class="kd-tile t4" data-act="go:scores"><img src="${UI_IMG('tegel-samen.png')}" alt="" ${IMG_HIDE}>Samen Leren</button>
+  </div>`;
+  const d = daily(p);
+  h += `<div class="kd-more"><div class="daily"><span class="ic">${p.today.claimed?'✅':d.e}</span><div class="tx"><div class="k">Uitdaging van vandaag</div><div class="t">${d.t}</div>
         <div class="bar"><i style="width:${Math.round(d.have/d.n*100)}%"></i></div></div><span style="font-weight:900;font-variant-numeric:tabular-nums">${p.today.claimed?'+20 XP':d.have+'/'+d.n}</span></div>`;
   h += rewardCards(p);
-  h += talkCardHTML(p);
+  h += talkCardHTML(p) + `</div>`;
+  return h;
+}
+// Alle werelden en lessen (was eerst de startpagina)
+function lessonsHTML(){
+  const p = me();
+  let firstOpen = null;
+  for(const wi of worldOrder(p)){ for(const l of WORLDS[wi].lessons.map((l,li)=>({...l,wi,li}))){ if(!firstOpen && lessonUnlocked(p,l.wi,l.li) && !p.lessons[l.id]) firstOpen=l.id; } }
+  let h = topbarHTML(p) + `<h1 class="page-h">Lessen</h1>`;
   h += `<button class="pen-card" data-act="penalty"><span class="ic">⚽</span><span><b>Penaltyschieten</b><span>Elk goed antwoord is een doelpunt!</span></span></button>`;
   worldOrder(p).forEach((wi,pos)=>{
     const w = WORLDS[wi];
@@ -4134,10 +4240,13 @@ function audioPanel(){
 
 /* ---------- render ---------- */
 function navHTML(){
-  const items = isAdult() ? [['home','📚','Leren'],['dict','📖','Woorden'],['practice','🎯','Oefenen'],['aprog','📈','Voortgang'],['gate','⚙️','Beheer']]
-    : [['home','🗺️','Leren'],['words','📖','Woorden'],['scores','🏆','Scores'],['stickers','🏅','Prijzen'],['gate','🔒','Ouders']];
   const cur = S.screen==='parent' ? 'gate' : S.screen;
-  return `<nav class="nav" aria-label="Menu"><div class="nav-in">${items.map(([k,e,t])=>`<button class="${cur===k?'on':''}" data-act="go:${k}"><span class="e">${e}</span>${t}</button>`).join('')}</div></nav>`;
+  if(isAdult()){
+    const items = [['home','📚','Leren'],['dict','📖','Woorden'],['practice','🎯','Oefenen'],['aprog','📈','Voortgang'],['gate','⚙️','Beheer']];
+    return `<nav class="nav" aria-label="Menu"><div class="nav-in">${items.map(([k,e,t])=>`<button class="${cur===k?'on':''}" data-act="go:${k}"><span class="e">${e}</span>${t}</button>`).join('')}</div></nav>`;
+  }
+  const items = [['home',ICO.home,'Start'],['lessons',ICO.book,'Lessen'],['stickers',ICO.bars,'Voortgang'],['words',ICO.compass,'Ontdekken'],['gate',ICO.gear,'Ouders']];
+  return `<nav class="nav kid" aria-label="Menu"><div class="nav-in">${items.map(([k,ic,t])=>`<button class="${cur===k?'on':''}" data-act="go:${k}" ${cur===k?'aria-current="page"':''}>${ic}<span>${t}</span></button>`).join('')}</div></nav>`;
 }
 let GLBL = null;
 function genderLabels(){ const ad = isAdult(); if(GLBL===ad) return; GLBL = ad;
@@ -4150,9 +4259,9 @@ function render(){
   const app = $('#app');
   const scr = S.screen;
   if(scr!=='splash' && scr!=='auth' && scr!=='loading' && AUTH.ready && !AUTH.user){ S.screen='auth'; return render(); }
-  if(['home','words','stickers','penalty','scores','lesson','done','dict','practice','aprog','talk'].includes(scr) && !me()) { S.screen='profiles'; return render(); }
-  const map = {splash:splashHTML, auth:authHTML, loading:loadingHTML, profiles:profilesHTML, home:()=>isAdult()?adultHomeHTML():homeHTML(), dict:dictHTML, practice:practiceHTML, talk:talkHTML, aprog:aprogHTML, words:wordsHTML, stickers:stickersHTML, scores:scoresHTML, gate:gateHTML, parent:parentHTML, lesson:lessonHTML, done:doneHTML, penalty:penHTML};
-  const showNav = me() && ['home','words','stickers','scores','gate','parent','dict','practice','aprog'].includes(scr);
+  if(['home','lessons','words','stickers','penalty','scores','lesson','done','dict','practice','aprog','talk'].includes(scr) && !me()) { S.screen='profiles'; return render(); }
+  const map = {splash:splashHTML, auth:authHTML, loading:loadingHTML, profiles:profilesHTML, home:()=>isAdult()?adultHomeHTML():homeHTML(), dict:dictHTML, practice:practiceHTML, talk:talkHTML, aprog:aprogHTML, words:wordsHTML, lessons:lessonsHTML, stickers:stickersHTML, scores:scoresHTML, gate:gateHTML, parent:parentHTML, lesson:lessonHTML, done:doneHTML, penalty:penHTML};
+  const showNav = me() && ['home','lessons','words','stickers','scores','gate','parent','dict','practice','aprog'].includes(scr);
   app.className = (showNav ? '' : 'full') + (isKid() ? ' lvl1' : '') + (isAdult() ? ' adult' : '');
   app.innerHTML = map[scr]() + (showNav ? navHTML() : '');
   if(scr==='profiles' && S.newP){
@@ -4263,6 +4372,7 @@ document.addEventListener('click', e=>{
     case 'pen-next': penNext(); return;
     case 'pen-again': { const opp = PEN && PEN.players.length>1 ? PEN.players.find(x=>x!==PEN.home) : null; penEndRestore(); startPenalty(opp); return; }
     case 'locked': toast('Speel eerst de les ervoor!'); return;
+    case 'soon': toast('Lezen en schrijven komt binnenkort!'); return;
     case 'testmode': if(testModeAllowed()){ TESTMODE_ON = !TESTMODE_ON; toast(TESTMODE_ON ? 'TESTMODUS aan: alle lessen open' : 'TESTMODUS uit'); } else TESTMODE_ON = false; break;
     case 'aopt': if(L.state!=='answer') return; L.sel=a; play(a); break;
     case 'fopt': if(L.state!=='answer') return; L.sel=+a; break;
