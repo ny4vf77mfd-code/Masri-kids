@@ -2459,11 +2459,11 @@ function buildSteps(wi, li, p){
     con.forEach(id=>body.push({type:'listen', id}));
     const pw = con.filter(hasAudio).filter(id=>audioPool(id).length>=2);
     if(pw.length) body.push({type:'picword', id:pick(pw)});
-    abs.forEach(id=>body.push({type:'say', id}));
+    abs.forEach(id=>body.push({type:'say', id}));  // 4–6 jaar: abstracte woorden blijven nazeggen; ophalen alleen met een duidelijk plaatje (herhaling hierboven)
     if(sents.length) body.push({type:'say', id:pick(sents)});
     if(con.length>=2) body.push({type:'memory', ids:sample(con, Math.min(4, con.length))});
   } else {
-    ids.forEach((id,i)=>body.push({type:wordTypeL2(id,i), id}));
+    let rc = 0; ids.forEach((id,i)=>{ const known = seenBefore(p,id) && rc<2; if(known) rc++; body.push({type: known ? 'recall' : wordTypeL2(id,i), id}); });
     if(ids.length>=3){ const m = matchIds(ids, 4); if(m.length>=3) body.push({type:'match', ids:m}); }
     const sn = sample(sents, (lesson.review||lesson.sentencesOnly) ? 3 : 2);
     sn.forEach((sid,i)=>body.push({type: (i%2===1 && !(acc!==null && acc<0.6)) ? 'fill' : 'build', id:sid}));
@@ -2474,12 +2474,13 @@ function buildSteps(wi, li, p){
   }
   // herhaling van woorden uit eerdere lessen (moeilijke woorden komen vaker terug)
   const own = ids.map(baseOf);
-  const rev = dueWords(p, lvl).filter(id=>!own.includes(id)).slice(0, 2).map(id=>{ const x = lid(id); return {type: lvl===1 ? 'listen' : wordTypeL2(x, Math.floor(Math.random()*4)), id:x, review:true}; });
+  // herhaling eerst: de les begint met maximaal 2 ophaalkaarten van woorden die aan de beurt zijn
+  const rev = dueWords(p, lvl).filter(id=>!own.includes(id)).slice(0, 2).map(id=>({type:'recall', id:lid(id), review:true}));
   // korte toets aan het eind
   const tpool = lvl===1 ? ids.filter(isConcrete) : ids;
   const test = sample(tpool, lvl===1 ? 2 : 3).map((id,i)=>({type: lvl===1 ? 'listen' : ['listen-nl','translate','picword'][i%3], id, test:true}))
     .map(t=>{ if(t.type==='listen-nl' && !hasAudio(t.id)) t.type='meaning'; if(t.type==='picword' && (!isConcrete(t.id))) t.type='translate'; return t; });
-  return steps.concat(shuffle(body), chat, rev, test);
+  return [steps[0], ...rev, ...steps.slice(1), ...shuffle(body), ...chat, ...test];
 }
 function startLesson(wi, li){
   const p = me();
@@ -2507,6 +2508,7 @@ function startReview(){
 function autoPlay(){
   const st = L && L.steps[L.i]; if(!st) return;
   if(st.type==='welcome'){ const p = me(); if(voiceOn()) later(()=>speakNL('Hoi '+p.name+'! '+(st.srs?'We gaan herhalen wat je al kent.':'We gaan leren. Luister goed!')), 300); return; }
+  if(st.type==='recall'){ if(!st.shown && voiceOn()) later(()=>speakNL('Weet je het nog? Hoe zeg je dit?'), 300); return; }  // nooit het antwoord voorspelen
   const word = ['intro','listen','meaning','say','listen-nl'].includes(st.type) && hasAudio(st.id);
   if(voiceOn() && INSTR[st.type]) later(()=>speakNL(INSTR[st.type], ()=>{ if(word) play(st.id,true); }), 300);
   else if(word) later(()=>play(st.id,true), 350);
@@ -2653,6 +2655,18 @@ function exHTML(st){
         return `<button class="mcard ${cls}" data-act="mem:${i}" aria-label="Kaart ${i+1}"><span class="in"><span class="f">?</span><span class="b">${back}</span></span></button>`;
       }).join('')}</div>`;
     }
+    case 'recall': {
+      const kid = isKid();
+      if(!st.shown) return `${chips(st)}<p class="ex-k">Weet je het nog?<small>Zeg het eerst hardop. Kijk daarna pas.</small></p>
+      <div class="wordcard saycard pop"><div class="pic">${picOf(it.id)}</div>${kid?'':`<div class="nl">${esc(it.nl)}</div>`}</div>
+      <div class="bubble-row">${mascot(64,'think','')}<div class="bubble">Hoe zeg je dit in het Egyptisch?</div></div>`;
+      return `${chips(st)}<p class="ex-k">Zo zeg je het</p>
+      <div class="wordcard saycard pop"><div class="pic">${picOf(it.id)}</div><div class="ar" lang="ar">${it.ar}</div><div class="ph">${esc(it.ph)}</div><div class="nl">${esc(it.nl)}</div>${playBtn(st.id,'big')}</div>
+      <div class="bubble-row">${mascot(64,'happy','')}<div class="bubble">${kid?'Wist je het?':'Wist je het? Wees eerlijk, dan komt het op het goede moment terug.'}</div></div>`;
+    }
+    case 'type': return `${chips(st)}<p class="ex-k">Typ het in het Egyptisch<small>Typ de uitspraak, zoals je die in de app ziet.</small></p>
+      <div class="prompt"><span class="pic">${picOf(it.id)}</span><div class="meta"><div class="nl">${esc(it.nl)}</div></div></div>
+      <form id="type-form" autocomplete="off"><input class="inp" id="type-in" maxlength="60" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Bijv. Ahlan" value="${esc(st.typed||'')}" ${L.state!=='answer'?'disabled':''} aria-label="Jouw antwoord"></form>`;
     case 'say': return `${chips(st)}
       <p class="ex-k">Zeg het hardop!<small>Luister eerst, en zeg het dan zelf na.</small></p>
       <div class="wordcard saycard pop">
@@ -2680,6 +2694,11 @@ function praise(){
   if(p.gender==='f') opts.push(['Sjaatra!','Knap gedaan!']);
   return pick(opts);
 }
+// Actief ophalen: alleen voor woorden die al eerder gezien én geoefend zijn (nooit voor nieuwe woorden).
+const seenBefore = (p, id) => { const w = p && p.words && p.words[baseOf(id)]; return !!w && ((w.c||0)+(w.w||0))>0; };
+// Typen (volwassenen): mild vergelijken; hoofdletters, koppeltekens, apostrof en leestekens tellen niet mee.
+const francoNorm = s => String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/['’`ʼ]/g,'').replace(/[-–]/g,' ').replace(/[?!.,;:]/g,'').replace(/\s+/g,' ').trim();
+function typedOk(input, id){ const it = ITEM[id], b = ITEM[baseOf(id)]; const goals = [it && it.ph, b && b.ph, b && b.fem && b.fem.ph].filter(Boolean).map(francoNorm); return !!francoNorm(input) && goals.includes(francoNorm(input)); }
 const HINTABLE = ['listen','meaning','listen-nl','picword','translate','fill','chat','eg-nl'];
 function footHTML(st){
   const kid = isKid();
@@ -2687,6 +2706,11 @@ function footHTML(st){
   if(st.type==='welcome') return `<button class="btn wide" data-act="next" aria-label="Start">${kid?'<span class="big-ic" aria-hidden="true">▶</span>':'Start'}</button>`;
   if(st.type==='intro' || st.type==='grammar') return `<button class="btn wide" data-act="next" aria-label="Verder">${st.type==='grammar'?'Begrepen':nextLbl}</button>`;
   if(st.type==='speak' && L.state!=='feedback') return `<button class="btn sun wide" data-act="said">Klinkt goed ✓</button>`;
+  if(st.type==='recall' && L.state!=='feedback'){
+    if(!st.shown) return `<button class="btn wide" data-act="recall-show">${kid?'Laat zien':'Laat het antwoord zien'}</button>`;
+    return `<div class="foot-row"><button class="btn try wide" data-act="recall:0">Nog niet</button><button class="btn ok wide" data-act="recall:1">Ik wist het</button></div>`;
+  }
+  if(L.state==='feedback' && st.type==='recall' && !L.ok) return `<div class="fb pop">${mascot(70,'encourage','')}<div><div class="big">Goed dat je het eerlijk zegt!</div><div class="sm">Dit woord komt morgen terug.</div></div></div><button class="btn try wide" data-act="next" aria-label="Verder">${nextLbl}</button>`;
   if(L.state==='feedback'){
     if(L.ok){ const [a,b] = L.praise; return `<div class="fb pop">${mascot(70,'cheer','')}<div><div class="big">${a}</div><div class="sm">${b}</div></div></div><button class="btn ok wide" data-act="next" aria-label="Verder">${nextLbl}</button>`; }
     const it = ITEM[st.id];
@@ -2699,7 +2723,7 @@ function footHTML(st){
   const hint = HINTABLE.includes(st.type) ? `<button class="hintbtn" data-act="hint" ${st.hintUsed?'disabled':''} aria-label="Hint van Mishmish">💡</button>` : '';
   const tip = st.hintUsed ? `<div class="hint-msg">${mascot(36,'think','')}<span>Eentje kan weg! Kijk en luister nog eens goed.</span></div>` : '';
   if(kid && st.type==='listen') return `${tip}<div class="foot-row">${hint}<p class="muted" style="flex:1;text-align:center">Tik op het goede plaatje.</p></div>`;
-  const ready = st.type==='build' ? st.ans.length>0 : L.sel!==null;
+  const ready = st.type==='build' ? st.ans.length>0 : st.type==='type' ? !!francoNorm(st.typed) : L.sel!==null;
   return `${tip}<div class="foot-row">${hint}<button class="btn wide" data-act="check" ${ready?'':'disabled'} aria-label="Controleer">${kid?'<span class="big-ic" aria-hidden="true">✓</span>':'Controleer'}</button></div>`;
 }
 function lessonHTML(){
@@ -2729,6 +2753,7 @@ function answer(ok){
 function check(){
   const st = L.steps[L.i];
   if(st.type==='build') answer(st.ans.map(ti=>st.tiles[ti].ph).join(' ') === ITEM[st.id].ph);
+  else if(st.type==='type') answer(typedOk(st.typed, st.id));
   else if(st.type==='fill') answer(st.choices[L.sel]===st.answer);
   else answer(L.sel===st.id);
   if(L.ok && hasAudio(st.id) && !voiceOn() && st.type!=='picword') play(st.id,true);
@@ -3127,13 +3152,16 @@ function startAdultLesson(mid, k){
   if(k===0 && GRAMMAR[m.id]) steps.push({type:'grammar', mod:m.id});
   fresh.forEach(id=>steps.push({type:'intro', id}));
   const body = ids.map((id,i)=>adultStepFor(id,i));
+  // actief ophalen: één bekend woord uit deze les zelf typen
+  const kn = ids.find(id=>seenBefore(p,id)); if(kn) body[ids.indexOf(kn)] = {type:'type', id:kn};
   if(ids.length>=3){ const m = matchIds(ids, 4); if(m.length>=3) body.push({type:'match', ids:m}); }
   const multi = ids.filter(id=>ITEM[id].ph.split(' ').length>=2);
   if(multi.length) body.push({type:'fill', id:pick(multi)});
   body.push({type:'speak', id:pick(ids)});
   const own = ids.map(baseOf);
-  const rev = dueWords(p, 2).filter(id=>!own.includes(id)).slice(0, 2).map(id=>({type:'eg-nl', id:lid(id), review:true}));
-  L = { wi:null, li:null, lesson:{id:`${m.id}-L${k+1}`, title:`${m.title} · les ${k+1}`, adult:true, group:m.title}, steps:steps.concat(shuffle(body), rev), i:0, mistakes:0, xp:0, state:'answer', sel:null, ok:null, retried:new Set(), t0:Date.now(), answered:0, correct:0 };
+  // herhaling eerst: één woord typen en één ophaalkaart
+  const rev = dueWords(p, 2).filter(id=>!own.includes(id)).slice(0, 2).map((id,i)=>({type: i===0 ? 'type' : 'recall', id:lid(id), review:true}));
+  L = { wi:null, li:null, lesson:{id:`${m.id}-L${k+1}`, title:`${m.title} · les ${k+1}`, adult:true, group:m.title}, steps:[steps[0], ...rev, ...steps.slice(1), ...shuffle(body)], i:0, mistakes:0, xp:0, state:'answer', sel:null, ok:null, retried:new Set(), t0:Date.now(), answered:0, correct:0 };
   S.screen='lesson'; window.scrollTo(0,0); render(); autoPlay();
 }
 function startScenario(sid){
@@ -4095,6 +4123,10 @@ function render(){
     if(nm) nm.addEventListener('input', ()=>{ S.newP.name = nm.value; $('#np-save').disabled = !(S.newP.kind && nm.value.trim() && S.newP.age); });
     f.addEventListener('submit', e=>{ e.preventDefault(); createProfile(); });
   }
+  if(scr==='lesson'){ const ti = $('#type-in'), tf = $('#type-form'); if(ti && L){ const st = L.steps[L.i];
+    ti.addEventListener('input', ()=>{ st.typed = ti.value; const b = document.querySelector('.lfoot [data-act="check"]'); if(b) b.disabled = !francoNorm(ti.value); });
+    tf.addEventListener('submit', e=>{ e.preventDefault(); if(L.state==='answer' && francoNorm(st.typed)) check(); });
+    if(L.state==='answer') ti.focus(); } }
   if(scr==='talk'){ const f = $('#talk-form'); if(f) f.addEventListener('submit', e=>{ e.preventDefault(); const el = $('#talk-in'); const v = el ? el.value.trim() : ''; if(v){ stopListen(); aiSend(v); } }); }
   if(scr==='auth'){ const f = $('#aform'); if(f) f.addEventListener('submit', e=>{ e.preventDefault(); authSubmit(); }); }
 }
@@ -4247,6 +4279,11 @@ document.addEventListener('click', e=>{
     case 'untile': { const st=L.steps[L.i]; if(L.state!=='answer') return; st.ans.splice(+a,1); break; }
     case 'mem': memTap(+a); return;
     case 'check': check(); return;
+    case 'recall-show': { const st=L.steps[L.i]; if(st.type!=='recall') return; st.shown=true; render(); if(hasAudio(st.id)) later(()=>play(st.id,true),150); return; }
+    case 'recall': { const st=L.steps[L.i]; if(st.type!=='recall' || !st.shown || L.state!=='answer') return; const knew = a==='1';
+      record(st.id, knew); L.ok = knew; L.state='feedback';
+      if(knew){ sfx('ok'); L.xp+=2; L.praise=praise(); if(voiceOn()) later(()=>speakNL(pick(PRAISE_NL)),300); }
+      break; }
     case 'said': sfx('ok'); if(voiceOn()) later(()=>speakNL(pick(PRAISE_NL)),300); L.xp+=2; record(L.steps[L.i].id,true); L.ok=true; L.state='feedback'; L.praise=praise(); break;
     case 'next': next(); return;
     case 'quit': S.sheet='quit'; break;
