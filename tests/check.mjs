@@ -288,5 +288,39 @@ const recallCase = (html.match(/case 'recall': \{ const st=L\.steps\[L\.i\];[\s\
 ok(/record\(st\.id, knew\)/.test(recallCase) && !/mistakes/.test(recallCase) && /!st\.shown/.test(recallCase),
   '"Weet je het nog?": telt mee voor herhaling, "Nog niet" kost geen ster, en kan pas na "Laat zien"');
 
+// 13. Gesproken begeleiding bij "Weet je het nog?" en ontbrekende opnames.
+const rpSrc = (html.match(/const RECALL_NL = \{[\s\S]*?\n\};\nfunction recallPlan[\s\S]*?\n\}\nfunction playThen[\s\S]*?\n\}\nfunction runRecallPlan[\s\S]*?\n\}/) || [''])[0];
+ok(!!rpSrc, 'spraakplan voor "Weet je het nog?" aanwezig');
+if (rpSrc) {
+  const c = vm.createContext({ AGEN: 0, curAudio: null, setTimeout, log: [] });
+  vm.runInContext(rpSrc + `
+    this.P = recallPlan; this.T = RECALL_NL; this.R = runRecallPlan;
+    this.mock = () => { log.length = 0; let busy = false;
+      speakNL = (t, then) => { if (busy) log.push('OVERLAP'); busy = true; log.push('say:' + t); setTimeout(() => { busy = false; then && then(); }, 1); };
+      play = (id) => { if (busy) log.push('OVERLAP'); busy = true; log.push('play:' + id); curAudio = { set onended(f) { setTimeout(() => { busy = false; f(); }, 1); }, set onerror(f) {} }; }; };
+    var speakNL, play;`, c);
+  const P = c.P;
+  ok(['ask'].every(ph => !P(ph, { voice: true, audio: true }).includes('play')), 'vraag stellen speelt nooit het Egyptische antwoord af');
+  ok(JSON.stringify(P('ask', { voice: true })) === '["say:ask"]' && P('ask', { voice: false }).length === 0, 'vraag wordt alleen uitgesproken als de spraak aan staat');
+  ok(JSON.stringify(P('reveal', { voice: true, audio: true })) === '["say:tried","play","say:check"]', 'na "Laat zien": eerst "Goed geprobeerd", dan het woord, dan "Wist je het?"');
+  ok(JSON.stringify(P('reveal', { voice: false, audio: true })) === '["play"]', 'spraak uit: alleen het Egyptische woord, geen Nederlandse zinnen');
+  ok(!P('reveal', { voice: true, audio: false }).includes('play') && !P('reveal', { voice: false, audio: false }).length, 'geen opname: niets afspelen en geen vervangende stem');
+  ok(JSON.stringify(P('knew', { voice: true })) === '["say:knew"]' && JSON.stringify(P('notyet', { voice: true })) === '["say:notyet"]' && !P('knew', { voice: false }).length,
+    'juiste feedback na "Ik wist het" en "Nog niet", alleen met spraak aan');
+  ok(Object.values(c.T).every(t => t.length <= 70 && !/[A-Z]{3}/.test(t)), 'gesproken zinnen zijn kort (max 70 tekens)');
+  c.mock(); c.R(c.P('reveal', { voice: true, audio: true }), 'otta');
+  await new Promise(r => setTimeout(r, 30));
+  ok(c.log.join('|') === `say:${c.T.tried}|play:otta|say:${c.T.check}` , 'alles klinkt na elkaar, nooit tegelijk (geen dubbele audio)');
+  c.mock(); c.R(c.P('reveal', { voice: true, audio: true }), 'otta'); c.AGEN++;
+  await new Promise(r => setTimeout(r, 30));
+  ok(c.log.length === 1, 'na verder gaan (nieuwe geluidsronde) stopt de rest van het plan');
+}
+ok(/if\(m==='none' && childView\(\)\) return '';/.test(html) && /S\.screen!=='parent'/.test((html.match(/const childView = [^\n]+/) || [''])[0]),
+  'kinderen zien geen "nog geen opname"; in het ouderdeel blijft de melding');
+ok(!/speakNL\([^)]*(it|ITEM\[[^\]]+\])\.(ph|ar)/.test(html), 'Egyptische woorden worden nooit door de computerstem voorgelezen');
+const showCase = (html.match(/case 'recall-show': \{[^\n]+/) || [''])[0];
+ok(/st\.shown\) return; hush\(\);/.test(showCase) && /recallPlan\('reveal'/.test(showCase), '"Laat zien" stopt eerst ander geluid en kan maar één keer');
+ok(/function voiceOn\(\)\{ const p = me\(\); return !!p && p\.level===1 && DB\.settings\.nlVoice!==false/.test(html), 'spraak blijft alleen voor 4–6 jaar en volgt de instelling aan/uit');
+
 console.log(fails ? `\n${fails} controle(s) mislukt.` : '\nAlle controles geslaagd.');
 process.exit(fails ? 1 : 0);

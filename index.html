@@ -2327,8 +2327,12 @@ function hush(){ AGEN++; try{ if(curAudio){ curAudio.onended = null; curAudio.pa
 const audioSrc = id => MEDIA.audio[id] || MEDIA.shared[id] || AUDIO_FILES[id] || null;
 const hasAudio = id => !!audioSrc(id);
 function audioMode(id){ return hasAudio(id) ? 'real' : 'none'; }
+// Kinderen zien nooit een technische melding: zonder opname tonen we bij hen geen afspeelknop.
+// (In het ouderdeel blijft de melding staan, zodat ouders zien wat nog opgenomen moet worden.)
+const childView = () => { const p = me(); return !!p && p.track!=='adult' && S.screen!=='parent' && S.screen!=='gate'; };
 function playBtn(id, size='', slow=(size==='big')){
   const m = audioMode(id);
+  if(m==='none' && childView()) return '';
   const tag = m==='none' ? '<span class="atag">nog geen opname</span>' : '';
   const sl = slow && m==='real' ? `<button class="slowbtn" data-play-slow="${id}" aria-label="Langzaam afspelen" title="Langzaam">🐢</button>${isAdult()?`<button class="slowbtn" data-play-rep="${id}" aria-label="Drie keer herhalen" title="3× herhalen">🔁</button>`:''}` : '';
   return `<span class="playwrap"><span class="playrow"><button class="play ${size} ${m==='none'?'noaudio':''}" data-play="${id}" aria-label="Luister naar ${esc(ITEM[id]?.ph||'')}">${ICON_SPK}</button>${sl}</span>${tag}</span>`;
@@ -2364,6 +2368,34 @@ function speakNL(text, then0){
     u.onend=fin; u.onerror=fin; setTimeout(fin, 600 + text.length*95);
     speechSynthesis.speak(u);
   }catch(e){ if(then) then(); }
+}
+// "Weet je het nog?": wat Mishmish zegt en wanneer. Een plan is een lijst stappen die na elkaar worden afgespeeld,
+// zodat er nooit twee geluiden tegelijk klinken. 'play' (het Egyptische woord) komt nooit vóór het kind heeft geprobeerd.
+const RECALL_NL = {
+  ask: 'Hoe zeg je dit in het Egyptisch?',
+  tried: 'Goed geprobeerd! Luister maar.',
+  check: 'Wist je het? Tik op het vinkje.',
+  knew: 'Fantastisch, je wist het!',
+  notyet: 'Goed dat je het eerlijk zegt. We oefenen dit woord morgen opnieuw.',
+};
+function recallPlan(phase, o){
+  const out = [], say = k => { if(o && o.voice) out.push('say:'+k); };
+  if(phase==='ask') say('ask');
+  else if(phase==='reveal'){ say('tried'); if(o && o.audio) out.push('play'); say('check'); }
+  else if(phase==='knew') say('knew');
+  else if(phase==='notyet') say('notyet');
+  return out;
+}
+function playThen(id, then){
+  let done = false; const fin = ()=>{ if(done) return; done = true; then(); };
+  play(id, true); const a = curAudio;
+  if(a){ a.onended = fin; a.onerror = fin; setTimeout(fin, 8000); } else fin();
+}
+function runRecallPlan(plan, id){
+  const g = AGEN;
+  const step = i => { if(g!==AGEN || i>=plan.length) return; const x = plan[i];
+    if(x==='play') playThen(id, ()=>step(i+1)); else speakNL(RECALL_NL[x.slice(4)], ()=>step(i+1)); };
+  step(0);
 }
 let AC = null;
 function sfx(kind){
@@ -2508,7 +2540,7 @@ function startReview(){
 function autoPlay(){
   const st = L && L.steps[L.i]; if(!st) return;
   if(st.type==='welcome'){ const p = me(); if(voiceOn()) later(()=>speakNL('Hoi '+p.name+'! '+(st.srs?'We gaan herhalen wat je al kent.':'We gaan leren. Luister goed!')), 300); return; }
-  if(st.type==='recall'){ if(!st.shown && voiceOn()) later(()=>speakNL('Weet je het nog? Hoe zeg je dit?'), 300); return; }  // nooit het antwoord voorspelen
+  if(st.type==='recall'){ if(!st.shown) later(()=>runRecallPlan(recallPlan('ask', {voice:voiceOn(), audio:false}), st.id), 300); return; }  // nooit het antwoord voorspelen
   const word = ['intro','listen','meaning','say','listen-nl'].includes(st.type) && hasAudio(st.id);
   if(voiceOn() && INSTR[st.type]) later(()=>speakNL(INSTR[st.type], ()=>{ if(word) play(st.id,true); }), 300);
   else if(word) later(()=>play(st.id,true), 350);
@@ -2659,7 +2691,7 @@ function exHTML(st){
       const kid = isKid();
       if(!st.shown) return `${chips(st)}<p class="ex-k">Weet je het nog?<small>Zeg het eerst hardop. Kijk daarna pas.</small></p>
       <div class="wordcard saycard pop"><div class="pic">${picOf(it.id)}</div>${kid?'':`<div class="nl">${esc(it.nl)}</div>`}</div>
-      <div class="bubble-row">${mascot(64,'think','')}<div class="bubble">Hoe zeg je dit in het Egyptisch?</div></div>`;
+      <div class="bubble-row">${mascot(64,'think','')}<div class="bubble">${kid?'Hoe zeg je dit?':RECALL_NL.ask}</div></div>`;
       return `${chips(st)}<p class="ex-k">Zo zeg je het</p>
       <div class="wordcard saycard pop"><div class="pic">${picOf(it.id)}</div><div class="ar" lang="ar">${it.ar}</div><div class="ph">${esc(it.ph)}</div><div class="nl">${esc(it.nl)}</div>${playBtn(st.id,'big')}</div>
       <div class="bubble-row">${mascot(64,'happy','')}<div class="bubble">${kid?'Wist je het?':'Wist je het? Wees eerlijk, dan komt het op het goede moment terug.'}</div></div>`;
@@ -2707,10 +2739,13 @@ function footHTML(st){
   if(st.type==='intro' || st.type==='grammar') return `<button class="btn wide" data-act="next" aria-label="Verder">${st.type==='grammar'?'Begrepen':nextLbl}</button>`;
   if(st.type==='speak' && L.state!=='feedback') return `<button class="btn sun wide" data-act="said">Klinkt goed ✓</button>`;
   if(st.type==='recall' && L.state!=='feedback'){
-    if(!st.shown) return `<button class="btn wide" data-act="recall-show">${kid?'Laat zien':'Laat het antwoord zien'}</button>`;
-    return `<div class="foot-row"><button class="btn try wide" data-act="recall:0">Nog niet</button><button class="btn ok wide" data-act="recall:1">Ik wist het</button></div>`;
+    if(!st.shown) return kid ? `<button class="btn wide" data-act="recall-show" aria-label="Laat zien"><span class="big-ic" aria-hidden="true">👀</span></button>` : `<button class="btn wide" data-act="recall-show">Laat het antwoord zien</button>`;
+    return kid ? `<div class="foot-row"><button class="btn try wide" data-act="recall:0" aria-label="Nog niet"><span class="big-ic" aria-hidden="true">?</span></button><button class="btn ok wide" data-act="recall:1" aria-label="Ik wist het"><span class="big-ic" aria-hidden="true">✓</span></button></div>`
+      : `<div class="foot-row"><button class="btn try wide" data-act="recall:0">Nog niet</button><button class="btn ok wide" data-act="recall:1">Ik wist het</button></div>`;
   }
-  if(L.state==='feedback' && st.type==='recall' && !L.ok) return `<div class="fb pop">${mascot(70,'encourage','')}<div><div class="big">Goed dat je het eerlijk zegt!</div><div class="sm">Dit woord komt morgen terug.</div></div></div><button class="btn try wide" data-act="next" aria-label="Verder">${nextLbl}</button>`;
+  if(L.state==='feedback' && st.type==='recall') return L.ok
+    ? `<div class="fb pop">${mascot(70,'cheer','')}<div><div class="big">${kid?'Je wist het!':'Fantastisch, je wist het!'}</div>${kid?'':`<div class="sm">${L.praise ? L.praise[1] : ''}</div>`}</div></div><button class="btn ok wide" data-act="next" aria-label="Verder">${nextLbl}</button>`
+    : `<div class="fb pop">${mascot(70,'encourage','')}<div><div class="big">${kid?'Morgen weer!':'Goed dat je het eerlijk zegt!'}</div>${kid?'':'<div class="sm">Dit woord komt morgen terug.</div>'}</div></div><button class="btn try wide" data-act="next" aria-label="Verder">${nextLbl}</button>`;
   if(L.state==='feedback'){
     if(L.ok){ const [a,b] = L.praise; return `<div class="fb pop">${mascot(70,'cheer','')}<div><div class="big">${a}</div><div class="sm">${b}</div></div></div><button class="btn ok wide" data-act="next" aria-label="Verder">${nextLbl}</button>`; }
     const it = ITEM[st.id];
@@ -3817,7 +3852,7 @@ function stickersHTML(){
 }
 function wordsHTML(){
   const p = me();
-  return topbarHTML(p) + `<h1 class="page-h">Mijn woordjes</h1><p class="page-sub">${learned(p).length} geleerd · tik op de luidspreker om te luisteren</p>
+  return topbarHTML(p) + `<h1 class="page-h">Mijn woordjes</h1><p class="page-sub">${learned(p).length} geleerd${(Object.keys(MEDIA.shared).length||Object.keys(MEDIA.audio).length) ? ' · tik op de luidspreker om te luisteren' : ''}</p>
   ${worldOrder(p).filter(i=>worldUnlocked(p,i)).map(i=>WORLDS[i]).map(w=>`<div class="wgroup"><h2>${w.emoji} ${w.name}</h2><div class="wlist">${wordsOfWorld(w.id).map(x=>{
       const s = p.words[x.id]; const l = (s?.c||0)>=2;
       return `<div class="wrow ${s?'':'unseen'}"><span class="pic">${picOf(x.id)}</span><div class="mid"><div class="ar" lang="ar" dir="rtl">${x.ar}</div><div class="ph">${esc(x.ph)}</div><div class="nl">${esc(x.nl)}</div></div>${l?'<span class="badge">✓</span>':''}${playBtn(x.id,'sm')}</div>`;
@@ -4279,10 +4314,11 @@ document.addEventListener('click', e=>{
     case 'untile': { const st=L.steps[L.i]; if(L.state!=='answer') return; st.ans.splice(+a,1); break; }
     case 'mem': memTap(+a); return;
     case 'check': check(); return;
-    case 'recall-show': { const st=L.steps[L.i]; if(st.type!=='recall') return; st.shown=true; render(); if(hasAudio(st.id)) later(()=>play(st.id,true),150); return; }
+    case 'recall-show': { const st=L.steps[L.i]; if(st.type!=='recall' || st.shown) return; hush(); st.shown=true; render(); runRecallPlan(recallPlan('reveal', {voice:voiceOn(), audio:hasAudio(st.id)}), st.id); return; }
     case 'recall': { const st=L.steps[L.i]; if(st.type!=='recall' || !st.shown || L.state!=='answer') return; const knew = a==='1';
-      record(st.id, knew); L.ok = knew; L.state='feedback';
-      if(knew){ sfx('ok'); L.xp+=2; L.praise=praise(); if(voiceOn()) later(()=>speakNL(pick(PRAISE_NL)),300); }
+      hush(); record(st.id, knew); L.ok = knew; L.state='feedback';
+      if(knew){ sfx('ok'); L.xp+=2; L.praise=praise(); }
+      runRecallPlan(recallPlan(knew ? 'knew' : 'notyet', {voice:voiceOn(), audio:false}), st.id);
       break; }
     case 'said': sfx('ok'); if(voiceOn()) later(()=>speakNL(pick(PRAISE_NL)),300); L.xp+=2; record(L.steps[L.i].id,true); L.ok=true; L.state='feedback'; L.praise=praise(); break;
     case 'next': next(); return;
