@@ -1088,6 +1088,55 @@ button,.opt,.mitem,.tile,.node{touch-action:manipulation;-webkit-user-select:non
  .home-view .node{width:clamp(44px,13vw,58px);height:clamp(44px,13vw,58px);border-radius:16px;font-size:22px}.home-view .nlabel{font-size:10px;overflow-wrap:anywhere}
  .home-view .startbub{font-size:9px;padding:3px 7px}
 }
+
+/* A more editorial, premium home screen: clear featured actions and a richer learning path. */
+body:has(#app.home-view){background:radial-gradient(ellipse at 92% 4%,#e9e9ff 0,transparent 28rem),linear-gradient(145deg,#f7f7fb,#f1f3f9 58%,#f8f5ef)}
+#app.home-view{max-width:1120px;gap:18px;padding-top:22px}
+.home-view>.topbar{position:relative;top:0;margin:0 0 2px;padding:10px 16px;border:1px solid rgba(40,54,124,.09);border-radius:22px;background:rgba(255,255,255,.76);box-shadow:0 8px 28px rgba(34,43,87,.045)}
+.home-view>.greet{min-height:180px;gap:26px;padding:30px 36px;border-radius:32px;background:radial-gradient(circle at 87% 18%,rgba(135,191,238,.28),transparent 16rem),linear-gradient(115deg,#17234f,#263875 56%,#4057a0);box-shadow:0 22px 50px rgba(34,49,111,.19)}
+.home-view>.greet::after{width:300px;height:300px;right:3%;top:-195px;border-color:rgba(255,255,255,.19);box-shadow:0 0 0 34px rgba(255,255,255,.045),0 0 0 70px rgba(255,255,255,.025)}
+.home-view>.greet::before{content:"JOUW LEERREIS";position:absolute;right:28px;bottom:24px;z-index:1;padding:7px 12px;border:1px solid rgba(255,255,255,.2);border-radius:999px;color:rgba(255,255,255,.72);font-size:10px;font-weight:900;letter-spacing:.16em}
+.home-view>.greet>.mascot{width:108px!important;height:108px!important;padding:8px;border:1px solid rgba(255,255,255,.24);border-radius:30px;background:rgba(255,255,255,.12);box-shadow:0 12px 26px rgba(8,16,51,.16)}
+.home-view>.greet .bubble{font-size:17px;letter-spacing:.01em}.home-view>.greet .bubble b{font-size:32px;line-height:1.08}
+.home-view>.daily{min-height:142px;gap:16px;padding:20px;border:1px solid rgba(255,255,255,.75);border-radius:26px;background:linear-gradient(140deg,#fff,#fff8e9);box-shadow:0 14px 32px rgba(81,65,26,.07)}
+.home-view .daily .ic{width:54px;height:54px;border-radius:18px;background:linear-gradient(145deg,#ffe7a1,#ffca4b);box-shadow:inset 0 1px 0 rgba(255,255,255,.8);color:#6e4b00}
+.home-view .daily .k{color:#8c7850;font-size:10px;letter-spacing:.15em}.home-view .daily .t{font-size:18px;font-weight:900;line-height:1.2}
+.home-view .daily .bar{height:8px;margin-top:10px;border-radius:99px;background:#eee8d9}.home-view .daily .bar i{border-radius:99px;background:linear-gradient(90deg,#f5b931,#f28c54)}
+.home-view>.pen-card{min-height:142px;gap:16px;align-self:stretch;justify-content:flex-start;margin:0;padding:20px;border:1px solid rgba(255,255,255,.25);border-radius:26px;background:radial-gradient(circle at 95% 0,rgba(255,255,255,.22),transparent 10rem),linear-gradient(130deg,#176b62,#15958c);box-shadow:0 16px 34px rgba(14,111,101,.18)}
+.home-view>.pen-card .ic{width:58px;height:58px;border-radius:19px;color:#126c63;font-size:32px;box-shadow:0 8px 18px rgba(11,75,68,.16)}
+.home-view>.pen-card b{font-size:20px}.home-view>.pen-card span{font-size:13px;line-height:1.35}
+.home-view>.reward{min-height:94px;padding:16px;border:1px solid rgba(255,255,255,.9);border-radius:24px;background:rgba(255,255,255,.88);box-shadow:0 12px 28px rgba(34,43,87,.055)}
+.home-view>.talk-card{min-height:94px;border-radius:24px;background:linear-gradient(120deg,#fff,#eef4ff);box-shadow:0 12px 28px rgba(34,43,87,.055)}
+.home-view>.world{position:relative;overflow:hidden;margin:0;padding:16px;border:1px solid rgba(255,255,255,.9);border-radius:32px;background:linear-gradient(155deg,rgba(255,255,255,.98),rgba(250,250,255,.92));box-shadow:0 18px 44px rgba(36,45,87,.08)}
+.home-view>.world::before{content:"";position:absolute;top:150px;right:-100px;width:260px;height:260px;border:1px solid rgba(40,54,124,.045);border-radius:50%;box-shadow:0 0 0 28px rgba(40,54,124,.018),0 0 0 58px rgba(40,54,124,.014);pointer-events:none}
+.home-view .wband{min-height:166px;padding:26px 28px;border-radius:24px;background:radial-gradient(circle at 90% 10%,rgba(255,255,255,.24),transparent 12rem),linear-gradient(115deg,color-mix(in srgb,var(--wc) 78%,#17234f),var(--wc));box-shadow:0 14px 28px color-mix(in srgb,var(--wcd) 32%,transparent)}
+.home-view .wband .wnum{font-size:10px;letter-spacing:.18em}.home-view .wband h2{font-size:34px}.home-view .wband p{font-size:15px;opacity:.88}
+.home-view .wband .wemoji{width:82px;height:82px;border:1px solid rgba(255,255,255,.28);border-radius:26px;background:rgba(255,255,255,.18);font-size:46px;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+.home-view .wband .wprog{margin-top:10px;padding:5px 11px;border:1px solid rgba(255,255,255,.24);border-radius:999px;background:rgba(16,26,68,.14);font-size:11px;letter-spacing:.03em}
+.home-view .path{gap:8px;padding:44px 12px 20px}.home-view .path::before{top:75px;left:9%;right:9%;border-top:2px dashed #d9ddec}
+.home-view .node-row{gap:8px}.home-view .node{width:72px;height:72px;border:4px solid #fff;border-radius:24px;background:var(--wc);box-shadow:0 9px 20px color-mix(in srgb,var(--wc) 28%,transparent);font-size:28px}
+.home-view .node.cur{box-shadow:0 0 0 3px #fff,0 0 0 6px color-mix(in srgb,var(--wc) 48%,#fff),0 12px 24px color-mix(in srgb,var(--wc) 30%,transparent)}
+.home-view .node.locked{border-color:#fff;background:linear-gradient(145deg,#f1f1f5,#e2e4ec);color:#9298a9}
+.home-view .nlabel{font-size:12px;font-weight:900;color:#414b71}.home-view .startbub{top:-32px;padding:5px 11px;border:1px solid #f2d88d;background:#fff5d9;color:#816016;font-size:9px;letter-spacing:.1em;box-shadow:0 4px 12px rgba(115,87,25,.08)}
+.home-view>.soon{padding:12px 4px 0}.home-view .soon h3{font-size:24px;color:#29356d}
+.home-nav .nav-in{border-color:rgba(36,45,87,.07);background:rgba(255,255,255,.9);box-shadow:0 14px 38px rgba(34,43,87,.16)}
+@media(min-width:760px){
+ #app.home-view{grid-template-columns:repeat(12,minmax(0,1fr));gap:18px;padding:24px 34px 144px}
+ .home-view>.daily{grid-column:span 7}.home-view>.pen-card{grid-column:span 5}
+ .home-view>.reward,.home-view>.talk-card,.home-view>.pen-card{grid-column:span 4}
+ .home-view>.daily{grid-column:span 8}.home-view>.pen-card{grid-column:span 4}
+ .home-view>.world{padding:18px}.home-view>.world::before{top:190px}.home-view .path{padding-top:50px}.home-view .path::before{top:82px}
+}
+@media(max-width:600px){
+ #app.home-view{gap:14px;padding:14px 15px 126px} .home-view>.greet{min-height:150px;gap:15px;padding:22px 20px;border-radius:26px}
+ .home-view>.greet::before{right:16px;bottom:14px;font-size:8px}.home-view>.greet>.mascot{width:78px!important;height:78px!important;border-radius:23px}
+ .home-view>.greet .bubble{font-size:14px}.home-view>.greet .bubble b{font-size:23px}
+ .home-view>.daily{grid-column:1/-1;min-height:112px;padding:15px;border-radius:22px}
+ .home-view>.pen-card,.home-view>.reward,.home-view>.talk-card{grid-column:1/-1;min-height:86px;padding:15px;border-radius:22px}
+ .home-view .wband{min-height:140px;padding:21px;border-radius:20px}.home-view .wband h2{font-size:28px}.home-view .wband .wemoji{width:64px;height:64px;border-radius:20px;font-size:36px}
+ .home-view .path{gap:2px;padding:42px 0 16px}.home-view .path::before{top:76px;left:8%;right:8%}
+ .home-view .node{width:clamp(46px,14vw,62px);height:clamp(46px,14vw,62px);border-radius:19px;font-size:22px}.home-view .nlabel{font-size:10px}
+}
 </style>
 
 </head>
