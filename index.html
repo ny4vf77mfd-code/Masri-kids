@@ -1036,6 +1036,107 @@ button,.opt,.mitem,.tile,.node{touch-action:manipulation;-webkit-user-select:non
 .world,.mod,.drow2,.scn-grid,.panel{content-visibility:auto;contain-intrinsic-size:auto 420px}
 .drow2{contain-intrinsic-size:auto 72px}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ---------- Premium home dashboard ---------- */
+#app.home-view{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-content:start;max-width:1000px;padding:18px 20px 132px}
+.home-view>.topbar,.home-view>.greet,.home-view>.daily,.home-view>.world,.home-view>.soon{grid-column:1/-1}
+.home-view>.topbar{margin:0 0 2px;padding:10px 14px;border:1px solid rgba(40,54,124,.08);border-radius:20px;background:rgba(255,255,255,.9);box-shadow:0 8px 26px rgba(40,54,124,.06);backdrop-filter:blur(14px)}
+.home-view .topbar .me .pav{width:48px;height:48px;border:2px solid #FFF0CF;background:#F7F7F7}
+.home-view .stats{gap:4px}.home-view .stat{padding:7px 10px;border:1px solid var(--duo-line);border-radius:14px;background:#fff;font-size:14px}
+.home-view>.greet{position:relative;overflow:hidden;display:flex;align-items:center;gap:18px;margin:0;padding:24px 26px;border:0;border-radius:28px;color:#fff;background:linear-gradient(118deg,#202A63 0%,#303F88 62%,#4353A0 100%);box-shadow:0 18px 42px rgba(37,50,122,.18)}
+.home-view>.greet::after{content:"";position:absolute;width:230px;height:230px;right:-54px;top:-120px;border:1px solid rgba(255,255,255,.14);border-radius:50%;box-shadow:0 0 0 24px rgba(255,255,255,.035),0 0 0 50px rgba(255,255,255,.025);pointer-events:none}
+.home-view>.greet>.mascot{position:relative;z-index:1;flex:none;width:94px!important;height:94px!important}
+.home-view>.greet .bubble{position:relative;z-index:1;flex:1;padding:0;border:0;background:transparent;color:rgba(255,255,255,.82);font-size:16px;font-weight:650}
+.home-view>.greet .bubble::before{display:none}.home-view>.greet .bubble b{display:block;margin-bottom:4px;color:#fff;font-size:24px;font-weight:900;letter-spacing:-.02em}
+.home-view>.daily{align-items:center;margin:0;padding:17px 20px;border:1px solid var(--duo-line);border-radius:22px;color:var(--duo-ink);background:#fff;box-shadow:0 10px 28px rgba(37,50,122,.055)}
+.home-view .daily .ic{width:48px;height:48px;border-radius:15px;background:#FFF2D9;color:#8A5A00;font-size:25px}
+.home-view .daily .k{color:var(--duo-mute);font-size:11px;letter-spacing:.1em}.home-view .daily .t{color:var(--duo-ink);font-size:17px}
+.home-view .daily .bar{height:9px;background:#EEF0F7}.home-view .daily .bar i{background:linear-gradient(90deg,var(--nile),#55C1B2)}
+.home-view>.reward{align-self:stretch;margin:0;border:1px solid var(--duo-line);border-radius:22px;background:#fff;box-shadow:0 10px 28px rgba(37,50,122,.05)}
+.home-view>.reward .re{border-radius:16px;background:#FFF2D9}.home-view>.reward.fam .re{background:var(--duo-sel)}
+.home-view>.review-card{grid-column:1/-1;margin:0;border:1px solid var(--duo-sel-b);border-radius:18px;background:var(--duo-sel);box-shadow:none}
+.home-view>.talk-card,.home-view>.pen-card{min-height:84px;margin:0;padding:16px 18px;border:1px solid var(--duo-line);border-radius:22px;box-shadow:0 10px 28px rgba(37,50,122,.05);transition:transform .16s,box-shadow .16s}
+.home-view>.talk-card{color:var(--duo-ink);background:linear-gradient(125deg,#E9F6F2,#F7FBF9)}.home-view>.talk-card .ic{width:48px;height:48px;border-radius:15px;background:#fff}
+.home-view>.talk-card b{font-size:17px}.home-view>.talk-card em{border-radius:999px;background:var(--nile);font-style:normal}
+.home-view>.pen-card{color:#fff;background:linear-gradient(115deg,#2F8954,#237648);box-shadow:0 10px 24px rgba(35,118,72,.15)}
+.home-view>.pen-card .ic{width:48px;height:48px;border-radius:15px;color:#276B3B;font-size:27px}.home-view>.pen-card b{font-size:17px}
+.home-view>.world{margin:0;padding:12px;border:1px solid var(--duo-line);border-radius:26px;background:#fff;box-shadow:0 12px 32px rgba(37,50,122,.055);content-visibility:visible;contain-intrinsic-size:auto}
+.home-view .wband{min-height:132px;padding:22px 24px;border-radius:20px;box-shadow:none}.home-view .wband .wnum{font-size:11px;letter-spacing:.12em}
+.home-view .wband h2{margin:4px 0;font-size:30px;letter-spacing:-.025em}.home-view .wband p{max-width:44ch}.home-view .wband .wemoji{font-size:54px}
+.home-view .path{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding:34px 6px 14px}
+.home-view .path::before{top:63px;bottom:auto;left:10%;right:10%;width:auto;border-left:0;border-top:3px solid var(--duo-line);transform:none}
+.home-view .node-row{width:100%;gap:7px;transform:none}.home-view .node{width:62px;height:62px;border:3px solid #fff;border-radius:20px;box-shadow:0 5px 14px color-mix(in srgb,var(--wc) 24%,transparent);font-size:26px}
+.home-view .node:active{transform:translateY(2px);box-shadow:0 2px 7px color-mix(in srgb,var(--wc) 24%,transparent)}.home-view .node.locked{border-color:#fff;background:#E9E7E0;box-shadow:none}
+.home-view .node.cur{box-shadow:0 0 0 4px #fff,0 0 0 7px color-mix(in srgb,var(--wc) 34%,#fff),0 6px 16px color-mix(in srgb,var(--wc) 28%,transparent)}
+.home-view .nlabel{max-width:100%;padding:0 3px;background:transparent;font-size:12px;line-height:1.2}
+.home-view .startbub{top:-28px;padding:3px 9px;border:0;background:#FFF2D9;color:#8A5A00;font-size:10px;box-shadow:none;animation:none}.home-view .startbub::after{display:none}
+.home-view .wlock{border:1px solid var(--duo-line);border-radius:16px;background:var(--duo-bg)}
+.home-view>.soon{padding:8px 4px 0}.home-view .soon h3{font-size:20px}.home-view .soon-card{border:1px solid var(--duo-line);border-radius:18px;background:rgba(255,255,255,.72)}
+.home-nav{border:0;background:transparent;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+.home-nav .nav-in{max-width:720px;padding:7px;border:1px solid rgba(37,50,122,.08);border-radius:22px;background:rgba(255,255,255,.92);box-shadow:0 12px 34px rgba(37,50,122,.12);backdrop-filter:blur(16px)}
+.home-nav button{min-height:58px;border-radius:16px;font-size:10px}.home-nav button .e{font-size:23px}.home-nav button.on{border-color:transparent;background:var(--lapis);color:#fff;outline:0}
+@media(min-width:760px){#app.home-view{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding-left:28px;padding-right:28px}.home-view>.greet{padding:28px 34px}.home-view>.world{padding:16px}.home-view .path{padding-top:38px}.home-view .path::before{top:69px}.home-view .node{width:68px;height:68px;border-radius:22px}}
+@media(max-width:520px){
+ #app.home-view{gap:12px;padding:12px 14px 120px}.home-view>.topbar{padding:8px 9px;border-radius:17px}.home-view .topbar .me{gap:6px;font-size:15px}
+ .home-view .topbar .me .pav{width:40px;height:40px;font-size:23px}.home-view .stats{gap:0}.home-view .stat{padding:6px;border:0;background:transparent;font-size:12px}
+ .home-view>.greet{gap:10px;padding:17px 16px;border-radius:22px;flex-wrap:wrap}.home-view>.greet>.mascot{width:68px!important;height:68px!important}
+ .home-view>.greet .bubble{font-size:14px}.home-view>.greet .bubble b{font-size:20px}.home-view>.daily{gap:10px;padding:13px;border-radius:18px}
+ .home-view>.daily>.ic{width:42px;height:42px}.home-view>.daily>span:last-child{font-size:13px}.home-view>.reward{padding:12px;border-radius:18px}
+ .home-view>.talk-card,.home-view>.pen-card{min-height:72px;padding:12px 14px;border-radius:18px}.home-view>.world{padding:9px;border-radius:21px}
+ .home-view .wband{min-height:112px;padding:17px;border-radius:16px}.home-view .wband h2{font-size:25px}.home-view .wband .wemoji{font-size:42px}
+ .home-view .path{gap:3px;padding:32px 0 12px}.home-view .path::before{top:56px;left:8%;right:8%}
+ .home-view .node{width:clamp(44px,13vw,58px);height:clamp(44px,13vw,58px);border-radius:16px;font-size:22px}.home-view .nlabel{font-size:10px;overflow-wrap:anywhere}
+ .home-view .startbub{font-size:9px;padding:3px 7px}
+}
+
+/* A more editorial, premium home screen: clear featured actions and a richer learning path. */
+body:has(#app.home-view){background:radial-gradient(ellipse at 92% 4%,#e9e9ff 0,transparent 28rem),linear-gradient(145deg,#f7f7fb,#f1f3f9 58%,#f8f5ef)}
+#app.home-view{max-width:1120px;gap:18px;padding-top:22px}
+.home-view>.topbar{position:relative;top:0;margin:0 0 2px;padding:10px 16px;border:1px solid rgba(40,54,124,.09);border-radius:22px;background:rgba(255,255,255,.76);box-shadow:0 8px 28px rgba(34,43,87,.045)}
+.home-view>.greet{min-height:180px;gap:26px;padding:30px 36px;border-radius:32px;background:radial-gradient(circle at 87% 18%,rgba(135,191,238,.28),transparent 16rem),linear-gradient(115deg,#17234f,#263875 56%,#4057a0);box-shadow:0 22px 50px rgba(34,49,111,.19)}
+.home-view>.greet::after{width:300px;height:300px;right:3%;top:-195px;border-color:rgba(255,255,255,.19);box-shadow:0 0 0 34px rgba(255,255,255,.045),0 0 0 70px rgba(255,255,255,.025)}
+.home-view>.greet::before{content:"JOUW LEERREIS";position:absolute;right:28px;bottom:24px;z-index:1;padding:7px 12px;border:1px solid rgba(255,255,255,.2);border-radius:999px;color:rgba(255,255,255,.72);font-size:10px;font-weight:900;letter-spacing:.16em}
+.home-view>.greet>.mascot{width:108px!important;height:108px!important;padding:8px;border:1px solid rgba(255,255,255,.24);border-radius:30px;background:rgba(255,255,255,.12);box-shadow:0 12px 26px rgba(8,16,51,.16)}
+.home-view>.greet .bubble{font-size:17px;letter-spacing:.01em}.home-view>.greet .bubble b{font-size:32px;line-height:1.08}
+.home-view>.daily{min-height:142px;gap:16px;padding:20px;border:1px solid rgba(255,255,255,.75);border-radius:26px;background:linear-gradient(140deg,#fff,#fff8e9);box-shadow:0 14px 32px rgba(81,65,26,.07)}
+.home-view .daily .ic{width:54px;height:54px;border-radius:18px;background:linear-gradient(145deg,#ffe7a1,#ffca4b);box-shadow:inset 0 1px 0 rgba(255,255,255,.8);color:#6e4b00}
+.home-view .daily .k{color:#8c7850;font-size:10px;letter-spacing:.15em}.home-view .daily .t{font-size:18px;font-weight:900;line-height:1.2}
+.home-view .daily .bar{height:8px;margin-top:10px;border-radius:99px;background:#eee8d9}.home-view .daily .bar i{border-radius:99px;background:linear-gradient(90deg,#f5b931,#f28c54)}
+.home-view>.pen-card{min-height:142px;gap:16px;align-self:stretch;justify-content:flex-start;margin:0;padding:20px;border:1px solid rgba(255,255,255,.25);border-radius:26px;background:radial-gradient(circle at 95% 0,rgba(255,255,255,.22),transparent 10rem),linear-gradient(130deg,#176b62,#15958c);box-shadow:0 16px 34px rgba(14,111,101,.18)}
+.home-view>.pen-card .ic{width:58px;height:58px;border-radius:19px;color:#126c63;font-size:32px;box-shadow:0 8px 18px rgba(11,75,68,.16)}
+.home-view>.pen-card b{font-size:20px}.home-view>.pen-card span{font-size:13px;line-height:1.35}
+.home-view>.reward{min-height:94px;padding:16px;border:1px solid rgba(255,255,255,.9);border-radius:24px;background:rgba(255,255,255,.88);box-shadow:0 12px 28px rgba(34,43,87,.055)}
+.home-view>.talk-card{min-height:94px;border-radius:24px;background:linear-gradient(120deg,#fff,#eef4ff);box-shadow:0 12px 28px rgba(34,43,87,.055)}
+.home-view>.world{position:relative;overflow:hidden;margin:0;padding:16px;border:1px solid rgba(255,255,255,.9);border-radius:32px;background:linear-gradient(155deg,rgba(255,255,255,.98),rgba(250,250,255,.92));box-shadow:0 18px 44px rgba(36,45,87,.08)}
+.home-view>.world::before{content:"";position:absolute;top:150px;right:-100px;width:260px;height:260px;border:1px solid rgba(40,54,124,.045);border-radius:50%;box-shadow:0 0 0 28px rgba(40,54,124,.018),0 0 0 58px rgba(40,54,124,.014);pointer-events:none}
+.home-view .wband{min-height:166px;padding:26px 28px;border-radius:24px;background:radial-gradient(circle at 90% 10%,rgba(255,255,255,.24),transparent 12rem),linear-gradient(115deg,color-mix(in srgb,var(--wc) 78%,#17234f),var(--wc));box-shadow:0 14px 28px color-mix(in srgb,var(--wcd) 32%,transparent)}
+.home-view .wband .wnum{font-size:10px;letter-spacing:.18em}.home-view .wband h2{font-size:34px}.home-view .wband p{font-size:15px;opacity:.88}
+.home-view .wband .wemoji{width:82px;height:82px;border:1px solid rgba(255,255,255,.28);border-radius:26px;background:rgba(255,255,255,.18);font-size:46px;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+.home-view .wband .wprog{margin-top:10px;padding:5px 11px;border:1px solid rgba(255,255,255,.24);border-radius:999px;background:rgba(16,26,68,.14);font-size:11px;letter-spacing:.03em}
+.home-view .path{gap:8px;padding:44px 12px 20px}.home-view .path::before{top:75px;left:9%;right:9%;border-top:2px dashed #d9ddec}
+.home-view .node-row{gap:8px}.home-view .node{width:72px;height:72px;border:4px solid #fff;border-radius:24px;background:var(--wc);box-shadow:0 9px 20px color-mix(in srgb,var(--wc) 28%,transparent);font-size:28px}
+.home-view .node.cur{box-shadow:0 0 0 3px #fff,0 0 0 6px color-mix(in srgb,var(--wc) 48%,#fff),0 12px 24px color-mix(in srgb,var(--wc) 30%,transparent)}
+.home-view .node.locked{border-color:#fff;background:linear-gradient(145deg,#f1f1f5,#e2e4ec);color:#9298a9}
+.home-view .nlabel{font-size:12px;font-weight:900;color:#414b71}.home-view .startbub{top:-32px;padding:5px 11px;border:1px solid #f2d88d;background:#fff5d9;color:#816016;font-size:9px;letter-spacing:.1em;box-shadow:0 4px 12px rgba(115,87,25,.08)}
+.home-view>.soon{padding:12px 4px 0}.home-view .soon h3{font-size:24px;color:#29356d}
+.home-nav .nav-in{border-color:rgba(36,45,87,.07);background:rgba(255,255,255,.9);box-shadow:0 14px 38px rgba(34,43,87,.16)}
+@media(min-width:760px){
+ #app.home-view{grid-template-columns:repeat(12,minmax(0,1fr));gap:18px;padding:24px 34px 144px}
+ .home-view>.daily{grid-column:span 7}.home-view>.pen-card{grid-column:span 5}
+ .home-view>.reward,.home-view>.talk-card,.home-view>.pen-card{grid-column:span 4}
+ .home-view>.daily{grid-column:span 8}.home-view>.pen-card{grid-column:span 4}
+ .home-view>.world{padding:18px}.home-view>.world::before{top:190px}.home-view .path{padding-top:50px}.home-view .path::before{top:82px}
+}
+@media(max-width:600px){
+ #app.home-view{gap:14px;padding:14px 15px 126px} .home-view>.greet{min-height:150px;gap:15px;padding:22px 20px;border-radius:26px}
+ .home-view>.greet::before{right:16px;bottom:14px;font-size:8px}.home-view>.greet>.mascot{width:78px!important;height:78px!important;border-radius:23px}
+ .home-view>.greet .bubble{font-size:14px}.home-view>.greet .bubble b{font-size:23px}
+ .home-view>.daily{grid-column:1/-1;min-height:112px;padding:15px;border-radius:22px}
+ .home-view>.pen-card,.home-view>.reward,.home-view>.talk-card{grid-column:1/-1;min-height:86px;padding:15px;border-radius:22px}
+ .home-view .wband{min-height:140px;padding:21px;border-radius:20px}.home-view .wband h2{font-size:28px}.home-view .wband .wemoji{width:64px;height:64px;border-radius:20px;font-size:36px}
+ .home-view .path{gap:2px;padding:42px 0 16px}.home-view .path::before{top:76px;left:8%;right:8%}
+ .home-view .node{width:clamp(46px,14vw,62px);height:clamp(46px,14vw,62px);border-radius:19px;font-size:22px}.home-view .nlabel{font-size:10px}
+}
 </style>
 
 </head>
@@ -4006,7 +4107,7 @@ function navHTML(){
   const items = isAdult() ? [['home','📚','Leren'],['dict','📖','Woorden'],['practice','🎯','Oefenen'],['aprog','📈','Voortgang'],['gate','⚙️','Beheer']]
     : [['home','🗺️','Leren'],['words','📖','Woorden'],['scores','🏆','Scores'],['stickers','🏅','Prijzen'],['gate','🔒','Ouders']];
   const cur = S.screen==='parent' ? 'gate' : S.screen;
-  return `<nav class="nav" aria-label="Menu"><div class="nav-in">${items.map(([k,e,t])=>`<button class="${cur===k?'on':''}" data-act="go:${k}"><span class="e">${e}</span>${t}</button>`).join('')}</div></nav>`;
+  return `<nav class="nav ${S.screen==='home'&&!isAdult()?'home-nav':''}" aria-label="Menu"><div class="nav-in">${items.map(([k,e,t])=>`<button class="${cur===k?'on':''}" data-act="go:${k}"><span class="e">${e}</span>${t}</button>`).join('')}</div></nav>`;
 }
 let GLBL = null;
 function genderLabels(){ const ad = isAdult(); if(GLBL===ad) return; GLBL = ad;
@@ -4021,7 +4122,7 @@ function render(){
   if(['home','words','stickers','penalty','scores','lesson','done','dict','practice','aprog','talk'].includes(scr) && !me()) { S.screen='profiles'; return render(); }
   const map = {splash:splashHTML, auth:authHTML, loading:loadingHTML, profiles:profilesHTML, home:()=>isAdult()?adultHomeHTML():homeHTML(), dict:dictHTML, practice:practiceHTML, talk:talkHTML, aprog:aprogHTML, words:wordsHTML, stickers:stickersHTML, scores:scoresHTML, gate:gateHTML, parent:parentHTML, lesson:lessonHTML, done:doneHTML, penalty:penHTML};
   const showNav = me() && ['home','words','stickers','scores','gate','parent','dict','practice','aprog'].includes(scr);
-  app.className = (showNav ? '' : 'full') + (isKid() ? ' lvl1' : '') + (isAdult() ? ' adult' : '');
+  app.className = (showNav ? '' : 'full') + (scr==='home'&&!isAdult() ? ' home-view' : '') + (isKid() ? ' lvl1' : '') + (isAdult() ? ' adult' : '');
   app.innerHTML = map[scr]() + (showNav ? navHTML() : '');
   if(scr==='profiles' && S.newP){
     const f = $('#pform'), nm = $('#np-name');
