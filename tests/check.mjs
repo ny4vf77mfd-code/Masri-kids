@@ -261,5 +261,14 @@ ok(weak.length === 0, weak.length ? `te weinig contrast: ${weak.join(', ')}` : '
 const worldCols = [...html.matchAll(/\{id:\d+, name:'[^']+',[^\n]*?color:'(#[0-9A-Fa-f]{6})'/g)].map(m => m[1]);
 ok(worldCols.length === 13 && worldCols.every(c => contrast('#FFFFFF', c) >= 3), 'witte titels op alle 13 wereldkleuren minstens 3:1');
 
+// 12. Nederlandse vertaling begint in de weergave met een hoofdletter; de opgeslagen woorden blijven gelijk.
+const nlcSrc = (html.match(/^const nlc = [^\n]+/m) || [''])[0];
+ok(!!nlcSrc, 'hulpfunctie voor hoofdletter in vertaling aanwezig');
+if (nlcSrc) { const c = vm.createContext({}); vm.runInContext(nlcSrc + '\nthis.f = nlc;', c);
+  ok(c.f('kat') === 'Kat' && c.f('falafel (ta\'meya)') === 'Falafel (ta\'meya)' && c.f('Dit is papa.') === 'Dit is papa.' && c.f('') === '' && c.f(undefined) === '', 'hoofdletter: "kat" wordt "Kat", rest blijft gelijk'); }
+const rawNl = (html.match(/esc\([A-Za-z_][\w.\[\]]*?\.nl\)/g) || []);
+ok(rawNl.length === 1 && /id="ce-nl" value="\$\{esc\(x\.nl\)\}"/.test(html), 'alle getoonde vertalingen met hoofdletter; alleen het bewerkveld voor de beheerder toont de opgeslagen tekst');
+ok(!/nl:\s*nlc\(/.test(html) && /\{id:'otta',\s+w:3, ar:'قطة',\s+ph:'Otta',\s+nl:'kat'/.test(html), 'woordenlijst zelf ongewijzigd (alleen weergave)');
+
 console.log(fails ? `\n${fails} controle(s) mislukt.` : '\nAlle controles geslaagd.');
 process.exit(fails ? 1 : 0);
