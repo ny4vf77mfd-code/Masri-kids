@@ -261,7 +261,67 @@ ok(weak.length === 0, weak.length ? `te weinig contrast: ${weak.join(', ')}` : '
 const worldCols = [...html.matchAll(/\{id:\d+, name:'[^']+',[^\n]*?color:'(#[0-9A-Fa-f]{6})'/g)].map(m => m[1]);
 ok(worldCols.length === 13 && worldCols.every(c => contrast('#FFFFFF', c) >= 3), 'witte titels op alle 13 wereldkleuren minstens 3:1');
 
-// 12. Nederlandse vertaling begint in de weergave met een hoofdletter; de opgeslagen woorden blijven gelijk.
+// 12. Actief ophalen: "Weet je het nog?", herhaling eerst, typen voor volwassenen.
+const apSrc = ['const seenBefore', 'const francoNorm', 'function typedOk'].map(k => (html.match(new RegExp('^' + k + '[^\\n]*', 'm')) || [''])[0]);
+ok(apSrc.every(Boolean), 'ophaal- en typhulpfuncties aanwezig');
+if (apSrc.every(Boolean)) {
+  const ITEMS = { ahlan:{ph:'Ahlan'}, salam:{ph:'Es-Salamo 3aleekom'}, la:{ph:"La'"}, kwayyes:{ph:'Kwayyes', fem:{ph:'Kwayyesa'}}, kwayyes_f:{ph:'Kwayyesa'} };
+  const c = vm.createContext({ ITEM: ITEMS, baseOf: id => id.replace(/_f$/, '') });
+  vm.runInContext(apSrc.join('\n') + '\nthis.t = typedOk; this.s = seenBefore;', c);
+  ok(c.t('ahlan', 'ahlan') && c.t('  AHLAN ', 'ahlan') && c.t('es salamo 3aleekom', 'salam') && c.t('Es-Salamo 3aleekom!', 'salam') && c.t('La', 'la'),
+    'typen: hoofdletters, koppeltekens, apostrof en leestekens tellen niet mee');
+  ok(!c.t('Ahlam', 'ahlan') && !c.t('', 'ahlan') && !c.t('Salamo', 'salam') && !c.t('Es Salamo 3aleekum', 'salam'), 'typen: een ander of onvolledig woord is fout');
+  ok(c.t('kwayyesa', 'kwayyes') && c.t('kwayyes', 'kwayyes'), 'typen: jongens- en meisjesvorm worden allebei goed gerekend');
+  ok(!c.s({ words: { ahlan: { c:0, w:0 } } }, 'ahlan') && !c.s({ words: {} }, 'ahlan') && c.s({ words: { ahlan: { c:1, w:0 } } }, 'ahlan') && c.s({ words: { ahlan: { c:0, w:2 } } }, 'ahlan'),
+    'ophalen alleen voor woorden die al eerder geoefend zijn (alleen gezien in de uitleg telt niet)');
+}
+const buildFn = (html.match(/function buildSteps\([\s\S]*?\n\}/) || [''])[0];
+const adultFn = (html.match(/function startAdultLesson\([\s\S]*?\n\}/) || [''])[0];
+const reviewFn = (html.match(/function startReview\([\s\S]*?\n\}/) || [''])[0];
+ok(/map\(id=>\(\{type:'recall', id:lid\(id\), review:true\}\)\)/.test(buildFn) && /return \[steps\[0\], \.\.\.rev, \.\.\.steps\.slice\(1\)/.test(buildFn),
+  'kinderles: herhaling als ophaalkaart, direct na de welkomstap');
+ok(/known = seenBefore\(p,id\) && rc<2/.test(buildFn), 'kinderles 7+: maximaal 2 bekende woorden als ophaalkaart');
+ok(/abs\.forEach\(id=>body\.push\(\{type:'say', id\}\)\)/.test(buildFn), 'kinderles 4–6: abstracte woorden blijven nazeggen');
+ok(!/type:'type'|'type'\s*:/.test(buildFn + reviewFn) && /\{type:'type', id:kn\}/.test(adultFn) && /type: i===0 \? 'type' : 'recall'/.test(adultFn),
+  'typen alleen in volwassenenlessen, nooit bij kinderen');
+const recallCase = (html.match(/case 'recall': \{ const st=L\.steps\[L\.i\];[\s\S]*?break; \}/) || [''])[0];
+ok(/record\(st\.id, knew\)/.test(recallCase) && !/mistakes/.test(recallCase) && /!st\.shown/.test(recallCase),
+  '"Weet je het nog?": telt mee voor herhaling, "Nog niet" kost geen ster, en kan pas na "Laat zien"');
+
+// 13. Gesproken begeleiding bij "Weet je het nog?" en ontbrekende opnames.
+const rpSrc = (html.match(/const RECALL_NL = \{[\s\S]*?\n\};\nfunction recallPlan[\s\S]*?\n\}\nfunction playThen[\s\S]*?\n\}\nfunction runRecallPlan[\s\S]*?\n\}/) || [''])[0];
+ok(!!rpSrc, 'spraakplan voor "Weet je het nog?" aanwezig');
+if (rpSrc) {
+  const c = vm.createContext({ AGEN: 0, curAudio: null, setTimeout, log: [] });
+  vm.runInContext(rpSrc + `
+    this.P = recallPlan; this.T = RECALL_NL; this.R = runRecallPlan;
+    this.mock = () => { log.length = 0; let busy = false;
+      speakNL = (t, then) => { if (busy) log.push('OVERLAP'); busy = true; log.push('say:' + t); setTimeout(() => { busy = false; then && then(); }, 1); };
+      play = (id) => { if (busy) log.push('OVERLAP'); busy = true; log.push('play:' + id); curAudio = { set onended(f) { setTimeout(() => { busy = false; f(); }, 1); }, set onerror(f) {} }; }; };
+    var speakNL, play;`, c);
+  const P = c.P;
+  ok(['ask'].every(ph => !P(ph, { voice: true, audio: true }).includes('play')), 'vraag stellen speelt nooit het Egyptische antwoord af');
+  ok(JSON.stringify(P('ask', { voice: true })) === '["say:ask"]' && P('ask', { voice: false }).length === 0, 'vraag wordt alleen uitgesproken als de spraak aan staat');
+  ok(JSON.stringify(P('reveal', { voice: true, audio: true })) === '["say:tried","play","say:check"]', 'na "Laat zien": eerst "Goed geprobeerd", dan het woord, dan "Wist je het?"');
+  ok(JSON.stringify(P('reveal', { voice: false, audio: true })) === '["play"]', 'spraak uit: alleen het Egyptische woord, geen Nederlandse zinnen');
+  ok(!P('reveal', { voice: true, audio: false }).includes('play') && !P('reveal', { voice: false, audio: false }).length, 'geen opname: niets afspelen en geen vervangende stem');
+  ok(JSON.stringify(P('knew', { voice: true })) === '["say:knew"]' && JSON.stringify(P('notyet', { voice: true })) === '["say:notyet"]' && !P('knew', { voice: false }).length,
+    'juiste feedback na "Ik wist het" en "Nog niet", alleen met spraak aan');
+  ok(Object.values(c.T).every(t => t.length <= 70 && !/[A-Z]{3}/.test(t)), 'gesproken zinnen zijn kort (max 70 tekens)');
+  c.mock(); c.R(c.P('reveal', { voice: true, audio: true }), 'otta');
+  await new Promise(r => setTimeout(r, 30));
+  ok(c.log.join('|') === `say:${c.T.tried}|play:otta|say:${c.T.check}` , 'alles klinkt na elkaar, nooit tegelijk (geen dubbele audio)');
+  c.mock(); c.R(c.P('reveal', { voice: true, audio: true }), 'otta'); c.AGEN++;
+  await new Promise(r => setTimeout(r, 30));
+  ok(c.log.length === 1, 'na verder gaan (nieuwe geluidsronde) stopt de rest van het plan');
+}
+ok(/if\(m==='none' && childView\(\)\) return '';/.test(html) && /S\.screen!=='parent'/.test((html.match(/const childView = [^\n]+/) || [''])[0]),
+  'kinderen zien geen "nog geen opname"; in het ouderdeel blijft de melding');
+ok(!/speakNL\([^)]*(it|ITEM\[[^\]]+\])\.(ph|ar)/.test(html), 'Egyptische woorden worden nooit door de computerstem voorgelezen');
+const showCase = (html.match(/case 'recall-show': \{[^\n]+/) || [''])[0];
+ok(/st\.shown\) return; hush\(\);/.test(showCase) && /recallPlan\('reveal'/.test(showCase), '"Laat zien" stopt eerst ander geluid en kan maar één keer');
+ok(/function voiceOn\(\)\{ const p = me\(\); return !!p && p\.level===1 && DB\.settings\.nlVoice!==false/.test(html), 'spraak blijft alleen voor 4–6 jaar en volgt de instelling aan/uit');
+// 14. Nederlandse vertaling begint in de weergave met een hoofdletter; de opgeslagen woorden blijven gelijk.
 const nlcSrc = (html.match(/^const nlc = [^\n]+/m) || [''])[0];
 ok(!!nlcSrc, 'hulpfunctie voor hoofdletter in vertaling aanwezig');
 if (nlcSrc) { const c = vm.createContext({}); vm.runInContext(nlcSrc + '\nthis.f = nlc;', c);
