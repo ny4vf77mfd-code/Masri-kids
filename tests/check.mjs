@@ -419,11 +419,13 @@ ok(!/nl:\s*nlc\(/.test(html) && /\{id:'otta',\s+w:3, ar:'قطة',\s+ph:'Otta',\s
   const api = readFileSync(new URL('./storage_api_test.mjs', import.meta.url), 'utf8');
   ok(/includes\(TEST_REF\)/.test(api) && /includes\(LIVE_REF\)/.test(api) && /process\.exit\(2\)/.test(api), 'opslagtest via API weigert alles behalve het testproject');
   ok(!/password\s*[:=]\s*'[^']/i.test(api) && /process\.env\.TEST_ADMIN_PASSWORD/.test(api), 'opslagtest bevat geen wachtwoorden (alleen uit de omgeving)');
-  ok(["gast kan demo/${label} lezen en downloaden", "[[A, 'audio'], [P, 'pics']]", "gast ziet niets in media/", "gast kan NIET uploaden in demo", "gast kan demo-bestanden NIET verwijderen", "gast kan NIET verplaatsen",
+  ok(["gast kan demo/${label} lezen en downloaden", "[[A, 'audio'], [P, 'pics']]", "gast ziet het testbestand in ${label} NIET", "gast krijgt geen downloadlink voor ${label}", "gast kan NIET uploaden in demo", "gast kan demo-bestanden NIET verwijderen", "gast kan NIET verplaatsen",
       "gast kan public.content NIET rechtstreeks lezen", "gezin ziet de demo-bestanden NIET", "gezin kan NIET uploaden in demo", "gezin kan eigen bestand NIET uit media naar demo verplaatsen",
       "gezin kan eigen bestand NIET uit media naar demo kopiëren", "beheerder uploadt demo/audio", "beheerder kan NIET uploaden buiten audio/ en pics/", "beheerder kan demo-bestanden verwijderen"].every(k => api.includes(k)),
     'opslagtest via API dekt lezen, uploaden, wijzigen, verwijderen, verplaatsen en kopiëren');
   ok(!/rlstest_api/.test(api) && /const RUN = 'rlstest_' \+ Date\.now\(\)/.test(api) && /filter\(x => x\.includes\(RUN\)\)/.test(api), 'opslagtest: unieke namen per run, ruimt alleen eigen testspullen op');
+  ok(/const SHARED = `shared\/audio\/\$\{RUN\}_gedeeld\.mp3`/.test(api) && /upload\(admin\.token, 'media', SHARED/.test(api) && /controle vooraf: het testbestand in media\/shared bestaat echt/.test(api) && api.indexOf('controle vooraf: het testbestand in media/shared') < api.indexOf('gast ziet het testbestand in'), 'opslagtest: eigen testbestand in media/shared, eerst bewezen dat het bestaat');
+  ok(/opruimen gecontroleerd: \$\{p\.split/.test(api) && /opruimen gecontroleerd: \$\{id\}/.test(api) && api.indexOf('await cleanRows') < api.indexOf('process.exit(fails ? 1 : 0)') && !/LET OP: niet alles/.test(api), 'opslagtest: opruimen wordt gecontroleerd en een opruimfout laat de test mislukken');
   ok(/const UNEXPECTED = s => s === 0 \|\| s >= 500;/.test(api) && /return \{ status: 0, data: String\(e\) \}/.test(api) && !/\.catch\(\(\) => \[\]\)/.test(api), 'opslagtest: API-fouten tellen nooit als geslaagde weigering');
 }
 

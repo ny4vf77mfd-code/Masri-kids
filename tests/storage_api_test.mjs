@@ -14,6 +14,9 @@
 //   (status 400/401/403/404, of 200 met een lege lijst), en waar mogelijk controleert de beheerder
 //   daarna dat er echt niets veranderd is (bestand bestaat nog / is niet ontstaan).
 //   Onverwachte antwoorden (netwerkfout, 5xx, onleesbaar antwoord) tellen als FOUT.
+// - "Gast ziet niets in media" wordt bewezen met eigen tijdelijke bestanden in media/shared en in een
+//   gezinsmap. Eerst wordt vastgesteld dat die bestanden echt bestaan; pas dan telt "niet zichtbaar".
+// - Opruimen wordt gecontroleerd. Lukt het niet, dan telt dat als mislukte test.
 import { readFileSync } from 'node:fs';
 import { randomBytes } from 'node:crypto';
 
@@ -34,7 +37,7 @@ const hdr = (token, extra = {}) => ({ apikey: KEY, ...(token ? { Authorization: 
 
 // Unieke namen voor deze run; alleen deze worden opgeruimd.
 const RUN = 'rlstest_' + Date.now().toString(36) + '_' + randomBytes(3).toString('hex');
-const made = { demo: new Set(), media: new Set(), content: new Set(), demo_words: new Set() };
+const made = { demo: new Set(), shared: new Set(), media: new Set(), content: new Set(), demo_words: new Set() };
 
 // ---------- API-hulpjes: geven altijd {status, data} terug, nooit stil een lege lijst ----------
 async function call(url, opts) {
@@ -91,6 +94,7 @@ const W_DEMO = `${RUN}_demo`, W_INTERN = `${RUN}_intern`;
 const admin = await login(process.env.TEST_ADMIN_EMAIL, process.env.TEST_ADMIN_PASSWORD);
 const gezin = await login(process.env.TEST_GEZIN_EMAIL, process.env.TEST_GEZIN_PASSWORD);
 const OWN = `${gezin.uid}/audio/${RUN}_eigen.mp3`;
+const SHARED = `shared/audio/${RUN}_gedeeld.mp3`;
 console.log(`Testrun ${RUN} op het testproject\n`);
 try {
   // ---------- beheerder ----------
@@ -111,6 +115,14 @@ try {
   res = await rest(admin.token, 'POST', 'demo_words', { id: W_DEMO });
   ok(res.status === 201, 'beheerder maakt een woord openbaar', desc(res)); if (res.status === 201) made.demo_words.add(W_DEMO);
 
+  // ---------- eigen testbestanden in media (nodig om "gast ziet dit niet" echt te bewijzen) ----------
+  res = await upload(admin.token, 'media', SHARED, 'audio/mpeg', AUDIO);
+  ok(res.status === 200, 'beheerder zet een tijdelijk testbestand in media/shared (voorbereiding)', desc(res)); if (res.status === 200) made.shared.add(SHARED);
+  ok(await exists(admin.token, 'media', SHARED), 'controle vooraf: het testbestand in media/shared bestaat echt');
+  res = await upload(gezin.token, 'media', OWN, 'audio/mpeg', AUDIO);
+  ok(res.status === 200, 'gezin kan een eigen bestand in media zetten (voorbereiding)', desc(res)); if (res.status === 200) made.media.add(OWN);
+  ok(await exists(gezin.token, 'media', OWN), 'controle vooraf: het testbestand in de gezinsmap bestaat echt');
+
   // ---------- gast ----------
   for (const [path, label] of [[A, 'audio'], [P, 'pics']]) {
     const s = await sign(null, 'demo', path);
@@ -122,15 +134,25 @@ try {
   ok(names(res) !== null && names(res).includes(`${RUN}.mp3`), 'gast ziet demo-bestand in de lijst', desc(res));
   res = await sign(null, 'demo', X);
   ok(refused(res), 'gast krijgt geen downloadlink buiten audio/ en pics/', desc(res));
-  for (const dir of ['shared/audio', 'shared/pics', `${gezin.uid}/audio`]) {
-    const r = await call(`${S}/object/list/media`, { method: 'POST', headers: hdr(null, { 'Content-Type': 'application/json' }), body: JSON.stringify({ prefix: dir, limit: 1 }) });
-    ok(!UNEXPECTED(r.status) && (DENIED(r.status) || (Array.isArray(r.data) && r.data.length === 0)), `gast ziet niets in media/${dir.startsWith('shared') ? dir : '<gezin>/audio'}`, desc(r));
+  for (const [path, label] of [[SHARED, 'media/shared'], [OWN, 'een gezinsmap in media']]) {
+    const dir = path.split('/').slice(0, -1).join('/'), file = path.split('/').pop();
+    const l = await list(null, 'media', dir);
+    ok(hidden(l, file), `gast ziet het testbestand in ${label} NIET`, desc(l));
+    const sg = await sign(null, 'media', path);
+    ok(refused(sg), `gast krijgt geen downloadlink voor ${label}`, desc(sg));
   }
+  res = await remove(null, 'media', [SHARED]);
+  ok(!UNEXPECTED(res.status) && (DENIED(res.status) || (Array.isArray(res.data) && res.data.length === 0)) && await exists(admin.token, 'media', SHARED),
+    'gast kan een bestand in media/shared NIET verwijderen (bestand bestaat nog)', desc(res));
+  res = await moveOrCopy(null, 'copy', { bucket: 'media', path: SHARED }, { bucket: 'demo', path: `audio/${RUN}_uit_gedeeld.mp3` });
+  if (res.status === 200) made.demo.add(`audio/${RUN}_uit_gedeeld.mp3`);
+  ok(refused(res) && !(await exists(admin.token, 'demo', `audio/${RUN}_uit_gedeeld.mp3`)), 'gast kan een bestand NIET uit media/shared naar demo kopiëren', desc(res));
   res = await upload(null, 'demo', `audio/${RUN}_gast.mp3`, 'audio/mpeg', AUDIO);
   if (res.status === 200) made.demo.add(`audio/${RUN}_gast.mp3`);
   ok(refused(res) && !(await exists(admin.token, 'demo', `audio/${RUN}_gast.mp3`)), 'gast kan NIET uploaden in demo', desc(res));
   res = await upload(null, 'media', `shared/audio/${RUN}_gast.mp3`, 'audio/mpeg', AUDIO);
-  ok(refused(res), 'gast kan NIET uploaden in media', desc(res));
+  if (res.status === 200) made.shared.add(`shared/audio/${RUN}_gast.mp3`);
+  ok(refused(res) && !(await exists(admin.token, 'media', `shared/audio/${RUN}_gast.mp3`)), 'gast kan NIET uploaden in media', desc(res));
   res = await upload(null, 'demo', A, 'audio/mpeg', AUDIO, true);
   ok(refused(res), 'gast kan een demo-bestand NIET overschrijven', desc(res));
   res = await remove(null, 'demo', [A, P]);
@@ -168,8 +190,6 @@ try {
   res = await remove(gezin.token, 'demo', [A, P]);
   ok(!UNEXPECTED(res.status) && (DENIED(res.status) || (Array.isArray(res.data) && res.data.length === 0)) && await exists(admin.token, 'demo', A) && await exists(admin.token, 'demo', P),
     'gezin kan demo-bestanden NIET verwijderen (bestanden bestaan nog)', desc(res));
-  res = await upload(gezin.token, 'media', OWN, 'audio/mpeg', AUDIO);
-  ok(res.status === 200, 'gezin kan een eigen bestand in media zetten (voorbereiding)', desc(res)); if (res.status === 200) made.media.add(OWN);
   res = await moveOrCopy(gezin.token, 'move', { bucket: 'media', path: OWN }, { bucket: 'demo', path: `audio/${RUN}_verplaatst.mp3` });
   if (res.status === 200) made.demo.add(`audio/${RUN}_verplaatst.mp3`);
   ok(refused(res) && await exists(gezin.token, 'media', OWN) && !(await exists(admin.token, 'demo', `audio/${RUN}_verplaatst.mp3`)),
@@ -188,15 +208,34 @@ try {
   res = await remove(admin.token, 'demo', [A, P]);
   ok(res.status === 200 && Array.isArray(res.data) && res.data.length === 2 && !(await exists(admin.token, 'demo', A)), 'beheerder kan demo-bestanden verwijderen', desc(res));
   if (res.status === 200) { made.demo.delete(A); made.demo.delete(P); }
+} catch (e) {
+  ok(false, 'test afgebroken door een onverwachte fout', e.message);
 } finally {
   // Opruimen: ALLEEN wat deze run zelf heeft aangemaakt (allemaal met het unieke RUN-voorvoegsel).
+  // Elk onderdeel wordt nagekeken; lukt het niet, dan telt dat als mislukte test.
   const own = s => [...s].filter(x => x.includes(RUN));
-  const left = [];
-  if (made.demo.size) { const r = await remove(admin.token, 'demo', own(made.demo)); if (r.status !== 200) left.push('demo-bestanden'); }
-  if (made.media.size) { const r = await remove(gezin.token, 'media', own(made.media)); if (r.status !== 200) left.push('gezinsbestand'); }
-  for (const id of own(made.demo_words)) { const r = await rest(admin.token, 'DELETE', `demo_words?id=eq.${id}`); if (r.status !== 200) left.push(id); }
-  for (const id of own(made.content)) { const r = await rest(admin.token, 'DELETE', `content?id=eq.${id}`); if (r.status !== 200) left.push(id); }
-  if (left.length) console.log(`\nLET OP: niet alles kon worden opgeruimd (${left.join(', ')}). Alles begint met ${RUN}.`);
+  const cleanFiles = async (label, token, bucket, paths) => {
+    if (!paths.length) return;
+    try {
+      const r = await remove(token, bucket, paths);
+      ok(r.status === 200, `opruimen: ${label} verwijderd`, desc(r));
+      for (const p of paths) ok(!(await exists(token, bucket, p)), `opruimen gecontroleerd: ${p.split('/').pop()} is weg`);
+    } catch (e) { ok(false, `opruimen van ${label} mislukt`, e.message); }
+  };
+  const cleanRows = async (table, ids) => {
+    for (const id of ids) {
+      try {
+        const r = await rest(admin.token, 'DELETE', `${table}?id=eq.${id}`);
+        const c = await rest(admin.token, 'GET', `${table}?select=id&id=eq.${id}`);
+        ok(r.status === 200 && c.status === 200 && Array.isArray(c.data) && c.data.length === 0, `opruimen gecontroleerd: ${id} is weg uit ${table}`, `${desc(r)} / ${desc(c)}`);
+      } catch (e) { ok(false, `opruimen van ${id} mislukt`, e.message); }
+    }
+  };
+  await cleanFiles('demo-bestanden', admin.token, 'demo', own(made.demo));
+  await cleanFiles('testbestanden in media/shared', admin.token, 'media', own(made.shared));
+  await cleanFiles('testbestand in de gezinsmap', gezin.token, 'media', own(made.media));
+  await cleanRows('demo_words', own(made.demo_words));
+  await cleanRows('content', own(made.content));
 }
 console.log(fails ? `\n${fails} controle(s) mislukt.` : '\nAlle opslagcontroles via de API geslaagd.');
 process.exit(fails ? 1 : 0);
