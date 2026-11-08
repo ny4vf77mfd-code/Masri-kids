@@ -340,5 +340,51 @@ const rawNl = (html.match(/esc\([A-Za-z_][\w.\[\]]*?\.nl\)/g) || []);
 ok(rawNl.length === 1 && /id="ce-nl" value="\$\{esc\(x\.nl\)\}"/.test(html), 'alle getoonde vertalingen met hoofdletter; alleen het bewerkveld voor de beheerder toont de opgeslagen tekst');
 ok(!/nl:\s*nlc\(/.test(html) && /\{id:'otta',\s+w:3, ar:'قطة',\s+ph:'Otta',\s+nl:'kat'/.test(html), 'woordenlijst zelf ongewijzigd (alleen weergave)');
 
+
+// 16. Voortgang samenvoegen: twee apparaten mogen elkaars sterren niet terugzetten.
+{
+  const a = html.indexOf('/* ---------- voortgang samenvoegen'), b = html.indexOf('async function loadFamily(){');
+  ok(a > 0 && b > a, 'samenvoeg-code staat vóór loadFamily');
+  const block = html.slice(a, b);
+  const server = {}; // gedeelde nep-database (players)
+  const clone = o => JSON.parse(JSON.stringify(o));
+  const fakeSb = { from: () => ({
+    select: () => ({ in: async (_c, ids) => ({ data: ids.filter(id => server[id]).map(id => ({ id, data: clone(server[id]) })), error: null }) }),
+    upsert: async rows => { (Array.isArray(rows) ? rows : [rows]).forEach(r => { if (r.data && r.id) server[r.id] = clone(r.data); }); return { error: null }; },
+  }) };
+  const tablet = () => { const c = vm.createContext({ sb: fakeSb, SYNC: { t: null }, AUTH: { user: { id: 'fam' } }, DB: null, saveLocal() {}, toast() {}, setTimeout: () => 0, clearTimeout() {}, console });
+    vm.runInContext(block + '\nthis.api = { save, flush, mergeProfile, get DB(){ return DB; }, set DB(v){ DB = v; } };', c); return c.api; };
+  const spencer = { id: 'sp', name: 'Spencer', xp: 100, lessons: { w1l1: 3, w1l2: 3 }, words: { ahlan: { c: 2, w: 0 } }, stickers: [0], days: ['2026-11-07'], last: '2026-11-07', streak: 1 };
+  const zus = { id: 'zu', name: 'Zus', xp: 50, lessons: { w1l1: 2 }, words: {}, stickers: [], days: [] };
+  server.sp = clone(spencer); server.zu = clone(zus);
+  const A = tablet(), B = tablet();
+  A.DB = { profiles: [clone(spencer), clone(zus)], activeId: 'zu', dirty: [] };
+  B.DB = { profiles: [clone(spencer), clone(zus)], activeId: 'sp', dirty: [] };
+  const stars = p => Object.values(p.lessons).reduce((x, y) => x + y, 0);
+  await (async () => {
+    // Spencer speelt op tablet B en haalt een ster.
+    B.DB.profiles[0].lessons.w1l3 = 1; B.DB.profiles[0].xp += 10; B.save(); await B.flush();
+    ok(stars(server.sp) === 7, 'tablet B: Spencer krijgt online zijn nieuwe ster');
+    // Zus speelt daarna op tablet A (die nog de oude stand van Spencer heeft).
+    A.DB.profiles[1].lessons.w1l2 = 3; A.save(); await A.flush();
+    ok(stars(server.sp) === 7 && server.sp.xp === 110, 'tablet A zet Spencers sterren en XP niet terug (het échte probleem)');
+    ok(stars(server.zu) === 5, 'tablet A: sterren van Zus komen wel online');
+    // Spencer speelt daarna óók op tablet A met de oude stand: beide lessen blijven bewaard.
+    A.DB.activeId = 'sp'; A.DB.profiles[0].lessons.w2l1 = 2; A.DB.profiles[0].words.mama = { c: 1, w: 0 }; A.save(); await A.flush();
+    ok(server.sp.lessons.w1l3 === 1 && server.sp.lessons.w2l1 === 2, 'zelfde kind op twee apparaten: lessen van beide apparaten blijven');
+    ok(server.sp.words.ahlan && server.sp.words.mama, 'woorden van beide apparaten blijven');
+    ok(A.DB.profiles[0].lessons.w1l3 === 1, 'apparaat neemt de samengevoegde stand ook zelf over');
+    ok(A.DB.dirty.length === 0, 'na opslaan staat er niets meer klaar');
+    // Ouder past op tablet A de naam aan: dat wint van de oude online naam, sterren blijven.
+    const m = A.mergeProfile({ ...server.sp, name: 'Oud' }, { ...A.DB.profiles[0], name: 'Spencer J', lessons: { w1l1: 1 } }, true);
+    ok(m.name === 'Spencer J' && m.lessons.w1l1 === 3, 'instelling van dit apparaat wint, maar sterren gaan nooit omlaag');
+    const w = A.mergeProfile({ words: { x: { c: 5, w: 1, b: 3 } } }, { words: { x: { c: 1, w: 0, b: 1 } } }, true);
+    ok(w.words.x.c === 5, 'woord: de versie met de meeste oefenbeurten blijft');
+    ok(A.mergeProfile({ today: { date: '2026-11-08', xp: 30 } }, { today: { date: '2026-11-08', xp: 10, claimed: true } }, true).today.xp === 30, 'dagdoel: hoogste stand van vandaag blijft');
+    ok(/sb\.from\('players'\)\.select\('id,data'\)\.in\('id', ids\)/.test(block) && !/upsert\(DB\.profiles\.map/.test(html), 'opslaan stuurt alleen gewijzigde spelers, nooit meer de hele familie');
+    ok(/pending\.has\(p\.id\)/.test(html), 'bij ophalen gaan nog niet opgeslagen wijzigingen (offline) niet verloren');
+  })().catch(e => ok(false, 'samenvoeg-test crashte: ' + e.message));
+}
+
 console.log(fails ? `\n${fails} controle(s) mislukt.` : '\nAlle controles geslaagd.');
 process.exit(fails ? 1 : 0);
