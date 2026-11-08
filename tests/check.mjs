@@ -184,7 +184,7 @@ ok(!/unlockAll\s*=\s*.*TESTMODE|TESTMODE[^\n]*(localStorage|sessionStorage|save\
 ok(/AUTH\.admin = false; TESTMODE_ON = false;/.test(html), 'testmodus gaat uit bij opnieuw inloggen of uitloggen');
 if (tmSrc.every(Boolean)) {
   const env = { SB_ENV: 'test', AUTH: { admin: false }, WORLDS: [{ id: 1, lessons: [{ id: 'a' }, { id: 'b' }] }, { id: 2, lessons: [{ id: 'c' }, { id: 'd' }] }],
-    prevWorld: (p, wi) => wi - 1 };
+    prevWorld: (p, wi) => wi - 1, guestBlocked: () => false };
   vm.createContext(env);
   vm.runInContext(tmSrc.join('\n') + '\nthis.api = { worldUnlocked, lessonUnlocked, testMode, setOn: v => { TESTMODE_ON = v; } };', env);
   const { api } = env;
@@ -384,6 +384,23 @@ ok(!/nl:\s*nlc\(/.test(html) && /\{id:'otta',\s+w:3, ar:'قطة',\s+ph:'Otta',\s
     ok(/sb\.from\('players'\)\.select\('id,data'\)\.in\('id', ids\)/.test(block) && !/upsert\(DB\.profiles\.map/.test(html), 'opslaan stuurt alleen gewijzigde spelers, nooit meer de hele familie');
     ok(/pending\.has\(p\.id\)/.test(html), 'bij ophalen gaan nog niet opgeslagen wijzigingen (offline) niet verloren');
   })().catch(e => ok(false, 'samenvoeg-test crashte: ' + e.message));
+}
+
+
+// 17. Proberen zonder account: alleen lokaal, alleen twee werelden, alleen de gedeelde map.
+{
+  ok(/const LSG = 'nowie_gast_v1'/.test(html) && /const GUEST_WORLDS = 2;/.test(html), 'gastmodus: eigen opslag op het apparaat en 2 werelden');
+  const fl = html.slice(html.indexOf('async function flush(){'), html.indexOf('async function loadFamily(){'));
+  ok(/if\(!sb \|\| !AUTH\.user\) return;/.test(fl), 'gast stuurt nooit voortgang naar de server (flush vereist inlog)');
+  const lm = html.slice(html.indexOf('async function loadMedia(){'), html.indexOf('function persistMedia'));
+  const gastDeel = lm.slice(0, lm.indexOf('if(!sb || !AUTH.user) return;'));
+  ok(/signFolder\('shared\/audio'/.test(gastDeel) && !/AUTH\.user\.id|u\+'\//.test(gastDeel), 'gast laadt alleen de gedeelde map, nooit een gezinsmap');
+  ok(/if\(AUTH\.guest && \(scr==='gate' \|\| scr==='parent' \|\| scr==='talk'\)\)/.test(html), 'gast komt niet in ouderdeel, beheer of AI-chat');
+  ok(/const guestBlocked = \(p,wi\) => AUTH\.guest && !AUTH\.user && !worldOrder\(p\)\.filter\(i=>!WORLDS\[i\]\.bonus\)\.slice\(0, GUEST_WORLDS\)/.test(html) && /function worldUnlocked\(p,wi\)\{ if\(guestBlocked\(p,wi\)\) return false;/.test(html), 'gast: alleen de eerste twee werelden open (ook geen bonuswereld)');
+  ok(/data-act="guest-keep"/.test(html) && /data-act="guest-drop"/.test(html), 'na inloggen wordt eerst gevraagd of de proefvoortgang mee mag');
+  ok(/Probeer je de app zonder account/.test(privacy), 'privacyverklaring noemt proberen zonder account');
+  const mig = readFileSync(new URL('../supabase/migrations/20261108_gast_leest_gedeeld.sql', import.meta.url), 'utf8');
+  ok(/for select to anon/.test(mig) && /\[1\] = 'shared'/.test(mig) && !/for (insert|update|delete|all) to anon/i.test(mig), 'databaseregel: gast mag alleen lezen, en alleen de gedeelde map');
 }
 
 console.log(fails ? `\n${fails} controle(s) mislukt.` : '\nAlle controles geslaagd.');

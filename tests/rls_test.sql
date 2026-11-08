@@ -52,12 +52,37 @@ begin
   exception when others then null;
   end;
 
-  -- niet ingelogd: helemaal niets
+  -- niet ingelogd (gast, "Proberen zonder account"): alleen gedeelde map en woordaanpassingen LEZEN
   reset role;
   set local role anon;
   select count(*) into n from public.players;  if n > 0 then fout := fout || ' anon_spelers'; end if;
-  select count(*) into n from public.content;  if n > 0 then fout := fout || ' anon_inhoud'; end if;
+  select count(*) into n from public.family_settings; if n > 0 then fout := fout || ' anon_instellingen'; end if;
   select count(*) into n from public.ai_config; if n > 0 then fout := fout || ' anon_ai_config'; end if;
+  select count(*) into n from public.admins;   if n > 0 then fout := fout || ' anon_beheerders'; end if;
+  select count(*) into n from storage.objects
+    where bucket_id = 'media' and (storage.foldername(name))[1] <> 'shared';
+  if n > 0 then fout := fout || ' anon_gezinsmedia'; end if;
+  update public.content set data = data;   get diagnostics n = row_count; if n > 0 then fout := fout || ' anon_inhoud_gewijzigd'; end if;
+  begin
+    delete from public.content;            get diagnostics n = row_count; if n > 0 then fout := fout || ' anon_inhoud_verwijderd'; end if;
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    insert into public.content(id, data) values ('rls_test_gast', '{}');
+    fout := fout || ' anon_inhoud_toegevoegd';
+  exception when others then null;
+  end;
+  begin
+    insert into storage.objects(bucket_id, name) values ('media', 'shared/rls_test_gast.txt');
+    fout := fout || ' anon_upload';
+  exception when others then null;
+  end;
+  update storage.objects set name = name where bucket_id = 'media';
+  get diagnostics n = row_count; if n > 0 then fout := fout || ' anon_media_gewijzigd'; end if;
+  begin
+    delete from storage.objects where bucket_id = 'media'; get diagnostics n = row_count; if n > 0 then fout := fout || ' anon_media_verwijderd'; end if;
+  exception when insufficient_privilege then null;
+  end;
 
   if fout = '' then raise exception 'RLS-TEST GESLAAGD (alles teruggedraaid)';
   else raise exception 'RLS-TEST MISLUKT:% (alles teruggedraaid)', fout; end if;
