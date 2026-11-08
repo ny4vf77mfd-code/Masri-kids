@@ -238,7 +238,17 @@ if (nlNumSrc) {
   ok(Object.entries(want).every(([n, w]) => c.f(+n) === w), 'ouderslot: Nederlandse getallen goed gespeld (o.a. tweeëntwintig, achtenveertig)');
 }
 // 10e. Kinderen 4–6: begroeting in het Nederlands, niet in Franco.
-ok(/<b>\$\{p\.level===1 \? 'Hoi' : g\[1\]\}, \$\{esc\(p\.name\)\}!<\/b>/.test(html), 'dashboard 4–6 jaar: begroeting "Hoi" in plaats van Franco');
+ok(/const g = p\.level===1 \? null/.test(html) && /<b>\$\{g \? esc\(ITEM\[g\]\.ph\)[^:]*: 'Hoi'\}, \$\{esc\(p\.name\)\}!<\/b>/.test(html), 'dashboard 4–6 jaar: begroeting "Hoi" in plaats van Franco');
+
+// 15. Design fase 2: kinderdashboard in klei-stijl, alle functies blijven bereikbaar.
+const homeSrc = html.slice(html.indexOf('function homeHTML(){'), html.indexOf('function lessonsHTML(){'));
+ok(/data-act="\$\{cta\.act\}"/.test(homeSrc) && /act:'review'/.test(homeSrc) && /act:`lesson:\$\{nxt\.wi\}:\$\{nxt\.li\}`/.test(homeSrc), 'dashboard: "Vandaag leren" start herhaling of de eerstvolgende les');
+ok(['go:lessons','go:stickers','go:scores','go:profiles'].every(a => homeSrc.includes(`data-act="${a}"`)), 'dashboard: tegels openen lessen, prijzen, samen leren en spelerswissel');
+ok(/rewardCards\(p\)/.test(homeSrc) && /talkCardHTML\(p\)/.test(homeSrc) && /daily\(p\)/.test(homeSrc), 'dashboard: uitdaging, gezinsdoel en praatkaart blijven');
+ok(/function lessonsHTML\(\)/.test(html) && /lessons:lessonsHTML/.test(html) && /data-act="penalty"/.test(html.slice(html.indexOf('function lessonsHTML(){'))), 'scherm Lessen: alle werelden, lessen en penaltyschieten');
+ok(/\['home',ICO\.home,'Start'\],\['lessons'/.test(html) && /\['gate',ICO\.gear,'Ouders'\]/.test(html), 'kindermenu: Start, Lessen, Voortgang, Ontdekken, Ouders (ouderslot blijft)');
+ok(!/kd-[a-z-]*[^]*?(🔔|st-fire)/.test(homeSrc), 'dashboard: geen bel en geen streak-vlam');
+ok((homeSrc.match(/<img /g)||[]).length === (homeSrc.match(/IMG_HIDE/g)||[]).length, 'dashboard: elk plaatje verdwijnt netjes als het bestand ontbreekt');
 
 // 11. Design system fase 1: één kleurenset, geen Duolingo-kleuren, leesbaar contrast.
 const cssAll = (html.match(/<style>([\s\S]*?)<\/style>/) || ['', ''])[1];
