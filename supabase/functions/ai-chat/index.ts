@@ -163,7 +163,7 @@ Deno.serve(async (req) => {
   const { data: today } = await admin.from("ai_usage").select("count,per_player").eq("family_id", fam).eq("day", day).maybeSingle();
   if ((today?.count || 0) >= Number(cfg.family_daily_msgs)) return json(req, { error: "Het maximum aantal berichten voor vandaag is bereikt. Morgen kun je weer verder." }, 429);
   const kidLimit = Number(p.aiDaily || KID_DAILY_DEFAULT);
-  if (kind === "kids" && ((today?.per_player || {})[pid] || 0) >= kidLimit) return json(req, { error: "Je hebt vandaag genoeg gekletst met Mishmish. Morgen weer!" }, 429);
+  if (kind === "kids" && ((today?.per_player || {})[pid] || 0) >= kidLimit) return json(req, { error: "Je hebt vandaag genoeg gekletst met Nowie. Morgen weer!" }, 429);
 
   if (kind === "kids" && msg && PERSONAL.some(r => r.test(msg))) { await addUsage(admin, fam, pid, 1, 0, 0); return json(req, { turn: KID_PRIVACY_REPLY, kind, preview: !active }); }
 
