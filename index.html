@@ -1136,6 +1136,17 @@ body:has(#test-banner) #app:not(.adult) .lesson{padding-top:30px}
 #app:not(.adult) .lesson .lfoot .btn:disabled{background:var(--kd-c20);color:#9A8F80;box-shadow:none;border-color:transparent}
 #app:not(.adult) .done-scr{background:linear-gradient(180deg,var(--kd-c28),var(--kd-c23));margin:-12px calc(-1 * max(16px,env(safe-area-inset-left,0px))) 0;padding-inline:max(16px,env(safe-area-inset-left,0px));border-radius:0 0 32px 32px}
 img.mm{display:block;object-fit:contain;filter:drop-shadow(0 4px 4px rgba(80,50,20,.22))}
+
+/* ---------- design fase 2: overige kinderschermen ---------- */
+#app:not(.adult):not(.full) .panel,#app:not(.adult) .wrow,#app:not(.adult) .pcard,#app:not(.adult) .tile-n,#app:not(.adult) .bdg,#app:not(.adult) .stk-item .stk,#app:not(.adult) .soon-card{
+  border:0;border-radius:24px;background:var(--kd-c29);box-shadow:0 6px 16px rgba(120,80,40,.10),inset 0 0 0 2px var(--kd-c22)}
+#app:not(.adult) .tile-n{box-shadow:inset 0 0 0 2px var(--kd-c22)}
+#app:not(.adult) .btn.ghost,#app:not(.adult) .gate .btn,#app:not(.adult) .seg button{text-transform:none;letter-spacing:0;border-radius:999px}
+#app:not(.adult) .btn:not(.ghost):not(.ok):not(.try):not(.sun){text-transform:none;letter-spacing:0;border-radius:999px;background:linear-gradient(180deg,var(--kd-c21),var(--kd-c17));box-shadow:0 5px 0 var(--kd-c11);color:#fff}
+#app:not(.adult) .topbar{background:rgba(255,248,238,.9)}
+body:has(#test-banner) #app:not(.adult) .topbar{top:22px}
+#app:not(.adult) .st-fire{display:none}
+#app:not(.adult) .page-h{color:var(--kd-c2)}
 </style>
 
 </head>
