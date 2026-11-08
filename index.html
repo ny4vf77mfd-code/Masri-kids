@@ -1077,10 +1077,10 @@ body:has(#test-banner) .kd-hero{padding-top:calc(32px + env(safe-area-inset-top,
 .kd-cat{width:min(54vw,240px);height:auto;filter:drop-shadow(0 6px 5px rgba(80,50,20,.3));animation:kdbob 3.2s ease-in-out infinite;transform-origin:50% 100%}
 @keyframes kdbob{0%,100%{transform:rotate(0)}50%{transform:rotate(-1.5deg)}}
 @media (prefers-reduced-motion:reduce){.kd-cat{animation:none}}
-.kd-bub{position:absolute;right:0;top:28px;max-width:40%;background:rgba(255,250,242,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border-radius:16px;padding:7px 11px;box-shadow:0 3px 8px rgba(80,50,20,.10);font-weight:800;font-size:13px;line-height:1.25;color:var(--kd-c2);text-align:center}
-.kd-bub::after{content:"";position:absolute;left:-8px;bottom:16px;border:8px solid transparent;border-right-color:rgba(255,250,242,.72);border-left:0}
-.kd-bub b{display:block;font-family:var(--f-display);font-size:clamp(14px,4vw,16px);margin-bottom:1px;hyphens:none;overflow-wrap:normal}
-.kd-bub .play{margin:6px auto 0}
+.kd-bub{position:absolute;right:8px;top:56px;max-width:48%;display:flex;align-items:center;gap:6px;background:rgba(255,250,242,.9);border-radius:999px;padding:6px 12px;box-shadow:0 3px 8px rgba(80,50,20,.10);color:var(--kd-c2);text-align:center}
+.kd-bub::after{content:"";position:absolute;left:-6px;bottom:8px;border:6px solid transparent;border-right-color:rgba(255,250,242,.9);border-left:0}
+.kd-bub b{display:block;font-family:var(--f-display);font-size:15px;line-height:1.2;hyphens:none;overflow-wrap:normal}
+.kd-bub .play{flex:none;margin:0}
 .kd-sign{position:absolute;right:4px;bottom:60px;background:linear-gradient(180deg,var(--kd-c18),var(--kd-c15));border:3px solid var(--kd-c12);border-radius:14px;padding:6px 10px;
   font-weight:900;font-size:13px;line-height:1.15;color:var(--kd-c5);text-align:center;transform:rotate(-4deg);box-shadow:0 6px 12px rgba(80,50,20,.22)}
 .kd-sign b{display:block;font-family:var(--f-display);font-size:16px}
@@ -3857,12 +3857,6 @@ function firstOpenLesson(p){
   for(const wi of worldOrder(p)){ for(let li=0; li<WORLDS[wi].lessons.length; li++){ const l = WORLDS[wi].lessons[li]; if(lessonUnlocked(p,wi,li) && !p.lessons[l.id]) return {wi,li,id:l.id,title:l.title}; } }
   return null;
 }
-function greetMsg(p, missed){
-  const due = dueWords(p, p.level).length;
-  return due>=3 ? `Je hebt ${due} woordjes om te herhalen.`
-    : missed ? 'Fijn dat je er weer bent!'
-    : Object.keys(p.lessons||{}).length ? 'Klaar voor een nieuw avontuur?' : 'Zullen we samen beginnen?';
-}
 const ICO = {
   play:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.4-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z" fill="#fff"/></svg>',
   star:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 3l6.2 12.6 13.9 2-10 9.8 2.4 13.8L24 34.7l-12.5 6.5 2.4-13.8-10-9.8 13.9-2z" fill="#FFC531" stroke="#E8A200" stroke-width="2.5" stroke-linejoin="round"/><path d="M24 13l3.2 6.6 7.2 1-5.2 5.1 1.2 7.2L24 29.5l-6.4 3.4 1.2-7.2-5.2-5.1 7.2-1z" fill="#FFE07A"/></svg>',
@@ -3874,7 +3868,6 @@ const ICO = {
 };
 function homeHTML(){
   const p = me();
-  const missed = p.last && p.last!==today() && p.last!==yesterday();
   const hr = new Date().getHours();
   const g = p.level===1 ? null : hr<12 ? 'sabah' : hr<18 ? 'ahlan' : 'masa';
   const due = dueWords(p, p.level).length;
@@ -3890,7 +3883,7 @@ function homeHTML(){
     </div>
     <div class="kd-stage">
       <img class="kd-cat" src="${UI_IMG('mishmish-zwaait.webp')}" alt="Mishmish de kat zwaait" width="500" height="500" ${IMG_HIDE}>
-      <div class="kd-bub"><b>${g ? esc(ITEM[g].ph).replace(/-/g,'\u2011') : 'Hoi'}, ${esc(p.name)}!</b>${esc(greetMsg(p, missed))}${g && hasAudio(g) ? playBtn(g,'sm',false) : ''}</div>
+      <div class="kd-bub"><b>${g ? esc(ITEM[g].ph).replace(/-/g,'\u2011') : 'Hoi'}, ${esc(p.name)}!</b>${g && hasAudio(g) ? playBtn(g,'sm',false) : ''}</div>
       <div class="kd-sign"><b>Mishmish</b>jouw gids</div>
     </div>
   </section>
