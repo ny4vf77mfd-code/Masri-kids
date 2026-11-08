@@ -104,7 +104,7 @@ try {
   ok(res.status === 200, 'beheerder uploadt demo/pics', desc(res)); if (res.status === 200) made.demo.add(P);
   res = await upload(admin.token, 'demo', X, 'image/png', PNG);
   if (res.status === 200) made.demo.add(X);
-  ok(refused(res) && !(await exists(admin.token, 'demo', X).catch(() => false)), 'beheerder kan NIET uploaden buiten audio/ en pics/', desc(res));
+  ok(refused(res) && !(await exists(admin.token, 'demo', X)), 'beheerder kan NIET uploaden buiten audio/ en pics/', desc(res));
   res = await upload(admin.token, 'demo', P, 'image/png', PNG, true);
   ok(res.status === 200, 'beheerder kan een demo-bestand overschrijven (wijzigen)', desc(res));
   ok(await exists(admin.token, 'demo', A), 'beheerder ziet demo-bestand');
