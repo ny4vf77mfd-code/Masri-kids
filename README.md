@@ -1,6 +1,6 @@
-# Masri Kids
+# Nowie’s World
 
-Leer Egyptisch Arabisch (Masri) met Mishmish de kat. Voor kinderen van 4 tot 9 jaar, en ouders die meespelen.
+Leer Egyptisch Arabisch (Masri) met Nowie de kat. Voor kinderen van 4 tot 9 jaar, en ouders die meespelen.
 
 - **Alles in één bestand:** `index.html`. Woorden, zinnen, werelden en stickers staan bovenaan in het script.
 - **Accounts en opslag:** Supabase (inloggen voor ouders, spelers per gezin, opnames en foto's).
@@ -37,7 +37,7 @@ Alle uitspraak (`ph`) gaat door één functie: `translit(ph, ar)` in `index.html
 
 ## AI-taalpartner
 
-- **Personages.** Kinderen van 7 tot 9 praten met Mishmish, volwassenen en tieners met Salma. Voor kinderen van 4 tot 6 staat hij uit, omdat zij nog niet kunnen lezen.
+- **Personages.** Kinderen van 7 tot 9 praten met Nowie, volwassenen en tieners met Salma. Voor kinderen van 4 tot 6 staat hij uit, omdat zij nog niet kunnen lezen.
 - **Staat standaard UIT.** De beheerder activeert hem per doelgroep in Ouders → Taalpartner. Dat kan pas als alle antwoorden van de dialecttest zijn beoordeeld. Tot die tijd kan alleen de beheerder proefgesprekken voeren.
 - **Kinderen.** Een ouder zet de taalpartner per kind aan en kiest een daglimiet (Instellingen). Gesprekken zijn terug te lezen bij Voortgang. Berichten met een e-mailadres, telefoonnummer, adres of link gaan niet naar de AI.
 - **Server.** `supabase/functions/ai-chat/` bestaat uit drie bestanden:
