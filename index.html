@@ -2107,21 +2107,21 @@ const me = () => DB.profiles.find(p=>p.id===DB.activeId);
 // Volgorde bij afspelen: opname van je eigen gezin > gedeelde opname van de beheerder > ingebouwde opname.
 const MEDIA = { audio:{}, shared:{}, ver:{audio:{}, shared:{}} };
 const WEEK = 60*60*24*7;
-async function signFolder(prefix, ver){
-  const {data, error} = await sb.storage.from('media').list(prefix, {limit:1000});
+async function signFolder(prefix, ver, bucket='media'){
+  const {data, error} = await sb.storage.from(bucket).list(prefix, {limit:1000});
   if(error || !data) return {};
   const files = data.filter(f=>f && f.id);
   if(ver) files.forEach(f=>{ ver[f.name] = f.updated_at || f.created_at || ''; });
   if(!files.length) return {};
-  const {data:signed} = await sb.storage.from('media').createSignedUrls(files.map(f=>prefix+'/'+f.name), WEEK);
+  const {data:signed} = await sb.storage.from(bucket).createSignedUrls(files.map(f=>prefix+'/'+f.name), WEEK);
   const out = {};
   (signed||[]).forEach(x=>{ if(x && x.signedUrl && x.path) out[x.path.split('/').pop()] = x.signedUrl; });
   return out;
 }
 async function loadMedia(){
-  if(sb && AUTH.guest && !AUTH.user){ // gast: alleen de gedeelde map (opnames en plaatjes van de beheerder)
+  if(sb && AUTH.guest && !AUTH.user){ // gast: alleen de aparte demo-plek (bucket 'demo'), nooit 'media'
     const vs = {};
-    const [sh, sp] = await Promise.all([signFolder('shared/audio', vs), signFolder('shared/pics')]);
+    const [sh, sp] = await Promise.all([signFolder('audio', vs, 'demo'), signFolder('pics', null, 'demo')]);
     MEDIA.audio = {}; MEDIA.shared = sh; MEDIA.ver = {audio:{}, shared:vs};
     Object.keys(PICF).forEach(k=>delete PICF[k]);
     Object.keys(PICSH).forEach(k=>delete PICSH[k]); Object.assign(PICSH, sp); rebuildPics();
@@ -2242,7 +2242,8 @@ const CONTENT = {}, ORIG = {};
 const EDIT_KEYS = ['ar','ph','nl','pic','tip'];
 async function loadContent(){
   if(!sb || !(AUTH.user || AUTH.guest)) return;
-  const {data, error} = await sb.from('content').select('id,data');
+  // gast: alleen de openbare woorden via de beperkte functie demo_content(), nooit de tabel zelf
+  const {data, error} = (AUTH.guest && !AUTH.user) ? await sb.rpc('demo_content') : await sb.from('content').select('id,data');
   if(error || !data) return;
   Object.keys(CONTENT).forEach(k=>delete CONTENT[k]);
   data.forEach(r=>{ CONTENT[r.id] = r.data || {}; });
