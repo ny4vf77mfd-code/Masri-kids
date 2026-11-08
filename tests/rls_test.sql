@@ -1,5 +1,5 @@
 -- Beveiligingstest (RLS en tabelrechten op de DATABASE) voor Nowie’s World.
--- Vereist: migratie 20261108_gast_demo.sql.
+-- Vereist: migraties 20261108_gast_demo.sql en 20261108_truncate_intrekken.sql.
 -- Test drie rollen: een onbekend ingelogd gezin, de beheerder, en een gast (niet ingelogd).
 -- Deze test schrijft NIETS in de opslag: het storage-schema behandelen we als alleen-lezen.
 -- Uploaden, lezen, verplaatsen en kopiëren van bestanden test tests/storage_api_test.mjs via de Storage-API.
@@ -14,6 +14,7 @@ declare
   n int;
   ander uuid;
   beheerder uuid;
+  tabel record;
 begin
   select family_id into ander from public.players limit 1;   -- kan leeg zijn in een nieuw project
   select user_id into beheerder from public.admins limit 1;  -- nodig voor de beheerdertest
@@ -28,6 +29,25 @@ begin
   if has_table_privilege('anon', 'storage.objects', 'truncate') then fout := fout || ' anon_mag_opslag_legen'; end if;
   if has_table_privilege('authenticated', 'storage.objects', 'truncate') then fout := fout || ' gezin_mag_opslag_legen'; end if;
   if has_table_privilege('public', 'storage.objects', 'truncate') then fout := fout || ' public_mag_opslag_legen'; end if;
+
+  -- standaardrechten van postgres: geen TRUNCATE voor app-rollen, globaal en in public (alleen lezen)
+  if exists (select 1 from pg_default_acl d cross join lateral aclexplode(d.defaclacl) a
+             where d.defaclrole = 'postgres'::regrole::oid and d.defaclobjtype = 'r'
+               and (d.defaclnamespace = 0 or d.defaclnamespace = 'public'::regnamespace::oid)
+               and a.privilege_type = 'TRUNCATE'
+               and (a.grantee = 0 or a.grantee in ('anon'::regrole::oid, 'authenticated'::regrole::oid))) then
+    fout := fout || ' standaardrechten_geven_truncate';
+  end if;
+  -- proeftabel: telt mee in de lus hieronder en verdwijnt met het terugdraaien aan het eind
+  create table public.rlstest_nieuw (id int);
+
+  -- geen enkele tabel in public mag TRUNCATE hebben voor een app-rol (alleen lezen)
+  for tabel in select c.oid, c.relname from pg_class c join pg_namespace ns on ns.oid = c.relnamespace
+               where ns.nspname = 'public' and c.relkind in ('r', 'p') loop
+    if has_table_privilege('anon', tabel.oid, 'truncate') then fout := fout || ' anon_truncate_' || tabel.relname; end if;
+    if has_table_privilege('authenticated', tabel.oid, 'truncate') then fout := fout || ' gezin_truncate_' || tabel.relname; end if;
+    if has_table_privilege('public', tabel.oid, 'truncate') then fout := fout || ' public_truncate_' || tabel.relname; end if;
+  end loop;
 
   ---------------------------------------------------------------------------------------------
   -- A. ONBEKEND INGELOGD GEZIN
