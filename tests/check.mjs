@@ -1,4 +1,4 @@
-// Automatische basiscontroles voor Masri Kids. Draai met: node tests/check.mjs
+// Automatische basiscontroles voor Nowie’s World. Draai met: node tests/check.mjs
 // Raakt geen database of gebruikersgegevens aan; leest alleen bestanden.
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -205,9 +205,9 @@ ok(/\$\{testModeAllowed\(\) \? `<div class="panel" id="testmode-panel">/.test(ht
 const wordsFn = (html.match(/function wordsHTML\(\)\{[\s\S]*?\n\}/) || [''])[0];
 ok(/<div class="mid"><div class="ar" lang="ar" dir="rtl">\$\{x\.ar\}<\/div><div class="ph">/.test(wordsFn) && !/<\/div><\/div><span class="ar" lang="ar">\$\{x\.ar\}/.test(wordsFn),
   'Mijn woordjes: Arabisch op eigen regel, niet meer naast de uitspraak');
-// 10b. Startscherm: geen effen grijze balk onder Mishmish.
+// 10b. Startscherm: geen effen grijze balk onder Nowie.
 const sunAfter = (html.match(/\.sun-disc::after\{[^}]*\}/) || [''])[0];
-ok(sunAfter && !/linear-gradient\(var\(--sand-2\)/.test(sunAfter), 'startscherm: geen grijze balk onder Mishmish');
+ok(sunAfter && !/linear-gradient\(var\(--sand-2\)/.test(sunAfter), 'startscherm: geen grijze balk onder Nowie');
 // 10c. Koppelen: nooit twee woorden met dezelfde betekenis.
 const mkSrc = ['const nlLabel', 'const nlBare', 'const meaningClash', 'function matchIds'].map(k => (html.match(new RegExp('^' + k + '[^\\n]*', 'm')) || [''])[0]);
 ok(mkSrc.every(Boolean) && (html.match(/const m = matchIds\(ids, 4\); if\(m\.length>=3\)/g) || []).length === 3 && !/type:'match', ids:sample\(/.test(html),

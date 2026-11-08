@@ -1,4 +1,4 @@
-// Masri Kids: account en alle gegevens van een gezin verwijderen (Supabase Edge Function 'delete-account').
+// Nowie’s World: account en alle gegevens van een gezin verwijderen (Supabase Edge Function 'delete-account').
 // - Alleen de ingelogde ouder kan ZIJN EIGEN account verwijderen (het id komt uit de inlog, niet uit het verzoek).
 // - Verwijdert eerst de eigen opnames en foto's (opslagmap <uid>/), daarna het account.
 //   Spelers, voortgang, gezinsinstellingen en AI-gebruik verdwijnen automatisch mee
