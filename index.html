@@ -1116,6 +1116,26 @@ body:has(#test-banner) .kd-hero{padding-top:calc(32px + env(safe-area-inset-top,
 .nav.kid button{gap:2px;padding:8px 0 6px;border-radius:22px;font-size:12px;text-transform:none;letter-spacing:0;border:0;color:var(--kd-c7);outline:0}
 .nav.kid button svg{width:28px;height:28px}
 .nav.kid button.on{background:linear-gradient(180deg,var(--kd-c21),var(--kd-c17));color:#fff;box-shadow:0 4px 0 var(--kd-c11)}
+
+/* ---------- design fase 2: lessen en eindscherm (kinderen) ---------- */
+#app:not(.adult) .lesson{background:linear-gradient(180deg,var(--kd-c28),var(--kd-c23) 140%);margin:-12px calc(-1 * max(16px,env(safe-area-inset-left,0px))) 0;padding:12px max(16px,env(safe-area-inset-left,0px)) 0}
+body:has(#test-banner) #app:not(.adult) .lesson{padding-top:30px}
+#app:not(.adult) .lesson .pbar{height:14px;background:var(--kd-c20);border-radius:999px}
+#app:not(.adult) .lesson .pbar i{background:linear-gradient(180deg,var(--kd-c8),var(--kd-c4));border-radius:999px}
+#app:not(.adult) .lesson .xbtn{width:40px;height:40px;border-radius:50%;background:var(--kd-c29);box-shadow:0 3px 8px rgba(120,80,40,.15);color:var(--kd-c2)}
+#app:not(.adult) .lesson .wordcard,#app:not(.adult) .lesson .bubble,#app:not(.adult) .lesson .opt,#app:not(.adult) .lesson .mcard .b{border:0;border-radius:28px;background:var(--kd-c29);box-shadow:0 8px 20px rgba(120,80,40,.12),inset 0 0 0 2px var(--kd-c22)}
+#app:not(.adult) .lesson .opt{border:3px solid transparent}
+#app:not(.adult) .lesson .bubble{border-radius:20px}
+#app:not(.adult) .lesson .lfoot{background:rgba(255,248,238,.92);border:0;border-radius:30px 30px 0 0;box-shadow:0 -6px 20px rgba(120,80,40,.10)}
+#app:not(.adult) .lesson .lfoot.ok{background:var(--ok-bg)}
+#app:not(.adult) .lesson .lfoot.bad{background:var(--try-bg)}
+#app:not(.adult) .lesson .lfoot .btn,#app:not(.adult) .done-scr .btn{min-height:64px;border-radius:999px;text-transform:none;letter-spacing:0;font-size:22px;color:#fff;
+  background:linear-gradient(180deg,var(--kd-c21),var(--kd-c17));box-shadow:0 6px 0 var(--kd-c11),0 12px 22px rgba(182,62,38,.25);border:3px solid var(--kd-c28)}
+#app:not(.adult) .lesson .lfoot .btn.ok{background:linear-gradient(180deg,var(--kd-c8),var(--kd-c4));box-shadow:0 6px 0 var(--ok-d),0 12px 22px rgba(62,155,70,.25)}
+#app:not(.adult) .lesson .lfoot .btn.try,#app:not(.adult) .lesson .lfoot .btn.sun{background:linear-gradient(180deg,#FFC24D,var(--try));box-shadow:0 6px 0 var(--try-d),0 12px 22px rgba(217,126,0,.22)}
+#app:not(.adult) .lesson .lfoot .btn:disabled{background:var(--kd-c20);color:#9A8F80;box-shadow:none;border-color:transparent}
+#app:not(.adult) .done-scr{background:linear-gradient(180deg,var(--kd-c28),var(--kd-c23));margin:-12px calc(-1 * max(16px,env(safe-area-inset-left,0px))) 0;padding-inline:max(16px,env(safe-area-inset-left,0px));border-radius:0 0 32px 32px}
+img.mm{display:block;object-fit:contain;filter:drop-shadow(0 4px 4px rgba(80,50,20,.22))}
 </style>
 
 </head>
@@ -2331,7 +2351,11 @@ const STAR = (on,size=16) => `<svg viewBox="0 0 24 24" width="${size}" height="$
 const PYR = '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 8 60 54H4z" fill="#C9822B"/><path d="M32 8 60 54H32z" fill="#A86418"/><path d="M14 54l8-13 8 13z" fill="#E0A04A"/><path d="M22 41l8 13h-8z" fill="#B97526"/></svg>';
 function stickerFace(s){ return s.e==='PYR' ? PYR : s.e; }
 
+const MM_POSE = {happy:'mishmish-zwaait.webp', wow:'mishmish-juicht.webp', cheer:'mishmish-juicht.webp', think:'mishmish-zwaait.webp', encourage:'mishmish-zwaait.webp'};
 function mascot(size=120, mood='happy', cls='bob'){
+  // Klei-Mishmish (design fase 2) voor iedereen behalve de volwassenen-omgeving; de oude tekening blijft daar.
+  if(!isAdult()){ const pose = MM_POSE[mood] || MM_POSE.happy;
+    return `<img class="mm ${cls}" src="img/ui/${pose}" width="${size}" height="${size}" alt="" aria-hidden="true" onerror="this.style.visibility='hidden'">`; }
   const mouths = {
     wow:'<ellipse cx="60" cy="63" rx="5" ry="6" fill="#7A2E1E"/>',
     cheer:'<path d="M48 58 Q60 76 72 58 Z" fill="#7A2E1E"/><path d="M53 66 Q60 72 67 66 Q60 63 53 66Z" fill="#FF8C8C"/>',
