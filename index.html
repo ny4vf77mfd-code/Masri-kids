@@ -2006,7 +2006,38 @@ let DB = EMPTY_DB();
 function loadLocal(){ try{ const v = JSON.parse(localStorage.getItem(LS)); if(v && AUTH.user && v.uid===AUTH.user.id) return v; }catch(e){} return null; }
 function saveLocal(){ try{ localStorage.setItem(LS, JSON.stringify({...DB, uid:AUTH.user ? AUTH.user.id : null})); }catch(e){} }
 const SYNC = { t:null };
-function save(){
+/* ---------- voortgang samenvoegen (meerdere apparaten) ----------
+   Een apparaat stuurt alleen spelers mee die het zelf veranderde ("dirty"), en voegt die vlak
+   voor het opslaan samen met de online versie. Voortgang (sterren, woorden, XP, stickers...)
+   kan daardoor alleen omhoog; instellingen (naam, leeftijd...) komen van het apparaat dat ze veranderde. */
+const maxMap = (a, b, pick) => { const o = {...(a||{})}; Object.entries(b||{}).forEach(([k,v])=>{ o[k] = (k in o) ? pick(o[k], v) : v; }); return o; };
+const hi = (x, y) => Math.max(+x||0, +y||0);
+const union = (a, b) => [...new Set([...(a||[]), ...(b||[])])];
+const longer = (a, b) => ((b||[]).length > (a||[]).length ? b : a) || [];
+function mergeDay(a, b){ if(!a) return b; if(!b) return a; if(a.date!==b.date) return a.date > b.date ? a : b;
+  const o = {...a}; Object.keys(b).forEach(k=>{ if(typeof b[k]==='number') o[k] = hi(a[k], b[k]); }); o.claimed = !!(a.claimed || b.claimed); return o; }
+function mergeWeek(a, b){ if(!a) return b; if(!b) return a; if(a.k!==b.k) return String(a.k) > String(b.k) ? a : b;
+  const o = {...a}; Object.keys(b).forEach(k=>{ if(typeof b[k]==='number') o[k] = hi(a[k], b[k]); }); return o; }
+function mergeProfile(srv, loc, locWins){
+  if(!srv) return loc; if(!loc) return srv;
+  const m = locWins ? {...srv, ...loc} : {...loc, ...srv};
+  m.lessons = maxMap(srv.lessons, loc.lessons, hi);
+  m.best = maxMap(srv.best, loc.best, (a,b)=> (b.stars||0) > (a.stars||0) || ((b.stars||0)===(a.stars||0) && (b.mistakes??99) < (a.mistakes??99)) ? b : a);
+  m.words = maxMap(srv.words, loc.words, (a,b)=> ((b.c||0)+(b.w||0)) > ((a.c||0)+(a.w||0)) ? b : a);
+  m.atests = maxMap(srv.atests, loc.atests, hi);
+  m.time = maxMap(srv.time, loc.time, hi);
+  m.stickers = union(srv.stickers, loc.stickers); m.badges = union(srv.badges, loc.badges); m.days = union(srv.days, loc.days).sort();
+  m.xp = hi(srv.xp, loc.xp); m.reviews = hi(srv.reviews, loc.reviews);
+  if((srv.last||'') !== (loc.last||'')){ const w = (srv.last||'') > (loc.last||'') ? srv : loc; m.last = w.last; m.streak = w.streak; }
+  else m.streak = hi(srv.streak, loc.streak);
+  m.today = mergeDay(srv.today, loc.today); m.week = mergeWeek(srv.week, loc.week); m.prevWeek = mergeWeek(srv.prevWeek, loc.prevWeek);
+  m.hist = longer(srv.hist, loc.hist); m.aiLog = longer(srv.aiLog, loc.aiLog); m.aiWords = longer(srv.aiWords, loc.aiWords);
+  Object.keys(m).forEach(k=>{ if(m[k]===undefined) delete m[k]; });
+  return m;
+}
+const markDirty = id => { if(!id) return; DB.dirty = union(DB.dirty, [id]); };
+function save(id){
+  markDirty(id || DB.activeId);
   saveLocal();
   if(!sb || !AUTH.user) return;
   clearTimeout(SYNC.t); SYNC.t = setTimeout(flush, 600);
@@ -2016,9 +2047,18 @@ async function flush(){
   if(!sb || !AUTH.user) return;
   const now = new Date().toISOString();
   try{
-    if(DB.profiles.length){
-      const {error} = await sb.from('players').upsert(DB.profiles.map(p=>({id:p.id, family_id:AUTH.user.id, data:p, updated_at:now})));
-      if(error) throw error;
+    const ids = (DB.dirty||[]).filter(id=>DB.profiles.some(p=>p.id===id));
+    if(ids.length){
+      const {data:rows, error:e0} = await sb.from('players').select('id,data').in('id', ids);
+      if(e0) throw e0;
+      const srv = Object.fromEntries((rows||[]).map(r=>[r.id, r.data]));
+      const out = ids.map(id=>{ const i = DB.profiles.findIndex(p=>p.id===id);
+        const merged = {...mergeProfile(srv[id], DB.profiles[i], true), id};
+        DB.profiles[i] = merged; return merged; });
+      // Eerst uit de lijst halen: wordt er tijdens het versturen verder gespeeld, dan komt de speler er opnieuw in.
+      DB.dirty = (DB.dirty||[]).filter(id=>!ids.includes(id)); saveLocal();
+      const {error} = await sb.from('players').upsert(out.map(p=>({id:p.id, family_id:AUTH.user.id, data:p, updated_at:now})));
+      if(error){ ids.forEach(markDirty); saveLocal(); throw error; }
     }
     const {error:e2} = await sb.from('family_settings').upsert({family_id:AUTH.user.id, data:{tts:!!DB.settings.tts, nlVoice:DB.settings.nlVoice!==false, verified:DB.verified||{}, familyGoal:DB.settings.familyGoal||null, familyGiven:DB.settings.familyGiven||null}, updated_at:now});
     if(e2) throw e2;
@@ -2037,7 +2077,13 @@ async function loadFamily(){
     toast('Kon je gegevens niet ophalen. Je speelt nu met wat op dit apparaat staat.');
     return;
   }
-  DB.profiles = (r1.data||[]).map(r=>({...r.data, id:r.id})).sort((a,b)=>(a.created||0)-(b.created||0) || String(a.name).localeCompare(String(b.name)));
+  // Nog niet opgeslagen wijzigingen van dit apparaat (bijv. offline gespeeld) niet weggooien.
+  const pending = new Set([...((local && local.dirty) || []), ...(DB.dirty || [])]);
+  const localById = Object.fromEntries(((DB.profiles.length ? DB.profiles : (local && local.profiles)) || []).map(p=>[p.id, p]));
+  DB.dirty = [...pending].filter(id=>localById[id]);
+  const srvProfiles = (r1.data||[]).map(r=>({...r.data, id:r.id}));
+  DB.dirty.forEach(id=>{ if(!srvProfiles.some(p=>p.id===id)) srvProfiles.push(localById[id]); });
+  DB.profiles = srvProfiles.map(p=> pending.has(p.id) ? {...mergeProfile(p, localById[p.id], true), id:p.id} : p).sort((a,b)=>(a.created||0)-(b.created||0) || String(a.name).localeCompare(String(b.name)));
   const st = (r2.data && r2.data.data) || {};
   DB.settings = {tts:!!st.tts, nlVoice: st.nlVoice!==false, familyGoal: st.familyGoal||null, familyGiven: st.familyGiven||null};
   DB.verified = st.verified || {};
@@ -4426,8 +4472,8 @@ document.addEventListener('click', e=>{
     case 'sp-rate': { const v = arVoices()[+a]; if(v) AI.sp.tts[v.name] = b; break; }
     case 'sp-voices': break;
     case 'sp-save': spSave(a); return;
-    case 'setp-ai': { const k=DB.profiles.find(x=>x.id===S.pkid); k.aiAllowed = a==='1'; save(); flush(); break; }
-    case 'setp-aid': { const k=DB.profiles.find(x=>x.id===S.pkid); k.aiDaily = +a; save(); flush(); break; }
+    case 'setp-ai': { const k=DB.profiles.find(x=>x.id===S.pkid); k.aiAllowed = a==='1'; save(k.id); flush(); break; }
+    case 'setp-aid': { const k=DB.profiles.find(x=>x.id===S.pkid); k.aiDaily = +a; save(k.id); flush(); break; }
     case 'ailog': S.ailog = S.ailog===+a ? null : +a; break;
     case 'ascn': startScenario(a); return;
     case 'atest': startAdultTest(a); return;
@@ -4469,22 +4515,22 @@ document.addEventListener('click', e=>{
     case 'ptab': S.ptab=a; S.confirmDel=false; S.delAcc=false; if(a!=='audio' && S.recS){ S.recS=null; recRelease(); } break;
     case 'pkid': S.pkid=a; S.confirmDel=false; break;
     case 'fw': S.filterW = isNaN(+a) ? a : +a; break;
-    case 'setp-kind': { const k=DB.profiles.find(x=>x.id===S.pkid); applyKind(k, a); save(); break; }
-    case 'setp-age': { const k=DB.profiles.find(x=>x.id===S.pkid); k.age=+a; k.level=+a<=6?1:2; save(); break; }
-    case 'setp-lvl': { const k=DB.profiles.find(x=>x.id===S.pkid); k.level=+a; save(); break; }
-    case 'setp-g': { const k=DB.profiles.find(x=>x.id===S.pkid); k.gender=a; save(); break; }
-    case 'setp-av': { const k=DB.profiles.find(x=>x.id===S.pkid); k.avatar=a; save(); break; }
-    case 'gstars': { const k=byId(a); if(!k) return; k.goal = k.goal||{}; k.goal.stars = Math.max(0, Math.min(60, (k.goal.stars||0) + (+b) * ((k.goal.stars||0)>=10?3:1))); if(!k.goal.emoji) k.goal.emoji='🎁'; save(); break; }
-    case 'gemoji': { const k=byId(a); if(!k) return; k.goal = k.goal||{}; k.goal.emoji = b; save(); break; }
-    case 'ggive': { const k=byId(a); if(!k) return; k.goalGiven = weekKey(); save(); confetti(60); toast('Beloning uitgereikt voor '+k.name); break; }
-    case 'gclear': { const k=byId(a); if(!k) return; delete k.goal; save(); break; }
+    case 'setp-kind': { const k=DB.profiles.find(x=>x.id===S.pkid); applyKind(k, a); save(k.id); break; }
+    case 'setp-age': { const k=DB.profiles.find(x=>x.id===S.pkid); k.age=+a; k.level=+a<=6?1:2; save(k.id); break; }
+    case 'setp-lvl': { const k=DB.profiles.find(x=>x.id===S.pkid); k.level=+a; save(k.id); break; }
+    case 'setp-g': { const k=DB.profiles.find(x=>x.id===S.pkid); k.gender=a; save(k.id); break; }
+    case 'setp-av': { const k=DB.profiles.find(x=>x.id===S.pkid); k.avatar=a; save(k.id); break; }
+    case 'gstars': { const k=byId(a); if(!k) return; k.goal = k.goal||{}; k.goal.stars = Math.max(0, Math.min(60, (k.goal.stars||0) + (+b) * ((k.goal.stars||0)>=10?3:1))); if(!k.goal.emoji) k.goal.emoji='🎁'; save(k.id); break; }
+    case 'gemoji': { const k=byId(a); if(!k) return; k.goal = k.goal||{}; k.goal.emoji = b; save(k.id); break; }
+    case 'ggive': { const k=byId(a); if(!k) return; k.goalGiven = weekKey(); save(k.id); confetti(60); toast('Beloning uitgereikt voor '+k.name); break; }
+    case 'gclear': { const k=byId(a); if(!k) return; delete k.goal; save(k.id); break; }
     case 'fstars': { const g = DB.settings.familyGoal = DB.settings.familyGoal||{}; g.stars = Math.max(0, Math.min(300, (g.stars||0) + (+a))); if(!g.emoji) g.emoji='🎁'; save(); break; }
     case 'femoji': { const g = DB.settings.familyGoal = DB.settings.familyGoal||{}; g.emoji = a; save(); break; }
     case 'fgive': DB.settings.familyGiven = weekKey(); save(); confetti(80); toast('Gezinsbeloning uitgereikt. Geniet ervan!'); break;
     case 'fclear': DB.settings.familyGoal = null; save(); break;
     case 'del-ask': S.confirmDel=true; break;
     case 'del-no': S.confirmDel=false; break;
-    case 'del-yes': if(sb && AUTH.user) sb.from('players').delete().eq('id', S.pkid).then(({error})=>{ if(error) toast('Verwijderen lukte niet online.'); }); DB.profiles=DB.profiles.filter(x=>x.id!==S.pkid); if(DB.activeId===S.pkid) DB.activeId=DB.profiles[0]?.id||null; S.pkid=null; S.confirmDel=false; save(); toast('Profiel verwijderd'); break;
+    case 'del-yes': if(sb && AUTH.user) sb.from('players').delete().eq('id', S.pkid).then(({error})=>{ if(error) toast('Verwijderen lukte niet online.'); }); DB.dirty=(DB.dirty||[]).filter(x=>x!==S.pkid); DB.profiles=DB.profiles.filter(x=>x.id!==S.pkid); if(DB.activeId===S.pkid) DB.activeId=DB.profiles[0]?.id||null; S.pkid=null; S.confirmDel=false; save(); toast('Profiel verwijderd'); break;
     case 'verify': if(AUTH.admin){ saveContent(a, {verified:!isVerified(a)}).then(()=>render()); return; } if(DB.verified[a]) delete DB.verified[a]; else DB.verified[a]=true; save(); break;
     case 'delaudio': removeAudio(a).then(()=>{ toast('Opname gewist'); render(); }); return;
     case 'bulk-save': bulkSave(); return;
@@ -4542,13 +4588,13 @@ document.addEventListener('change', async e=>{
   if(t.dataset.rnote!==undefined){ aiRate(+t.dataset.rnote, 0, t.value.trim()); return; }
   if(t.dataset.dq){ S.dq = t.value; S.dlimit = 50; render(); const el = $('#dq'); if(el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); } return; }
   if(t.dataset.cq){ S.cq = t.value; S.climit = 40; render(); const el = $('#cq'); if(el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); } return; }
-  if(t.dataset.greward){ const k = byId(t.dataset.greward); if(!k) return; k.goal = k.goal||{}; k.goal.reward = t.value.trim().slice(0,40); if(!k.goal.emoji) k.goal.emoji='🎁'; save(); render(); return; }
+  if(t.dataset.greward){ const k = byId(t.dataset.greward); if(!k) return; k.goal = k.goal||{}; k.goal.reward = t.value.trim().slice(0,40); if(!k.goal.emoji) k.goal.emoji='🎁'; save(k.id); render(); return; }
   if(t.dataset.freward){ const g = DB.settings.familyGoal = DB.settings.familyGoal||{}; g.reward = t.value.trim().slice(0,40); if(!g.emoji) g.emoji='🎁'; save(); render(); return; }
   if(t.dataset.setp){
     const k = DB.profiles.find(x=>x.id===S.pkid); if(!k) return;
     if(t.dataset.setp==='name'){ if(t.value.trim()) k.name=t.value.trim(); }
     else if(t.dataset.setp==='unlockAll') k.unlockAll = t.checked;
-    save(); render();
+    save(k.id); render();
   }
 });
 
