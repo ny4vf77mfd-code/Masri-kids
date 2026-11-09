@@ -184,7 +184,7 @@ ok(!/unlockAll\s*=\s*.*TESTMODE|TESTMODE[^\n]*(localStorage|sessionStorage|save\
 ok(/AUTH\.admin = false; TESTMODE_ON = false;/.test(html), 'testmodus gaat uit bij opnieuw inloggen of uitloggen');
 if (tmSrc.every(Boolean)) {
   const env = { SB_ENV: 'test', AUTH: { admin: false }, WORLDS: [{ id: 1, lessons: [{ id: 'a' }, { id: 'b' }] }, { id: 2, lessons: [{ id: 'c' }, { id: 'd' }] }],
-    prevWorld: (p, wi) => wi - 1 };
+    prevWorld: (p, wi) => wi - 1, guestBlocked: () => false };
   vm.createContext(env);
   vm.runInContext(tmSrc.join('\n') + '\nthis.api = { worldUnlocked, lessonUnlocked, testMode, setOn: v => { TESTMODE_ON = v; } };', env);
   const { api } = env;
@@ -384,6 +384,50 @@ ok(!/nl:\s*nlc\(/.test(html) && /\{id:'otta',\s+w:3, ar:'قطة',\s+ph:'Otta',\s
     ok(/sb\.from\('players'\)\.select\('id,data'\)\.in\('id', ids\)/.test(block) && !/upsert\(DB\.profiles\.map/.test(html), 'opslaan stuurt alleen gewijzigde spelers, nooit meer de hele familie');
     ok(/pending\.has\(p\.id\)/.test(html), 'bij ophalen gaan nog niet opgeslagen wijzigingen (offline) niet verloren');
   })().catch(e => ok(false, 'samenvoeg-test crashte: ' + e.message));
+}
+
+
+// 17. Proberen zonder account: alleen lokaal, alleen twee werelden, alleen de gedeelde map.
+{
+  ok(/const LSG = 'nowie_gast_v1'/.test(html) && /const GUEST_WORLDS = 2;/.test(html), 'gastmodus: eigen opslag op het apparaat en 2 werelden');
+  const fl = html.slice(html.indexOf('async function flush(){'), html.indexOf('async function loadFamily(){'));
+  ok(/if\(!sb \|\| !AUTH\.user\) return;/.test(fl), 'gast stuurt nooit voortgang naar de server (flush vereist inlog)');
+  const lm = html.slice(html.indexOf('async function loadMedia(){'), html.indexOf('function persistMedia'));
+  const gastDeel = lm.slice(0, lm.indexOf('if(!sb || !AUTH.user) return;'));
+  ok(/signFolder\('audio', vs, 'demo'\)/.test(gastDeel) && /signFolder\('pics', null, 'demo'\)/.test(gastDeel) && !/'media'|'shared|AUTH\.user\.id|u\+'\//.test(gastDeel.replace(/\/\/[^\n]*/g, '')), 'gast laadt alleen uit de demo-plek, nooit uit media (ook niet de gedeelde map)');
+  ok(/\(AUTH\.guest && !AUTH\.user\) \? await sb\.rpc\('demo_content'\) : await sb\.from\('content'\)/.test(html), 'gast leest woorden alleen via demo_content(), nooit de tabel content');
+  ok(/if\(AUTH\.guest && \(scr==='gate' \|\| scr==='parent' \|\| scr==='talk'\)\)/.test(html), 'gast komt niet in ouderdeel, beheer of AI-chat');
+  ok(/const guestBlocked = \(p,wi\) => AUTH\.guest && !AUTH\.user && !worldOrder\(p\)\.filter\(i=>!WORLDS\[i\]\.bonus\)\.slice\(0, GUEST_WORLDS\)/.test(html) && /function worldUnlocked\(p,wi\)\{ if\(guestBlocked\(p,wi\)\) return false;/.test(html), 'gast: alleen de eerste twee werelden open (ook geen bonuswereld)');
+  ok(/function splashHTML\(\)[\s\S]{0,1200}AUTH\.ready&&!AUTH\.user\?`<button[^>]*data-act="guest"/.test(html), 'eerste scherm toont de knop om zonder account te proberen (niet voor ingelogden)');
+  ok(/data-act="guest-keep"/.test(html) && /data-act="guest-drop"/.test(html), 'na inloggen wordt eerst gevraagd of de proefvoortgang mee mag');
+  ok(/Probeer je de app zonder account/.test(privacy), 'privacyverklaring noemt proberen zonder account');
+  const mig = readFileSync(new URL('../supabase/migrations/20261108_gast_demo.sql', import.meta.url), 'utf8');
+  const sqlCode = mig.replace(/--[^\n]*/g, '');
+  const anonPol = [...sqlCode.matchAll(/create policy[^;]*?to anon[^;]*;/gis)].map(m => m[0]);
+  ok(anonPol.length === 1 && /for select to anon/i.test(anonPol[0]) && /bucket_id = 'demo'/.test(anonPol[0]), 'migratie: precies één gast-policy, alleen lezen, alleen bucket demo');
+  ok(!/create policy[^;]*on public\.content/i.test(sqlCode) && !/grant[^;]*on public\.content/i.test(sqlCode) && /revoke all on public\.content from anon, public;/.test(sqlCode), 'migratie: geen policy of grant op content, en gast verliest alle directe rechten op content');
+  ok(!/(insert into|update|delete from|alter table)\s+storage\.buckets/i.test(sqlCode) && /from storage\.buckets where id = 'demo'/.test(sqlCode), 'migratie: maakt of wijzigt storage.buckets niet (bucket via dashboard), controleert alleen');
+  const demoPols = [...sqlCode.matchAll(/create policy "demo[^"]*"[^;]*;/g)].map(m => m[0]);
+  ok(demoPols.length === 5 && demoPols.every(p => /bucket_id = 'demo'/.test(p) && /\[1\] in \('audio', 'pics'\)/.test(p)) && demoPols.filter(p => /using \(|using\s+\(/.test(p)).every(p => (p.match(/bucket_id = 'demo'/g) || []).length >= (/with check/.test(p) && /using/.test(p) ? 2 : 1)), 'alle 5 demo-regels (ook wijzigen en verwijderen) beperkt tot bucket demo en mappen audio/pics');
+  ok(/'shared'/.test(sqlCode) === false && !/bucket_id = 'media'/.test(sqlCode), 'migratie: raakt de bucket media (en de gedeelde map) niet aan');
+  ok(/security definer/.test(sqlCode) && /set search_path = ''/.test(sqlCode) && !/'note'|'verified'/.test(sqlCode.slice(sqlCode.indexOf('demo_content'))), 'demo_content(): vaste velden, geen notities of controle-vlag');
+  ok(/revoke all on public\.demo_words from anon/.test(sqlCode) && !/to anon[^;]*demo_words|demo_words[^;]*to anon/i.test(sqlCode), 'demo_words: gast heeft er geen rechten op');
+  const rls = readFileSync(new URL('./rls_test.sql', import.meta.url), 'utf8');
+  ok(!/(insert into|update|delete from|truncate)\s+storage\./i.test(rls), 'RLS-test schrijft niets in het storage-schema (alleen lezen)');
+  ok(['gast_ziet_demo_woord_niet','gast_ziet_interne_velden','gast_ziet_intern_woord','gast_heeft_tabelrecht_content','gast_heeft_recht_content','public_heeft_recht_content','gast_maakt_woord_openbaar','gast_leegt_content',
+      'gezin_ziet_demo_woorden','gezin_maakt_woord_openbaar','gezin_leegt_content','anon_mag_opslag_legen','gezin_mag_opslag_legen',
+      'beheerder_kan_woord_niet_openbaar_maken','geen_beheerder_om_te_testen'].every(k => rls.includes(k)), 'RLS-test (database) dekt gast, gezin en beheerder');
+  const api = readFileSync(new URL('./storage_api_test.mjs', import.meta.url), 'utf8');
+  ok(/includes\(TEST_REF\)/.test(api) && /includes\(LIVE_REF\)/.test(api) && /process\.exit\(2\)/.test(api), 'opslagtest via API weigert alles behalve het testproject');
+  ok(!/password\s*[:=]\s*'[^']/i.test(api) && /process\.env\.TEST_ADMIN_PASSWORD/.test(api), 'opslagtest bevat geen wachtwoorden (alleen uit de omgeving)');
+  ok(["gast kan demo/${label} lezen en downloaden", "[[A, 'audio'], [P, 'pics']]", "gast ziet het testbestand in ${label} NIET", "gast krijgt geen downloadlink voor ${label}", "gast kan NIET uploaden in demo", "gast kan demo-bestanden NIET verwijderen", "gast kan NIET verplaatsen",
+      "gast kan public.content NIET rechtstreeks lezen", "gezin ziet de demo-bestanden NIET", "gezin kan NIET uploaden in demo", "gezin kan eigen bestand NIET uit media naar demo verplaatsen",
+      "gezin kan eigen bestand NIET uit media naar demo kopiëren", "beheerder uploadt demo/audio", "beheerder kan NIET uploaden buiten audio/ en pics/", "beheerder kan demo-bestanden verwijderen"].every(k => api.includes(k)),
+    'opslagtest via API dekt lezen, uploaden, wijzigen, verwijderen, verplaatsen en kopiëren');
+  ok(!/rlstest_api/.test(api) && /const RUN = 'rlstest_' \+ Date\.now\(\)/.test(api) && /filter\(x => x\.includes\(RUN\)\)/.test(api), 'opslagtest: unieke namen per run, ruimt alleen eigen testspullen op');
+  ok(/const SHARED = `shared\/audio\/\$\{RUN\}_gedeeld\.mp3`/.test(api) && /upload\(admin\.token, 'media', SHARED/.test(api) && /controle vooraf: het testbestand in media\/shared bestaat echt/.test(api) && api.indexOf('controle vooraf: het testbestand in media/shared') < api.indexOf('gast ziet het testbestand in'), 'opslagtest: eigen testbestand in media/shared, eerst bewezen dat het bestaat');
+  ok(/opruimen gecontroleerd: \$\{p\.split/.test(api) && /opruimen gecontroleerd: \$\{id\}/.test(api) && api.indexOf('await cleanRows') < api.indexOf('process.exit(fails ? 1 : 0)') && !/LET OP: niet alles/.test(api), 'opslagtest: opruimen wordt gecontroleerd en een opruimfout laat de test mislukken');
+  ok(/const UNEXPECTED = s => s === 0 \|\| s >= 500;/.test(api) && /return \{ status: 0, data: String\(e\) \}/.test(api) && !/\.catch\(\(\) => \[\]\)/.test(api), 'opslagtest: API-fouten tellen nooit als geslaagde weigering');
 }
 
 console.log(fails ? `\n${fails} controle(s) mislukt.` : '\nAlle controles geslaagd.');

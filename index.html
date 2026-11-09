@@ -1999,12 +1999,16 @@ if(SB_ENV === 'test') document.addEventListener('DOMContentLoaded', ()=>{
 const sb = (SB_URL && SB_KEY && window.supabase && window.supabase.createClient)
   ? window.supabase.createClient(SB_URL, SB_KEY, {auth:{persistSession:true, autoRefreshToken:true, detectSessionInUrl:true}})
   : null;
-const AUTH = { user:null, ready:false, admin:false };
+const AUTH = { user:null, ready:false, admin:false, guest:false };
 const LS = 'masrikids_v2';
+// Proberen zonder account: alles van de gast blijft op dit apparaat (aparte opslag), er gaat niets naar de server.
+const LSG = 'nowie_gast_v1';
+const GUEST_WORLDS = 2; // aantal werelden dat een gast mag spelen
+const guestData = () => { try{ const v = JSON.parse(localStorage.getItem(LSG)); return v && Array.isArray(v.profiles) ? v : null; }catch(e){ return null; } };
 const EMPTY_DB = () => ({profiles:[], activeId:null, settings:{tts:false}, verified:{}});
 let DB = EMPTY_DB();
 function loadLocal(){ try{ const v = JSON.parse(localStorage.getItem(LS)); if(v && AUTH.user && v.uid===AUTH.user.id) return v; }catch(e){} return null; }
-function saveLocal(){ try{ localStorage.setItem(LS, JSON.stringify({...DB, uid:AUTH.user ? AUTH.user.id : null})); }catch(e){} }
+function saveLocal(){ try{ if(AUTH.guest && !AUTH.user){ localStorage.setItem(LSG, JSON.stringify({profiles:DB.profiles, activeId:DB.activeId, settings:DB.settings})); return; } localStorage.setItem(LS, JSON.stringify({...DB, uid:AUTH.user ? AUTH.user.id : null})); }catch(e){} }
 const SYNC = { t:null };
 /* ---------- voortgang samenvoegen (meerdere apparaten) ----------
    Een apparaat stuurt alleen spelers mee die het zelf veranderde ("dirty"), en voegt die vlak
@@ -2103,18 +2107,26 @@ const me = () => DB.profiles.find(p=>p.id===DB.activeId);
 // Volgorde bij afspelen: opname van je eigen gezin > gedeelde opname van de beheerder > ingebouwde opname.
 const MEDIA = { audio:{}, shared:{}, ver:{audio:{}, shared:{}} };
 const WEEK = 60*60*24*7;
-async function signFolder(prefix, ver){
-  const {data, error} = await sb.storage.from('media').list(prefix, {limit:1000});
+async function signFolder(prefix, ver, bucket='media'){
+  const {data, error} = await sb.storage.from(bucket).list(prefix, {limit:1000});
   if(error || !data) return {};
   const files = data.filter(f=>f && f.id);
   if(ver) files.forEach(f=>{ ver[f.name] = f.updated_at || f.created_at || ''; });
   if(!files.length) return {};
-  const {data:signed} = await sb.storage.from('media').createSignedUrls(files.map(f=>prefix+'/'+f.name), WEEK);
+  const {data:signed} = await sb.storage.from(bucket).createSignedUrls(files.map(f=>prefix+'/'+f.name), WEEK);
   const out = {};
   (signed||[]).forEach(x=>{ if(x && x.signedUrl && x.path) out[x.path.split('/').pop()] = x.signedUrl; });
   return out;
 }
 async function loadMedia(){
+  if(sb && AUTH.guest && !AUTH.user){ // gast: alleen de aparte demo-plek (bucket 'demo'), nooit 'media'
+    const vs = {};
+    const [sh, sp] = await Promise.all([signFolder('audio', vs, 'demo'), signFolder('pics', null, 'demo')]);
+    MEDIA.audio = {}; MEDIA.shared = sh; MEDIA.ver = {audio:{}, shared:vs};
+    Object.keys(PICF).forEach(k=>delete PICF[k]);
+    Object.keys(PICSH).forEach(k=>delete PICSH[k]); Object.assign(PICSH, sp); rebuildPics();
+    return;
+  }
   if(!sb || !AUTH.user) return;
   const u = AUTH.user.id;
   const va = {}, vs = {};
@@ -2229,8 +2241,9 @@ async function removePic(id){
 const CONTENT = {}, ORIG = {};
 const EDIT_KEYS = ['ar','ph','nl','pic','tip'];
 async function loadContent(){
-  if(!sb || !AUTH.user) return;
-  const {data, error} = await sb.from('content').select('id,data');
+  if(!sb || !(AUTH.user || AUTH.guest)) return;
+  // gast: alleen de openbare woorden via de beperkte functie demo_content(), nooit de tabel zelf
+  const {data, error} = (AUTH.guest && !AUTH.user) ? await sb.rpc('demo_content') : await sb.from('content').select('id,data');
   if(error || !data) return;
   Object.keys(CONTENT).forEach(k=>delete CONTENT[k]);
   data.forEach(r=>{ CONTENT[r.id] = r.data || {}; });
@@ -2398,7 +2411,8 @@ const testMode = () => TESTMODE_ON === true && testModeAllowed();
 function testModeBanner(){ const b = document.getElementById('test-banner'); if(!b) return;
   const base = SB_URL ? 'TESTOMGEVING · testdatabase, geen echte gezinnen' : 'TESTOMGEVING · nog geen testdatabase gekoppeld';
   b.textContent = testMode() ? 'TESTMODUS · alle lessen open · testdatabase' : base; b.style.background = testMode() ? '#7b2cbf' : '#e8590c'; }
-function worldUnlocked(p,wi){ if(p.unlockAll||testMode()||WORLDS[wi].bonus) return true; const pv = prevWorld(p,wi); if(pv<0) return true; return WORLDS[pv].lessons.filter(l=>p.lessons[l.id]).length>=3; }
+const guestBlocked = (p,wi) => AUTH.guest && !AUTH.user && !worldOrder(p).filter(i=>!WORLDS[i].bonus).slice(0, GUEST_WORLDS).includes(wi);
+function worldUnlocked(p,wi){ if(guestBlocked(p,wi)) return false; if(p.unlockAll||testMode()||WORLDS[wi].bonus) return true; const pv = prevWorld(p,wi); if(pv<0) return true; return WORLDS[pv].lessons.filter(l=>p.lessons[l.id]).length>=3; }
 function lessonUnlocked(p,wi,li){ if(!worldUnlocked(p,wi)) return false; if(p.unlockAll||testMode()||li===0) return true; return !!p.lessons[WORLDS[wi].lessons[li-1].id]; }
 
 /* ---------- iconen ---------- */
@@ -3839,7 +3853,7 @@ function authHTML(){
       ${A.msg?`<p class="status err" role="alert">${esc(A.msg)}</p>`:''}
       <button class="btn wide" type="submit" id="a-go" ${A.busy?'disabled':''}>${A.busy?'Even geduld…':signup?'Account maken':reset?'Stuur de link':np?'Opslaan':'Inloggen'}</button>
     </form>
-    <div class="auth-links">${signup||reset?`<button class="link" data-act="auth:login">Ik heb al een account</button>`:np?'':`<button class="link" data-act="auth:signup">Nieuw hier? Maak een account</button><button class="link" data-act="auth:reset">Wachtwoord vergeten?</button>`}<a class="link" href="/privacy.html" target="_blank" rel="noopener">Privacyverklaring</a></div>
+    <div class="auth-links">${signup||reset?`<button class="link" data-act="auth:login">Ik heb al een account</button>`:np?'':`<button class="link" data-act="auth:signup">Nieuw hier? Maak een account</button><button class="link" data-act="auth:reset">Wachtwoord vergeten?</button>`}${np||AUTH.user?'':`<button class="btn ghost wide" data-act="guest" style="margin-top:10px">${AUTH.guest?'Terug naar proberen':'Eerst proberen, zonder account'}</button>`}<a class="link" href="/privacy.html" target="_blank" rel="noopener">Privacyverklaring</a></div>
   </div>`;
 }
 async function authSubmit(){
@@ -3863,6 +3877,8 @@ let loadedFor = null;
 async function onSession(session){
   const u = session && session.user || null;
   AUTH.user = u; AUTH.ready = true;
+  if(!u && AUTH.guest){ render(); return; } // gast blijft gewoon spelen
+  if(u && AUTH.guest){ AUTH.guest = false; DB = EMPTY_DB(); }
   if(!u){
     loadedFor = null; DB = EMPTY_DB(); MEDIA.audio = {}; MEDIA.shared = {}; try{ localStorage.removeItem(LSM); }catch(e){} [PICS, PICF, PICSH].forEach(o=>Object.keys(o).forEach(k=>delete o[k])); AUTH.admin = false;
     if(S.screen!=='splash') S.screen = 'auth';
@@ -3877,6 +3893,7 @@ async function onSession(session){
   if(had) warmAll();
   await Promise.all([loadFamily(), checkAdmin(), loadContent(), had ? null : media]);
   aiStatus();
+  { const g = guestData(); if(g && g.profiles.length) S.guestOffer = g.profiles.map(p=>p.name); }
   if(S.auth.mode==='newpass'){ S.screen = 'auth'; }
   else if(!wasSplash) S.screen = me() ? 'home' : 'profiles';
   render();
@@ -3890,6 +3907,7 @@ function splashHTML(){
     <p class="lead">Leer Egyptisch Arabisch met Nowie de kat</p>
     <div class="feat"><span class="chip">🗺️ ${WORLDS.length} werelden</span><span class="chip">🗣️ ${WORDS.length} woorden</span><span class="chip">💬 ${SENTENCES.length} zinnetjes</span></div>
     <button class="btn sun wide" style="max-width:320px" data-act="start" ${AUTH.ready?'':'disabled'}>${AUTH.ready?(AUTH.user?'Beginnen':'Inloggen of account maken'):'Even laden…'}</button>
+    ${AUTH.ready&&!AUTH.user?`<button class="btn ghost wide" style="max-width:320px" data-act="guest">${AUTH.guest?'Terug naar proberen':'Eerst proberen, zonder account'}</button>`:''}
     ${AUTH.user?`<p class="hint">Ingelogd als ${esc(AUTH.user.email||'')}</p>`:''}
   </div>`;
 }
@@ -3904,7 +3922,8 @@ function profilesHTML(){
     <button class="pcard add" data-act="newp"><span class="pav">+</span><span class="pname">Nieuwe speler</span><span class="plvl">kind of volwassene</span></button>
     ${DB.profiles.length?'':'<p class="empty-note">Nog geen spelers. Maak er een aan voor je kind, of voor jezelf om mee te doen.</p>'}
   </div>
-  <p style="text-align:center;margin-top:28px"><button class="link" data-act="go:gate">Voor ouders</button></p>`;
+  ${AUTH.guest ? `<p class="hint" style="text-align:center;margin-top:24px">Je probeert de app zonder account. Je voortgang blijft alleen op dit apparaat.</p><p style="text-align:center;margin-top:8px"><button class="link" data-act="guest-signup">Account maken of inloggen</button></p>`
+    : `<p style="text-align:center;margin-top:28px"><button class="link" data-act="go:gate">Voor ouders</button></p>`}`;
 }
 function newProfileHTML(){
   const n = S.newP, kids = n.kind==='k1' || n.kind==='k2', ad = n.kind==='teen' || n.kind==='adult';
@@ -4008,7 +4027,7 @@ function lessonsHTML(){
         ${st?`<span class="nstars">${[1,2,3].map(n=>STAR(n<=st,18)).join('')}</span>`:''}
       </div>`;
     });
-    h += `</div>${open?'':`<div class="wlock">🔒 Speel 3 lessen in ${esc(WORLDS[prevWorld(p,wi)]?.name||'')} om deze wereld te openen</div>`}</section>`;
+    h += `</div>${open?'':guestBlocked(p,wi)?`<div class="wlock">🔒 Maak een gratis account om deze wereld te spelen. <button class="link" data-act="guest-signup">Account maken</button></div>`:`<div class="wlock">🔒 Speel 3 lessen in ${esc(WORLDS[prevWorld(p,wi)]?.name||'')} om deze wereld te openen</div>`}</section>`;
   });
   h += `<section class="soon"><h3>Binnenkort</h3><div class="soon-grid">${COMING.map(([e,n],i)=>`<div class="soon-card"><span class="e">${e}</span><span>${n}<small>Wereld ${i+WORLDS.length+1}</small></span></div>`).join('')}</div></section>`;
   return h;
@@ -4316,28 +4335,53 @@ function audioPanel(){
 function navHTML(){
   const cur = S.screen==='parent' ? 'gate' : S.screen;
   if(isAdult()){
-    const items = [['home','📚','Leren'],['dict','📖','Woorden'],['practice','🎯','Oefenen'],['aprog','📈','Voortgang'],['gate','⚙️','Beheer']];
-    return `<nav class="nav" aria-label="Menu"><div class="nav-in">${items.map(([k,e,t])=>`<button class="${cur===k?'on':''}" data-act="go:${k}"><span class="e">${e}</span>${t}</button>`).join('')}</div></nav>`;
+    const items = [['home','📚','Leren'],['dict','📖','Woorden'],['practice','🎯','Oefenen'],['aprog','📈','Voortgang'],AUTH.guest?['guest-signup','👤','Account']:['gate','⚙️','Beheer']];
+    return `<nav class="nav" aria-label="Menu"><div class="nav-in">${items.map(([k,e,t])=>`<button class="${cur===k?'on':''}" data-act="${k==='guest-signup'?k:'go:'+k}"><span class="e">${e}</span>${t}</button>`).join('')}</div></nav>`;
   }
-  const items = [['home',ICO.home,'Start'],['lessons',ICO.book,'Lessen'],['stickers',ICO.bars,'Voortgang'],['words',ICO.compass,'Ontdekken'],['gate',ICO.gear,'Ouders']];
-  return `<nav class="nav kid" aria-label="Menu"><div class="nav-in">${items.map(([k,ic,t])=>`<button class="${cur===k?'on':''}" data-act="go:${k}" ${cur===k?'aria-current="page"':''}>${ic}<span>${t}</span></button>`).join('')}</div></nav>`;
+  const items = [['home',ICO.home,'Start'],['lessons',ICO.book,'Lessen'],['stickers',ICO.bars,'Voortgang'],['words',ICO.compass,'Ontdekken'],AUTH.guest?['guest-signup',ICO.gear,'Account']:['gate',ICO.gear,'Ouders']];
+  return `<nav class="nav kid" aria-label="Menu"><div class="nav-in">${items.map(([k,ic,t])=>`<button class="${cur===k?'on':''}" data-act="${k==='guest-signup'?k:'go:'+k}" ${cur===k?'aria-current="page"':''}>${ic}<span>${t}</span></button>`).join('')}</div></nav>`;
 }
 let GLBL = null;
 function genderLabels(){ const ad = isAdult(); if(GLBL===ad) return; GLBL = ad;
   Object.values(ITEM).forEach(it=>{ if(!it.base || !it.id.endsWith('_f')) return;
     it.nl = ad ? it.nl.replace(' (tegen een meisje)',' (tegen een vrouw)').replace(' (meisje)',' (vrouw)') : it.nl.replace(' (tegen een vrouw)',' (tegen een meisje)').replace(' (vrouw)',' (meisje)'); }); }
+function startGuest(){
+  AUTH.guest = true; AUTH.admin = false;
+  const g = guestData();
+  DB = {...EMPTY_DB(), profiles:(g && g.profiles) || [], activeId:(g && g.activeId) || null, settings:(g && g.settings) || {tts:false}};
+  if(!me()) DB.activeId = null;
+  S.screen = me() ? 'home' : 'profiles';
+  if(!DB.profiles.length) S.newP = {name:'', age:null, gender:null, avatar:pick(AVATARS)};
+  render();
+  Promise.all([loadMedia(), loadContent()]).then(()=>{ if(!busyScreen() && !S.newP) render(); warmAll(); }).catch(()=>{});
+}
+// Na inloggen: proefspelers van dit apparaat meenemen naar het account (alleen als de ouder dat kiest).
+function guestKeep(){
+  const g = guestData(); S.guestOffer = null;
+  if(g){ g.profiles.forEach(p=>{ if(!DB.profiles.some(x=>x.id===p.id)){ DB.profiles.push(p); markDirty(p.id); } }); }
+  try{ localStorage.removeItem(LSG); }catch(e){}
+  save(); flush(); toast('Voortgang van de proefspeler is bewaard in je account');
+}
+function guestDrop(){ S.guestOffer = null; try{ localStorage.removeItem(LSG); }catch(e){} }
+function guestSheet(){
+  if(!S.guestOffer) return '';
+  return `<div class="sheet-bg"><div class="sheet">${mascot(80,'happy','')}<h3>Proefvoortgang meenemen?</h3>
+    <p class="muted">Op dit apparaat is gespeeld zonder account (${S.guestOffer.map(esc).join(', ')}). Wil je die speler${S.guestOffer.length>1?'s':''} en de voortgang bewaren in dit account?</p>
+    <button class="btn wide" data-act="guest-keep">Ja, meenemen</button><button class="btn ghost wide" data-act="guest-drop">Nee, weggooien</button></div></div>`;
+}
 function render(){
   genderLabels();
   testModeBanner();
   if(L && !L._w && S.screen==='lesson'){ L._w = 1; try{ warmMany(lessonAudioIds(L), true); }catch(e){} }
   const app = $('#app');
   const scr = S.screen;
-  if(scr!=='splash' && scr!=='auth' && scr!=='loading' && AUTH.ready && !AUTH.user){ S.screen='auth'; return render(); }
+  if(scr!=='splash' && scr!=='auth' && scr!=='loading' && AUTH.ready && !AUTH.user && !AUTH.guest){ S.screen='auth'; return render(); }
   if(['home','lessons','words','stickers','penalty','scores','lesson','done','dict','practice','aprog','talk'].includes(scr) && !me()) { S.screen='profiles'; return render(); }
   const map = {splash:splashHTML, auth:authHTML, loading:loadingHTML, profiles:profilesHTML, home:()=>isAdult()?adultHomeHTML():homeHTML(), dict:dictHTML, practice:practiceHTML, talk:talkHTML, aprog:aprogHTML, words:wordsHTML, lessons:lessonsHTML, stickers:stickersHTML, scores:scoresHTML, gate:gateHTML, parent:parentHTML, lesson:lessonHTML, done:doneHTML, penalty:penHTML};
   const showNav = me() && ['home','lessons','words','stickers','scores','gate','parent','dict','practice','aprog'].includes(scr);
   app.className = (showNav ? '' : 'full') + (isKid() ? ' lvl1' : '') + (isAdult() ? ' adult' : '');
-  app.innerHTML = map[scr]() + (showNav ? navHTML() : '');
+  if(AUTH.guest && (scr==='gate' || scr==='parent' || scr==='talk')){ S.screen = 'home'; return render(); }
+  app.innerHTML = map[scr]() + (showNav ? navHTML() : '') + guestSheet();
   if(scr==='profiles' && S.newP){
     const f = $('#pform'), nm = $('#np-name');
     if(nm) nm.addEventListener('input', ()=>{ S.newP.name = nm.value; $('#np-save').disabled = !(S.newP.kind && nm.value.trim() && S.newP.age); });
@@ -4399,6 +4443,10 @@ document.addEventListener('click', e=>{
   const [act, a, b] = el.dataset.act.split(':');
   const p = me();
   switch(act){
+    case 'guest': startGuest(); return;
+    case 'guest-signup': S.screen = 'auth'; S.auth = {mode:'signup'}; break;
+    case 'guest-keep': guestKeep(); break;
+    case 'guest-drop': guestDrop(); break;
     case 'start': if(!AUTH.ready) return; S.screen = !AUTH.user ? 'auth' : (loadedFor ? (me() ? 'home' : 'profiles') : 'loading'); break;
     case 'reload': location.reload(); return;
     case 'auth': S.auth = {mode:a, email:S.auth.email}; break;
