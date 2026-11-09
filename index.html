@@ -1147,6 +1147,24 @@ img.mm{display:block;object-fit:contain;filter:drop-shadow(0 4px 4px rgba(80,50,
 body:has(#test-banner) #app:not(.adult) .topbar{top:22px}
 #app:not(.adult) .st-fire{display:none}
 #app:not(.adult) .page-h{color:var(--kd-c2)}
+/* Profielfoto's: portretkeuze zonder emoji's; oude dierkeuzes blijven herkenbaar via de sprite. */
+.avatar-photo{display:block;flex:none;overflow:hidden;background-image:url('img/avatars/profielportretten.jpg')!important;background-size:400% 300%;background-position:var(--avatar-pos);background-repeat:no-repeat;font-size:0!important;color:transparent}
+.seg.av button.avatar-choice{width:60px;height:60px;min-width:60px;min-height:60px;padding:4px;border-radius:18px;display:grid;place-items:center;background:var(--card)}
+.seg.av button.avatar-choice.on{background:var(--nile);border-color:var(--nile-d)}
+.seg.av button.avatar-choice:focus-visible{outline:3px solid var(--lapis);outline-offset:2px}
+.avatar-option-image{display:block;width:100%;height:100%;border-radius:13px;overflow:hidden;background-image:url('img/avatars/profielportretten.jpg');background-size:400% 300%;background-position:var(--avatar-pos);background-repeat:no-repeat}
+.turn-av{position:relative;font-size:0}
+.turn-av .avatar-photo{position:absolute;inset:0;width:100%;height:100%;border:3px solid var(--duo-line);border-radius:50%}
+.kd-av{position:relative;font-size:0;overflow:hidden}
+.kd-av .avatar-photo{position:absolute;inset:0;width:100%;height:100%;border-radius:50%}
+.dav.avatar-photo{width:28px;height:28px;border-radius:50%}
+.cav.avatar-photo{width:32px;height:32px;border-radius:50%}
+.fam-av .fam-person{display:flex;align-items:center;gap:3px}
+.fam-av .fam-photo{width:32px;height:32px;border-radius:50%}
+.champ-avatar{display:inline-block;vertical-align:middle;width:30px;height:30px;border-radius:50%;margin-right:5px}
+.profile-tabs button{display:inline-flex;align-items:center;gap:6px}
+.tab-photo{width:28px;height:28px;border-radius:50%}
+.kindb span{display:none}
 </style>
 
 </head>
@@ -1969,7 +1987,20 @@ buildVariants();
 const baseOf = id => (ITEM[id] && ITEM[id].base) || id;
 const ALL_LESSONS = WORLDS.flatMap((w,wi)=>w.lessons.map((l,li)=>({...l,wi,li})));
 const OFFS = [0,-60,-30,40,60];
-const AVATARS = ['🐱','🦁','🐫','🐢','🦋','🐬','🦊','🐰','🦉','🐼','🦒','🐊'];
+const AVATAR_LEGACY = ['🐱','🦁','🐫','🐢','🦋','🐬','🦊','🐰','🦉','🐼','🦒','🐊'];
+const AVATARS = Array.from({length:12}, (_,i)=>'portrait-'+(i+1));
+function avatarPosition(value){
+  let i = AVATARS.indexOf(value);
+  if(i<0) i = Math.max(0, AVATAR_LEGACY.indexOf(value));
+  const xs = [0,33.333333,66.666667,100], ys = [0,50,100];
+  return xs[i%4]+'% '+ys[Math.floor(i/4)]+'%';
+}
+function avatarHTML(value, cls='pav', label='Profielfoto'){
+  return '<span class="'+cls+' avatar-photo" role="img" aria-label="'+label+'" style="--avatar-pos:'+avatarPosition(value)+'"></span>';
+}
+function avatarChoices(value, act){
+  return '<div class="seg av">'+AVATARS.map((a,i)=>'<button type="button" class="avatar-choice '+(value===a?'on':'')+'" data-act="'+act+':'+a+'" aria-label="Portret '+(i+1)+'" title="Portret '+(i+1)+'"><span class="avatar-option-image" aria-hidden="true" style="--avatar-pos:'+avatarPosition(a)+'"></span></button>').join('')+'</div>';
+}
 const DAILY = [
   {t:'Maak vandaag 1 les af',        k:'lessons', n:1, e:'🎯'},
   {t:'Verdien vandaag 30 XP',        k:'xp',      n:30, e:'⚡'},
@@ -2811,7 +2842,7 @@ function exHTML(st){
       st.id = a;
       st.opts = st.opts || shuffle([a, ...t.d.map(res)]);
       const who = sz => st.who ? `<span class="cav who">${st.who}</span>` : `<span class="cav">${mascot(sz,'happy','')}</span>`;
-      const hist = st.turns.slice(0, st.t).map(x=>`<div class="cmsg mm">${who(30)}<div class="cb">${esc(ITEM[res(x.q)].ph)}</div></div><div class="cmsg me"><div class="cb">${esc(ITEM[res(x.a)].ph)}</div><span class="cav">${me().avatar}</span></div>`).join('');
+      const hist = st.turns.slice(0, st.t).map(x=>`<div class="cmsg mm">${who(30)}<div class="cb">${esc(ITEM[res(x.q)].ph)}</div></div><div class="cmsg me"><div class="cb">${esc(ITEM[res(x.a)].ph)}</div>${avatarHTML(me().avatar,'cav')}</div>`).join('');
       return `${chips(st)}<p class="ex-k">${st.who?esc(st.stitle||'Gesprek'):'Gesprekje met Nowie'}<small>${st.t===0&&st.intro?esc(st.intro)+' ':''}Wat zeg jij terug?</small></p>
       <div class="chat">${hist}<div class="cmsg mm now">${who(42)}<div class="cb"><b>${esc(ITEM[q].ph)}</b><span class="ar" lang="ar">${ITEM[q].ar}</span><small>${esc(nlc(ITEM[q].nl))}</small></div>${playBtn(q,'sm',false)}</div></div>
       <div class="list1">${vis(st).map(o=>`<button class="opt row ${optCls(st,o)}" data-act="opt:${o}"><span class="ph">${esc(ITEM[o].ph)}</span><span class="ar" lang="ar">${ITEM[o].ar}</span></button>`).join('')}</div>`;
@@ -3137,7 +3168,7 @@ function penHead(){
   const right = isKid() ? `<button class="helpbtn" data-act="helpme" aria-label="Wat moet ik doen?">${mascot(48,'happy','')}</button>` : `<span class="lxp">${PEN.xp[DB.activeId]||0} XP</span>`;
   if(!isDuel()) return `<div class="lbar"><button class="xbtn" data-act="go:home" aria-label="Stoppen">×</button><div class="shots" aria-label="Penalty's">${penDots(PEN.players[0])}</div>${right}</div>`;
   return `<div class="lbar"><button class="xbtn" data-act="go:scores" aria-label="Stoppen">×</button>
-    <div class="duelbar">${PEN.players.map(id=>{ const pl = byId(id); return `<div class="drow ${id===DB.activeId&&PEN.state!=='end'?'turn':''}"><span class="dav">${pl.avatar}</span><span class="dname">${esc(pl.name)}</span><span class="shots">${penDots(id)}</span><b class="dscore">${penGoals(id)}</b></div>`; }).join('')}</div></div>`;
+    <div class="duelbar">${PEN.players.map(id=>{ const pl = byId(id); return `<div class="drow ${id===DB.activeId&&PEN.state!=='end'?'turn':''}">${avatarHTML(pl.avatar,'dav')}<span class="dname">${esc(pl.name)}</span><span class="shots">${penDots(id)}</span><b class="dscore">${penGoals(id)}</b></div>`; }).join('')}</div></div>`;
 }
 function penHTML(){
   const p = me(), lvl = p.level;
@@ -3148,7 +3179,7 @@ function penHTML(){
       const win = ga===gb ? null : (ga>gb ? a : b), wp = win && byId(win);
       return `<div class="lesson">${head}<div class="done-scr">${mascot(130,'cheer','m-dance')}
         <h1>${wp ? esc(wp.name) + ' wint!' : 'Gelijkspel!'}</h1>
-        ${wp?`<div class="winner"><span class="pav">${wp.avatar}</span><span>🏆</span></div>`:''}
+        ${wp?`<div class="winner">${avatarHTML(wp.avatar)}<span>🏆</span></div>`:''}
         <p class="muted" style="font-size:18px"><b>${esc(byId(a).name)} ${ga}</b> – <b>${gb} ${esc(byId(b).name)}</b></p>
         <p class="extra-msg">${wp ? 'Goed gespeeld allebei! Elk doelpunt telt mee voor jullie XP.' : 'Allebei even sterk. Nog een keer?'}</p>
         <button class="btn ok wide" data-act="pen-again">Revanche!</button><button class="btn ghost wide" data-act="go:scores">Naar de scores</button>
@@ -3165,7 +3196,7 @@ function penHTML(){
   }
   if(PEN.state==='turn'){
     return `<div class="lesson">${head}<div class="done-scr turn-scr">
-      <div class="turn-av">${p.avatar}</div>
+      <div class="turn-av">${avatarHTML(p.avatar,'avatar-photo')}</div>
       <h1>Beurt van ${esc(p.name)}!</h1>
       <p class="muted" style="font-size:17px">Penalty ${penShotNo(PEN.i)+1} van 5 · ${lvl===1?'luister en kies het plaatje':'kies het goede woord'}</p>
       <button class="btn sun wide" data-act="pen-ready" aria-label="Ik ben er klaar voor">${isKid()?'<span class="big-ic" aria-hidden="true">⚽ ➜</span>':'Ik ben er klaar voor'}</button>
@@ -3263,7 +3294,7 @@ function rewardCards(p){
       <div class="rn">${fs.given?'✓ ':''}${esc(fs.g.reward||'Beloning')}</div>
       <div class="rmsg">${fs.done?(fs.given?'Lekker samen genoten!':'Gehaald! Jullie hebben het samen verdiend 🎉'):`Samen nog <b>${fs.left} ⭐</b>`}</div>
       ${goalBar(fs.have, fs.g.stars)}
-      <div class="fam-av">${DB.profiles.map(x=>`<span title="${esc(x.name)}">${x.avatar}<small>${weekOf(x).stars}</small></span>`).join('')}</div></div></div>`;
+      <div class="fam-av">${DB.profiles.map(x=>`<span class="fam-person" title="${esc(x.name)}">${avatarHTML(x.avatar,'fam-photo')}<small>${weekOf(x).stars}</small></span>`).join('')}</div></div></div>`;
   }
   return h;
 }
@@ -3273,13 +3304,13 @@ function rewardsPanel(){
   const emojiPick = (cur, act) => `<div class="seg av">${REWARD_EMOJI.map(e=>`<button class="${cur===e?'on':''}" data-act="${act}:${e}" aria-label="${e}">${e}</button>`).join('')}</div>`;
   return `<div class="panel"><h3>👑 Kampioen van de week</h3>
     <p class="muted">Wie vorige week de meeste sterren had, krijgt deze week een kroon bij zijn naam.</p>
-    <p style="margin-top:10px;font-weight:900;font-size:18px">${ch.size ? DB.profiles.filter(x=>ch.has(x.id)).map(x=>`${x.avatar} ${esc(x.name)} 👑`).join(' &nbsp; ') : '<span class="muted">Nog geen kampioen: de eerste kroon komt na deze week.</span>'}</p>
+    <p style="margin-top:10px;font-weight:900;font-size:18px">${ch.size ? DB.profiles.filter(x=>ch.has(x.id)).map(x=>`${avatarHTML(x.avatar,'champ-avatar')}${esc(x.name)} 👑`).join(' &nbsp; ') : '<span class="muted">Nog geen kampioen: de eerste kroon komt na deze week.</span>'}</p>
   </div>
   <div class="panel"><h3>🎁 Weekdoel per speler</h3>
     <p class="muted" style="margin-bottom:12px">Kies per speler hoeveel sterren hij deze week moet halen, en wat hij dan krijgt. Een les levert maximaal 3 sterren op. Kies voor kleintjes een haalbaar doel, bijvoorbeeld 5 sterren.</p>
     ${DB.profiles.map(x=>{ const g = x.goal || {}; const st = goalState(x);
       return `<div class="goal-edit">
-        <div class="ge-head"><span class="pav">${x.avatar}</span><b>${esc(x.name)}</b>${st?`<span class="badge ${st.done?'':'new'}">${st.done?(st.given?'uitgereikt ✓':'gehaald!'):`${st.have}/${st.g.stars} ⭐`}</span>`:''}</div>
+        <div class="ge-head">${avatarHTML(x.avatar)}<b>${esc(x.name)}</b>${st?`<span class="badge ${st.done?'':'new'}">${st.done?(st.given?'uitgereikt ✓':'gehaald!'):`${st.have}/${st.g.stars} ⭐`}</span>`:''}</div>
         <div class="setrow"><label>Aantal sterren deze week</label><div class="stepper"><button data-act="gstars:${x.id}:-1" aria-label="Minder">−</button><b>${g.stars||0} ⭐</b><button data-act="gstars:${x.id}:1" aria-label="Meer">+</button></div></div>
         <div class="setrow"><label for="greward-${x.id}">Beloning</label><input class="inp" id="greward-${x.id}" maxlength="40" placeholder="bijv. ijsje, filmavond, 30 min. gamen" value="${esc(g.reward||'')}" data-greward="${x.id}"></div>
         ${emojiPick(g.emoji, 'gemoji:'+x.id)}
@@ -3803,9 +3834,9 @@ function scoresHTML(){
   const dl = daysLeft();
   return topbarHTML(p) + `<h1 class="page-h">Scorebord</h1>
   <p class="page-sub">Week ${weekKey().split('-W')[1]} · nog ${dl} ${dl===1?'dag':'dagen'} · maandag begint iedereen weer bij nul</p>
-  ${rows.length>1 && anyone ? `<div class="podium">${[1,0,2].filter(i=>rows[i]).map(i=>`<div class="pod p${i+1}"><span class="pav">${rows[i].x.avatar}</span><b>${esc(rows[i].x.name)}</b><span class="pstars">⭐ ${rows[i].w.stars}</span><div class="block">${i+1}</div></div>`).join('')}</div>` : ''}
+  ${rows.length>1 && anyone ? `<div class="podium">${[1,0,2].filter(i=>rows[i]).map(i=>`<div class="pod p${i+1}">${avatarHTML(rows[i].x.avatar)}<b>${esc(rows[i].x.name)}</b><span class="pstars">⭐ ${rows[i].w.stars}</span><div class="block">${i+1}</div></div>`).join('')}</div>` : ''}
   <div class="panel score-list">
-    ${rows.map((r,i)=>`<div class="srow ${r.x.id===p.id?'me':''}"><span class="rank">${anyone?medal(i):'–'}</span><span class="pav">${r.x.avatar}</span>
+    ${rows.map((r,i)=>`<div class="srow ${r.x.id===p.id?'me':''}"><span class="rank">${anyone?medal(i):'–'}</span>${avatarHTML(r.x.avatar)}
       <div class="sname"><b>${esc(r.x.name)}${crown(r.x.id)}${r.x.id===p.id?' <span class="you">jij</span>':''}</b><span>${ageLabel(r.x.age)} · niveau ${r.x.level}</span></div>
       <div class="snums"><span title="Sterren deze week">⭐ <b>${r.w.stars}</b></span><span title="Doelpunten deze week">⚽ <b>${r.w.goals}</b></span><span title="Duels gewonnen">🏆 <b>${r.w.duelsWon}</b></span></div></div>`).join('')}
     ${anyone?'':'<p class="muted" style="margin-top:8px">Nog niemand heeft deze week gespeeld. Wie verdient de eerste ster?</p>'}
@@ -3813,7 +3844,7 @@ function scoresHTML(){
   ${familyState() ? rewardCards({}).trim() : ''}
   <div class="panel duel-card"><h3>⚽ Penalty-duel</h3>
     <p class="muted">Om de beurt 5 penalty's op één telefoon of tablet. Iedereen krijgt vragen op zijn eigen niveau, dus groot en klein kunnen allebei winnen.</p>
-    ${others.length ? `<p class="lb" style="margin:12px 0 8px">${esc(p.name)} speelt tegen:</p><div class="opp-grid">${others.map(o=>`<button class="pcard" data-act="duel:${o.id}"><span class="pav">${o.avatar}</span><span class="pname">${esc(o.name)}</span><span class="plvl">niveau ${o.level}</span></button>`).join('')}</div>`
+    ${others.length ? `<p class="lb" style="margin:12px 0 8px">${esc(p.name)} speelt tegen:</p><div class="opp-grid">${others.map(o=>`<button class="pcard" data-act="duel:${o.id}">${avatarHTML(o.avatar)}<span class="pname">${esc(o.name)}</span><span class="plvl">niveau ${o.level}</span></button>`).join('')}</div>`
       : `<p class="status" style="margin-top:12px">Maak eerst een tweede speler aan, dan kun je een duel spelen.</p><button class="btn ghost wide" data-act="go:profiles">Speler toevoegen</button>`}
   </div>
   <div class="panel"><h3>Hoe werkt de score?</h3>
@@ -3918,7 +3949,7 @@ function profilesHTML(){
   if(S.newP) return newProfileHTML();
   return `<h1 class="ptitle">Wie gaat er spelen?</h1><p class="psub">Kies je profiel</p>
   <div class="profiles">
-    ${DB.profiles.map(p=>`<button class="pcard" data-act="pick:${p.id}"><span class="pav">${p.avatar}</span><span class="pname">${esc(p.name)}${crown(p.id)}</span><span class="plvl">${KINDS[kindOf(p)]} · ${p.xp} XP</span></button>`).join('')}
+    ${DB.profiles.map(p=>`<button class="pcard" data-act="pick:${p.id}">${avatarHTML(p.avatar)}<span class="pname">${esc(p.name)}${crown(p.id)}</span><span class="plvl">${KINDS[kindOf(p)]} · ${p.xp} XP</span></button>`).join('')}
     <button class="pcard add" data-act="newp"><span class="pav">+</span><span class="pname">Nieuwe speler</span><span class="plvl">kind of volwassene</span></button>
     ${DB.profiles.length?'':'<p class="empty-note">Nog geen spelers. Maak er een aan voor je kind, of voor jezelf om mee te doen.</p>'}
   </div>
@@ -3930,19 +3961,19 @@ function newProfileHTML(){
   const ages = n.kind==='k1' ? [4,5,6] : n.kind==='k2' ? [7,8,9] : [];
   return `<h1 class="ptitle">Nieuw profiel</h1><p class="psub">Kies eerst voor wie dit profiel is. Iedereen krijgt een eigen leeromgeving en voortgang.</p>
   <form class="form" id="pform" autocomplete="off">
-    <div><span class="lb">Voor wie?</span><div class="kinds">${Object.entries(KINDS).map(([k,t])=>`<button type="button" class="kindb ${n.kind===k?'on':''}" data-act="np-kind:${k}"><span>${{k1:'🧸',k2:'🎒',teen:'🎧',adult:'☕'}[k]}</span><b>${t}</b><small>${{k1:'Plaatjes en geluid',k2:'Woorden en zinnetjes',teen:'Volwassen programma',adult:'Leerprogramma in 4 niveaus'}[k]}</small></button>`).join('')}</div></div>
+    <div><span class="lb">Voor wie?</span><div class="kinds">${Object.entries(KINDS).map(([k,t])=>`<button type="button" class="kindb ${n.kind===k?'on':''}" data-act="np-kind:${k}"><b>${t}</b><small>${{k1:'Plaatjes en geluid',k2:'Woorden en zinnetjes',teen:'Volwassen programma',adult:'Leerprogramma in 4 niveaus'}[k]}</small></button>`).join('')}</div></div>
     ${n.kind?`<div><label class="lb" for="np-name">Naam</label><input class="inp" id="np-name" maxlength="20" value="${esc(n.name)}" placeholder="Naam"></div>
     ${kids?`<div><span class="lb">Hoe oud?</span><div class="seg">${ages.map(a=>`<button type="button" class="${n.age===a?'on':''}" data-act="np-age:${a}">${a}</button>`).join('')}</div></div>`:''}
     <div><span class="lb">${ad?'Ik ben een…':'Jongen of meisje?'}</span><div class="seg"><button type="button" class="${n.gender==='m'?'on':''}" data-act="np-g:m">${ad?'man':'jongen'}</button><button type="button" class="${n.gender==='f'?'on':''}" data-act="np-g:f">${ad?'vrouw':'meisje'}</button></div>
       <p class="hint">In het Egyptisch zeggen mannen en vrouwen sommige woorden anders. De app laat je de juiste vorm zien.</p></div>
-    <div><span class="lb">Kies je ${ad?'icoon':'dier'}</span><div class="seg av">${AVATARS.map(a=>`<button type="button" class="${n.avatar===a?'on':''}" data-act="np-av:${a}" aria-label="${a}">${a}</button>`).join('')}</div></div>`:''}
+    <div><span class="lb">Kies je profielfoto</span>${avatarChoices(n.avatar,'np-av')}</div>`:''}
     <button type="submit" class="btn wide" ${n.kind && n.name.trim() && n.age?'':'disabled'} id="np-save">Klaar!</button>
     <button type="button" class="btn ghost wide" data-act="np-cancel">Terug</button>
   </form>`;
 }
 function topbarHTML(p){
   return `<div class="topbar">
-    <button class="me" data-act="go:profiles" aria-label="Wissel van profiel"><span class="pav">${p.avatar}</span><span>${esc(p.name)}${crown(p.id)}</span></button>
+    <button class="me" data-act="go:profiles" aria-label="Wissel van profiel">${avatarHTML(p.avatar)}<span>${esc(p.name)}${crown(p.id)}</span></button>
     <div class="stats"><span class="stat st-fire ${curStreak(p)?'':'off'}" title="Dagen op rij">🔥 ${curStreak(p)}</span><span class="stat st-star" title="Sterren">⭐ ${totalStars(p)}</span><span class="stat st-xp" title="XP">⚡ ${p.xp}</span></div>
   </div>`;
 }
@@ -3977,7 +4008,7 @@ function homeHTML(){
   const ww = wordsOfWorld(cw.id), wl = ww.filter(w=>(p.words[w.id]?.c||0)>=2).length;
   let h = `<section class="kd-hero">
     <div class="kd-top">
-      <button class="kd-av" data-act="go:profiles" aria-label="Wissel van speler (${esc(p.name)})">${p.avatar}</button>
+      <button class="kd-av" data-act="go:profiles" aria-label="Wissel van speler (${esc(p.name)})">${avatarHTML(p.avatar,'avatar-photo')}</button>
       <div class="kd-logo"><b>Nowie’s <span>World</span></b><small>Leer Egyptisch Arabisch (Masri)</small></div>
       <span></span>
     </div>
@@ -4086,7 +4117,7 @@ function parentHTML(){
   if(S.ptab==='ai'){ aiLoadLastTest(); return h + aiPanel(); }
   if(!DB.profiles.length) return h + `<div class="panel"><h3>Nog geen kinderen</h3><p class="muted">Maak eerst een profiel aan.</p><p style="margin-top:12px"><button class="btn" data-act="go:profiles">Profiel maken</button></p></div>`;
   if(!S.pkid || !DB.profiles.find(p=>p.id===S.pkid)) S.pkid = DB.activeId || DB.profiles[0].id;
-  h += `<div class="ptabs">${DB.profiles.map(p=>`<button class="${S.pkid===p.id?'on':''}" data-act="pkid:${p.id}">${p.avatar} ${esc(p.name)}</button>`).join('')}</div>`;
+  h += `<div class="ptabs">${DB.profiles.map(p=>`<button class="${S.pkid===p.id?'on':''}" data-act="pkid:${p.id}">${avatarHTML(p.avatar,'tab-photo')} ${esc(p.name)}</button>`).join('')}</div>`;
   const p = DB.profiles.find(x=>x.id===S.pkid);
   return h + (S.ptab==='overview' ? overviewPanel(p) : settingsPanel(p));
 }
@@ -4188,7 +4219,7 @@ function settingsPanel(p){
     <div class="setrow" ${p.track==='adult'?'hidden':''}><label>Leeftijd</label><div class="seg">${[4,5,6,7,8,9].map(a=>`<button class="${p.age===a?'on':''}" data-act="setp-age:${a}">${a}</button>`).join('')}<button class="${p.age>=18?'on':''}" data-act="setp-age:18">volwassene</button></div></div>
     <div class="setrow"><label>Niveau</label><div class="seg"><button class="${p.level===1?'on':''}" data-act="setp-lvl:1">1 · 4–6 jaar</button><button class="${p.level===2?'on':''}" data-act="setp-lvl:2">2 · 7+ en volwassenen</button></div>
       <p class="hint">Niveau 1: plaatjes, luisteren, memory en nazeggen. Niveau 2: vertalen, zinnen bouwen, memory en nazeggen.</p></div>
-    <div class="setrow"><label>Dier</label><div class="seg av">${AVATARS.map(a=>`<button class="${p.avatar===a?'on':''}" data-act="setp-av:${a}" aria-label="${a}">${a}</button>`).join('')}</div></div>
+    <div class="setrow"><label>Profielfoto</label>${avatarChoices(p.avatar,'setp-av')}</div>
     <div class="setrow"><label>Jongen of meisje</label><div class="seg"><button class="${p.gender==='m'?'on':''}" data-act="setp-g:m">jongen</button><button class="${p.gender==='f'?'on':''}" data-act="setp-g:f">meisje</button></div></div>
     <label class="switch"><input type="checkbox" id="set-unlock" data-setp="unlockAll" ${p.unlockAll?'checked':''}> Alle werelden en lessen openzetten</label>
   </div>
