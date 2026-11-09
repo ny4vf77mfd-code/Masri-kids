@@ -398,6 +398,7 @@ ok(!/nl:\s*nlc\(/.test(html) && /\{id:'otta',\s+w:3, ar:'قطة',\s+ph:'Otta',\s
   ok(/\(AUTH\.guest && !AUTH\.user\) \? await sb\.rpc\('demo_content'\) : await sb\.from\('content'\)/.test(html), 'gast leest woorden alleen via demo_content(), nooit de tabel content');
   ok(/if\(AUTH\.guest && \(scr==='gate' \|\| scr==='parent' \|\| scr==='talk'\)\)/.test(html), 'gast komt niet in ouderdeel, beheer of AI-chat');
   ok(/const guestBlocked = \(p,wi\) => AUTH\.guest && !AUTH\.user && !worldOrder\(p\)\.filter\(i=>!WORLDS\[i\]\.bonus\)\.slice\(0, GUEST_WORLDS\)/.test(html) && /function worldUnlocked\(p,wi\)\{ if\(guestBlocked\(p,wi\)\) return false;/.test(html), 'gast: alleen de eerste twee werelden open (ook geen bonuswereld)');
+  ok(/function splashHTML\(\)[\s\S]{0,1200}AUTH\.ready&&!AUTH\.user\?`<button[^>]*data-act="guest"/.test(html), 'eerste scherm toont de knop om zonder account te proberen (niet voor ingelogden)');
   ok(/data-act="guest-keep"/.test(html) && /data-act="guest-drop"/.test(html), 'na inloggen wordt eerst gevraagd of de proefvoortgang mee mag');
   ok(/Probeer je de app zonder account/.test(privacy), 'privacyverklaring noemt proberen zonder account');
   const mig = readFileSync(new URL('../supabase/migrations/20261108_gast_demo.sql', import.meta.url), 'utf8');

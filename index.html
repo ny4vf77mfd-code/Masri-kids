@@ -3907,6 +3907,7 @@ function splashHTML(){
     <p class="lead">Leer Egyptisch Arabisch met Nowie de kat</p>
     <div class="feat"><span class="chip">🗺️ ${WORLDS.length} werelden</span><span class="chip">🗣️ ${WORDS.length} woorden</span><span class="chip">💬 ${SENTENCES.length} zinnetjes</span></div>
     <button class="btn sun wide" style="max-width:320px" data-act="start" ${AUTH.ready?'':'disabled'}>${AUTH.ready?(AUTH.user?'Beginnen':'Inloggen of account maken'):'Even laden…'}</button>
+    ${AUTH.ready&&!AUTH.user?`<button class="btn ghost wide" style="max-width:320px" data-act="guest">${AUTH.guest?'Terug naar proberen':'Eerst proberen, zonder account'}</button>`:''}
     ${AUTH.user?`<p class="hint">Ingelogd als ${esc(AUTH.user.email||'')}</p>`:''}
   </div>`;
 }
