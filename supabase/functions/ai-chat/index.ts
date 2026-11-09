@@ -2,7 +2,8 @@
 // Veiligheid en kosten:
 // - De API-sleutel staat alleen hier als Supabase Secret. De app ziet hem nooit.
 // - De AI staat UIT tot de beheerder hem per doelgroep activeert (tabel ai_config).
-//   Tot die tijd kan alleen de beheerder proefgesprekken voeren.
+//   Tot die tijd kan niemand de AI gebruiken. Alleen als de server-instelling AI_ADMIN_PREVIEW
+//   op "aan" staat, kan de beheerder proefgesprekken voeren en de dialecttest draaien (zie access.ts).
 // - Personage, niveau en veiligheidsregels bepaalt de server op basis van het profiel in de database.
 // - Kinderen: alleen als een ouder dit per kind heeft aangezet, met daglimiet per kind,
 //   persoonlijke gegevens worden niet naar de AI gestuurd.
@@ -12,6 +13,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { getProvider, type Msg } from "./providers.ts";
 import { systemPrompt, SCHEMA, SCENES, KID_TOPICS, TESTS } from "./prompts.ts";
+import { canUseAi, previewAllowed } from "./access.ts";
 
 const SB_URL = Deno.env.get("SUPABASE_URL")!;
 const SB_SERVICE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -79,6 +81,7 @@ Deno.serve(async (req) => {
   const { data: cfg } = await admin.from("ai_config").select("*").eq("id", 1).maybeSingle();
   const { data: adm } = await admin.from("admins").select("user_id").eq("user_id", fam).maybeSingle();
   const isAdmin = !!adm;
+  const preview = previewAllowed(Deno.env.get("AI_ADMIN_PREVIEW")); // alleen van de server, nooit uit het verzoek
   const day = new Date().toISOString().slice(0, 10);
 
   if (action === "status") {
@@ -86,6 +89,7 @@ Deno.serve(async (req) => {
     const out: Record<string, unknown> = {
       configured: provider.configured(), provider: provider.name,
       active_adult: !!cfg?.active_adult, active_kids: !!cfg?.active_kids, admin: isAdmin,
+      admin_preview: isAdmin && preview,
       today: { msgs: today?.count || 0, per_player: today?.per_player || {} }, family_daily_msgs: cfg?.family_daily_msgs,
     };
     if (isAdmin) {
@@ -95,15 +99,35 @@ Deno.serve(async (req) => {
     }
     return json(req, out);
   }
-  if (!provider.configured()) return json(req, { error: "not_configured" }, 503);
   if (!cfg) return json(req, { error: "Instellingen ontbreken" }, 500);
+  if (action !== "chat" && action !== "dialect-test") return json(req, { error: "Onbekende actie" }, 400);
 
-  // kostenbewaking: maandbudget voor de hele app
+  // 1. TOEGANG eerst (access.ts), nog vóór sleutel, budget of een aanroep naar de AI.
+  //    Bij een chat bepaalt het profiel uit de database de doelgroep, niet het verzoek.
+  const pid = String(body.player_id || "");
+  let p: Record<string, any> = {};
+  let kind: "kids" | "adult" = "adult";
+  let active = false;
+  if (action === "chat") {
+    const { data: prow } = await admin.from("players").select("data").eq("id", pid).eq("family_id", fam).maybeSingle();
+    if (!prow) return json(req, { error: "Profiel niet gevonden" }, 404);
+    p = prow.data as Record<string, any>;
+    kind = p.track === "adult" ? "adult" : "kids";
+    active = !!(kind === "kids" ? cfg.active_kids : cfg.active_adult);
+  }
+  const access = canUseAi({ action, active, isAdmin, preview });
+  if (!access.ok) return json(req, { error: access.error }, access.status);
+  if (action === "chat" && kind === "kids") {
+    if (p.kind === "k1" || p.level === 1) return json(req, { error: "Voor kinderen van 4 tot 6 is de taalpartner nog niet beschikbaar." }, 403);
+    if (p.aiAllowed !== true) return json(req, { error: "Een ouder moet de taalpartner eerst aanzetten voor dit profiel (Ouders → Instellingen)." }, 403);
+  }
+
+  // 2. sleutel en kostenbewaking (maandbudget voor de hele app)
+  if (!provider.configured()) return json(req, { error: "not_configured" }, 503);
   const used = await monthTokens(admin);
   if (used >= Number(cfg.monthly_token_limit)) return json(req, { error: "Het maandbudget van de taalpartner is op. Volgende maand kan het weer." }, 429);
 
   if (action === "dialect-test") {
-    if (!isAdmin) return json(req, { error: "Alleen voor beheerders" }, 403);
     const models: string[] = (cfg.test_models || []).slice(0, 3);
     let tin = 0, tout = 0;
     // max 6 tegelijk, zodat we de limieten van de provider niet raken
@@ -130,20 +154,7 @@ Deno.serve(async (req) => {
     return json(req, { id: row?.id, summary, results, tokens: { in: tin, out: tout } });
   }
 
-  if (action !== "chat") return json(req, { error: "Onbekende actie" }, 400);
-
-  // profiel: persoonage, niveau en toestemming komen uit de database
-  const pid = String(body.player_id || "");
-  const { data: prow } = await admin.from("players").select("data").eq("id", pid).eq("family_id", fam).maybeSingle();
-  if (!prow) return json(req, { error: "Profiel niet gevonden" }, 404);
-  const p = prow.data as Record<string, any>;
-  const kind: "kids" | "adult" = p.track === "adult" ? "adult" : "kids";
-  const active = kind === "kids" ? cfg.active_kids : cfg.active_adult;
-  if (!active && !isAdmin) return json(req, { error: "De taalpartner is nog niet geactiveerd." }, 403);
-  if (kind === "kids") {
-    if (p.kind === "k1" || p.level === 1) return json(req, { error: "Voor kinderen van 4 tot 6 is de taalpartner nog niet beschikbaar." }, 403);
-    if (p.aiAllowed !== true) return json(req, { error: "Een ouder moet de taalpartner eerst aanzetten voor dit profiel (Ouders → Instellingen)." }, 403);
-  }
+  // chat
 
   const msg = String(body.message || "").slice(0, 400).trim();
   if (!msg && !body.start) return json(req, { error: "Leeg bericht" }, 400);
@@ -152,7 +163,7 @@ Deno.serve(async (req) => {
   const { data: today } = await admin.from("ai_usage").select("count,per_player").eq("family_id", fam).eq("day", day).maybeSingle();
   if ((today?.count || 0) >= Number(cfg.family_daily_msgs)) return json(req, { error: "Het maximum aantal berichten voor vandaag is bereikt. Morgen kun je weer verder." }, 429);
   const kidLimit = Number(p.aiDaily || KID_DAILY_DEFAULT);
-  if (kind === "kids" && ((today?.per_player || {})[pid] || 0) >= kidLimit) return json(req, { error: "Je hebt vandaag genoeg gekletst met Mishmish. Morgen weer!" }, 429);
+  if (kind === "kids" && ((today?.per_player || {})[pid] || 0) >= kidLimit) return json(req, { error: "Je hebt vandaag genoeg gekletst met Nowie. Morgen weer!" }, 429);
 
   if (kind === "kids" && msg && PERSONAL.some(r => r.test(msg))) { await addUsage(admin, fam, pid, 1, 0, 0); return json(req, { turn: KID_PRIVACY_REPLY, kind, preview: !active }); }
 
