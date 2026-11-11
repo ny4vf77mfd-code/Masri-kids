@@ -1236,8 +1236,7 @@ h1,h2,h3,.ptitle,.page-h,.ex-k,.auth-h{font-family:Georgia,"Times New Roman",ser
 #app:not(.adult) .kd-eyebrow{margin:0 0 8px;color:var(--mk-nile-d);font-size:11px;font-weight:1000;letter-spacing:.13em;text-transform:uppercase}
 #app:not(.adult) .kd-copy h1{max-width:11ch;font:700 clamp(37px,8vw,58px)/.98 Georgia,"Times New Roman",serif;letter-spacing:-.06em;color:var(--mk-ink)}
 #app:not(.adult) .kd-copy h1 span{color:var(--mk-clay);text-decoration:underline;text-decoration-color:var(--mk-saffron);text-decoration-thickness:4px;text-underline-offset:5px}
-#app:not(.adult) .kd-copy p.kd-intro{max-width:34ch;margin-top:13px;font-size:15px;font-weight:700;line-height:1.45;color:#51483F}
-#app:not(.adult) .kd-world-tag{display:inline-flex;align-items:center;gap:7px;margin-top:13px;padding:6px 10px;border:1.5px solid var(--mk-ink);border-radius:999px;background:var(--mk-saffron-soft);font-size:11px;font-weight:1000;letter-spacing:.04em;text-transform:uppercase;color:var(--mk-ink)}
+#app:not(.adult) .kd-copy p.kd-intro{max-width:30ch;margin-top:11px;font-size:14px;font-weight:700;line-height:1.4;color:#51483F}
 #app:not(.adult) .kd-art{position:relative;display:grid;place-items:end center;align-self:stretch;min-height:210px}
 #app:not(.adult) .kd-art::before{content:"";position:absolute;right:3%;bottom:5px;width:min(30vw,210px);aspect-ratio:1;border-radius:50%;background:var(--mk-saffron-soft);border:2px solid var(--mk-ink)}
 #app:not(.adult) .kd-cat{position:relative;z-index:1;width:min(38vw,230px);max-height:230px;object-fit:contain;filter:drop-shadow(0 5px 0 rgba(32,27,24,.18));animation:kdbob 3.2s ease-in-out infinite}
@@ -1251,25 +1250,20 @@ h1,h2,h3,.ptitle,.page-h,.ex-k,.auth-h{font-family:Georgia,"Times New Roman",ser
 #app:not(.adult) .kd-cta svg{width:26px;height:26px;padding:8px;box-sizing:content-box;border:2px solid currentColor;border-radius:50%;background:rgba(255,255,255,.12)}
 #app:not(.adult) .kd-cta small{font-size:10px;font-weight:900;letter-spacing:.045em;opacity:.92}
 #app:not(.adult) .kd-cta .kd-go{font-size:24px;line-height:1}
-#app:not(.adult) .kd-journey{gap:11px;margin:0 0 14px;padding:12px;border:2px solid var(--mk-ink);border-radius:18px;background:var(--mk-white);box-shadow:0 4px 0 var(--mk-ink)}
-#app:not(.adult) .kd-journey img{width:48px;height:48px;mask-image:none;-webkit-mask-image:none;mix-blend-mode:multiply}
-#app:not(.adult) .kd-journey h3{font:700 19px Georgia,"Times New Roman",serif;color:var(--mk-ink)}
+#app:not(.adult) .kd-journey{gap:10px;margin:0 0 12px;padding:10px 13px;border:2px solid var(--mk-ink);border-radius:15px;background:var(--mk-white);box-shadow:0 3px 0 var(--mk-ink)}
+#app:not(.adult) .kd-journey img{display:none}
+#app:not(.adult) .kd-journey-label{font:800 13px var(--f-body);color:var(--mk-ink)}
 #app:not(.adult) .kd-journey .bar{height:10px;background:var(--sand-2);border:1px solid var(--mk-ink)}
 #app:not(.adult) .kd-journey .bar i{background:var(--mk-nile)}
-#app:not(.adult) .kd-journey .n{font-size:12px;color:var(--mk-mute)}
 #app:not(.adult) .kd-lvl span{background:var(--mk-nile);border:1px solid var(--mk-ink);color:#fff}
-#app:not(.adult) .kd-tiles{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 18px}
-#app:not(.adult) .kd-tile{min-height:126px;padding:10px 7px;border:2px solid var(--mk-ink);border-radius:16px;background:var(--mk-white);box-shadow:0 4px 0 var(--mk-ink);font:800 13px/1.15 var(--f-body);color:var(--mk-ink)}
+#app:not(.adult) .kd-tiles{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 14px}
+#app:not(.adult) .kd-tile{min-height:70px;display:flex;flex-direction:row;justify-content:flex-start;gap:7px;padding:8px;border:1.5px solid var(--mk-ink);border-radius:13px;background:var(--mk-white);box-shadow:0 2px 0 var(--mk-ink);font:800 12px/1.1 var(--f-body);text-align:left;color:var(--mk-ink)}
 #app:not(.adult) .kd-tile:active{transform:translateY(3px);box-shadow:0 1px 0 var(--mk-ink)}
-#app:not(.adult) .kd-tile img{width:70px;height:70px;mask-image:none;-webkit-mask-image:none;mix-blend-mode:multiply}
-#app:not(.adult) .kd-tile.t1{background:var(--mk-clay-soft)}
-#app:not(.adult) .kd-tile.t2{background:var(--mk-saffron-soft)}
-#app:not(.adult) .kd-tile.t3{background:var(--mk-nile-soft)}
-#app:not(.adult) .kd-tile.t4{background:#EFE9E1}
+#app:not(.adult) .kd-tile img{width:38px;height:38px;flex:none;mask-image:none;-webkit-mask-image:none;mix-blend-mode:multiply}
+#app:not(.adult) .kd-tile.t1,#app:not(.adult) .kd-tile.t2,#app:not(.adult) .kd-tile.t3,#app:not(.adult) .kd-tile.t4{background:var(--mk-white)}
 #app:not(.adult) .kd-tile .soon{top:5px;right:5px;border:1px solid var(--mk-ink);border-radius:999px;background:var(--mk-white);color:var(--mk-ink)}
 #app:not(.adult) .kd-more{margin-top:0}
 #app:not(.adult) .kd-feature{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;margin:0 0 14px;padding:14px 16px;border:2px solid var(--mk-ink);border-radius:18px;background:var(--mk-saffron-soft);box-shadow:0 4px 0 var(--mk-ink)}
-#app:not(.adult) .kd-feature .kd-feature-label{grid-column:1/-1;font-size:10px;font-weight:1000;letter-spacing:.12em;text-transform:uppercase;color:var(--mk-nile-d)}
 #app:not(.adult) .kd-feature .ar{font-size:28px;color:var(--mk-ink)}
 #app:not(.adult) .kd-feature .kd-feature-copy{font-weight:800;color:var(--mk-ink)}
 #app:not(.adult) .kd-feature .kd-feature-copy small{display:block;font-size:12px;font-weight:700;color:var(--mk-mute)}
@@ -1297,15 +1291,14 @@ body:has(#test-banner) #app:not(.adult) .kd-hero{padding-top:calc(58px + env(saf
   #app:not(.adult) .kd-stage{grid-template-columns:minmax(0,1fr) 132px;min-height:196px;margin-top:14px}
   #app:not(.adult) .kd-copy h1{font-size:clamp(34px,9vw,44px)}
   #app:not(.adult) .kd-copy p.kd-intro{font-size:13px;margin-top:9px}
-  #app:not(.adult) .kd-world-tag{font-size:9px;margin-top:9px}
   #app:not(.adult) .kd-art{min-height:185px}
   #app:not(.adult) .kd-cat{width:145px;max-height:175px}
   #app:not(.adult) .kd-bub{font-size:10px;right:-2px;padding:6px 7px}
   #app:not(.adult) .kd-bub b{font-size:10px}
   #app:not(.adult) .kd-sign{right:-2px;bottom:0}
-  #app:not(.adult) .kd-tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-  #app:not(.adult) .kd-tile{min-height:112px;display:grid;grid-template-columns:54px 1fr;justify-content:start;text-align:left;gap:4px 8px;padding:9px}
-  #app:not(.adult) .kd-tile img{width:52px;height:52px;grid-row:1/3}
+  #app:not(.adult) .kd-tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  #app:not(.adult) .kd-tile{min-height:58px;padding:7px}
+  #app:not(.adult) .kd-tile img{width:34px;height:34px}
   #app:not(.adult) .kd-tile .soon{font-size:9px}
 }
 @media (prefers-reduced-motion:reduce){.kd-cta,.kd-tile,.nav button{transition:none}}
@@ -4158,35 +4151,33 @@ function homeHTML(){
   let h = `<section class="kd-hero" aria-labelledby="kd-welcome-title">
     <div class="kd-top">
       <button class="kd-av" data-act="go:profiles" aria-label="Wissel van speler (${esc(p.name)})">${avatarHTML(p.avatar,'avatar-photo')}</button>
-      <div class="kd-logo"><b>Masri <span>Kids</span></b><small>مصري · Egyptisch Arabisch</small></div>
+      <div class="kd-logo"><b>Masri <span>Kids</span></b><small>مصري · Arabisch</small></div>
       <span class="stat st-xp" aria-label="${p.xp} XP">✦ ${p.xp}</span>
     </div>
     <div class="kd-stage">
       <div class="kd-copy">
         <p class="kd-eyebrow">${esc(cw.emoji)} WERELD ${cw.id} · ${esc(cw.name)}</p>
         <h1 id="kd-welcome-title">${g ? `${esc(ITEM[g].ph).replace(/-/g,'\u2011')},` : 'Hoi,'}<br><span>${esc(p.name)}!</span></h1>
-        <p class="kd-intro">${esc(cw.desc)} — vandaag oefenen we het zoals je het in Egypte hoort.</p>
-        <span class="kd-world-tag">Een stukje Cairo, elke dag</span>
+        <p class="kd-intro">${esc(cw.desc)}</p>
       </div>
       <div class="kd-art">
         <img class="kd-cat" src="${UI_IMG('mishmish-zwaait.webp')}" alt="Mishmish de oranje kat zwaait" width="500" height="500" ${IMG_HIDE}>
-        <div class="kd-bub"><b>${g ? esc(ITEM[g].ph).replace(/-/g,'\u2011') : 'Hoi'}, ${esc(p.name)}!</b>${g && hasAudio(g) ? playBtn(g,'sm',false) : ''}</div>
-        <div class="kd-sign"><b>Mishmish</b>jouw gids</div>
+        <div class="kd-sign"><b>Mishmish</b></div>
       </div>
     </div>
   </section>
   <button class="kd-cta" data-act="${cta.act}" aria-label="${due>=3?'Herhaal woorden':nxt?'Start les '+esc(nxt.title):'Kies een les'}">
     ${ICO.play}<span class="kd-cta-copy"><small>VANDAAG LEREN · ${due>=3?`${due} WOORDEN KOMEN TERUG`:`${worldDone}/${worldLessons.length} · ${esc(cw.name.toUpperCase())}`}</small><b>${esc(ctaTitle)}</b></span><span class="kd-go" aria-hidden="true">↗</span>
   </button>
-  <div class="kd-journey"><img src="${UI_IMG('kaart.jpg')}" alt="" ${IMG_HIDE}>
-    <div class="tx"><h3>Jouw route door Egypte</h3><div class="bar" role="progressbar" aria-label="Voortgang in ${esc(cw.name)}" aria-valuenow="${worldDone}" aria-valuemin="0" aria-valuemax="${worldLessons.length}"><i style="width:${pct}%"></i></div><div class="n">${worldDone} van ${worldLessons.length} lessen · ${esc(cw.name)}</div></div>
+  <div class="kd-journey">
+    <div class="tx"><div class="kd-journey-label">${esc(cw.emoji)} ${esc(cw.name)} · ${worldDone}/${worldLessons.length}</div><div class="bar" role="progressbar" aria-label="Voortgang in ${esc(cw.name)}" aria-valuenow="${worldDone}" aria-valuemin="0" aria-valuemax="${worldLessons.length}"><i style="width:${pct}%"></i></div></div>
     <div class="kd-lvl">${ICO.star}<span>Niveau ${p.level}</span></div></div>
-  ${featured?`<section class="kd-feature" aria-label="Woord uit de volgende les"><span class="kd-feature-label">Uit jouw volgende les</span><span class="ar" lang="ar">${esc(featured.ar)}</span><span class="kd-feature-copy">${esc(featured.ph)}<small>${esc(nlc(featured.nl))}</small></span>${playBtn(featured.id,'sm',false)}</section>`:''}
+  ${featured?`<section class="kd-feature" aria-label="Woord uit de volgende les"><span class="ar" lang="ar">${esc(featured.ar)}</span><span class="kd-feature-copy">${esc(featured.ph)}<small>${esc(nlc(featured.nl))}</small></span>${playBtn(featured.id,'sm',false)}</section>`:''}
   <div class="kd-tiles">
-    <button class="kd-tile t1" data-act="go:lessons"><img src="${UI_IMG('tegel-luisteren.jpg')}" alt="" ${IMG_HIDE}><span>Luisteren &amp; praten</span></button>
-    <button class="kd-tile t2" data-act="go:words"><img src="${UI_IMG('tegel-lezen.jpg')}" alt="" ${IMG_HIDE}><span>Woorden uit Cairo</span></button>
-    <button class="kd-tile t3" data-act="go:stickers"><img src="${UI_IMG('tegel-prijzen.jpg')}" alt="" ${IMG_HIDE}><span>Mijn stickers</span></button>
-    <button class="kd-tile t4" data-act="go:scores"><img src="${UI_IMG('tegel-samen.jpg')}" alt="" ${IMG_HIDE}><span>Samen spelen</span></button>
+    <button class="kd-tile t1" data-act="go:lessons"><img src="${UI_IMG('tegel-luisteren.jpg')}" alt="" ${IMG_HIDE}><span>Lessen</span></button>
+    <button class="kd-tile t2" data-act="go:words"><img src="${UI_IMG('tegel-lezen.jpg')}" alt="" ${IMG_HIDE}><span>Woorden</span></button>
+    <button class="kd-tile t3" data-act="go:stickers"><img src="${UI_IMG('tegel-prijzen.jpg')}" alt="" ${IMG_HIDE}><span>Prijzen</span></button>
+    <button class="kd-tile t4" data-act="go:scores"><img src="${UI_IMG('tegel-samen.jpg')}" alt="" ${IMG_HIDE}><span>Samen</span></button>
   </div>`;
   const d = daily(p);
   h += `<div class="kd-more"><div class="daily"><span class="ic">${p.today.claimed?'✅':d.e}</span><div class="tx"><div class="k">Uitdaging van vandaag</div><div class="t">${d.t}</div>
