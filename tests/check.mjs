@@ -238,7 +238,7 @@ if (nlNumSrc) {
   ok(Object.entries(want).every(([n, w]) => c.f(+n) === w), 'ouderslot: Nederlandse getallen goed gespeld (o.a. tweeëntwintig, achtenveertig)');
 }
 // 10e. Kinderen 4–6: begroeting in het Nederlands, niet in Franco.
-ok(/const g = p\.level===1 \? null/.test(html) && /<b>\$\{g \? esc\(ITEM\[g\]\.ph\)[^:]*: 'Hoi'\}, \$\{esc\(p\.name\)\}!<\/b>/.test(html), 'dashboard 4–6 jaar: begroeting "Hoi" in plaats van Franco');
+ok(/const g = p\.level===1 \? null/.test(html) && /<h1 id="kd-welcome-title">\$\{g \?[\s\S]{0,120}: 'Hoi,'\}<br><span>\$\{esc\(p\.name\)\}!<\/span><\/h1>/.test(html), 'dashboard 4–6 jaar: begroeting "Hoi" in plaats van Franco');
 
 // 15. Design fase 2: kinderdashboard in klei-stijl, alle functies blijven bereikbaar.
 const homeSrc = html.slice(html.indexOf('function homeHTML(){'), html.indexOf('function lessonsHTML(){'));
